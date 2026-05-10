@@ -114,6 +114,9 @@ export default function Portfolio() {
   const textX = useSpring(mouseX, springConfig);
   const textY = useSpring(mouseY, springConfig);
 
+  const rotateX = useTransform(textY, [-30, 30], [20, -20]);
+  const rotateY = useTransform(textX, [-30, 30], [-20, 20]);
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const x = (e.clientX / window.innerWidth - 0.5) * 60;
@@ -130,7 +133,7 @@ export default function Portfolio() {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           if (entry.target.id === 'hero') {
-            setActiveSection("projects");
+            setActiveSection("hero");
           } else {
             setActiveSection(entry.target.id);
           }
@@ -172,10 +175,10 @@ export default function Portfolio() {
       />
 
       {/* Navigation */}
-      <nav className="fixed w-full z-50 top-6 px-6 pointer-events-none">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Left: Logo & Socials */}
-          <div className="flex items-center gap-6 pointer-events-auto">
+      <nav className="fixed w-full z-50 top-6 px-8 md:px-16 lg:px-24 pointer-events-none">
+        <div className="w-full flex items-center justify-between">
+          {/* Left: Logo */}
+          <div className="pointer-events-auto flex items-center">
             <a href="#hero" className="flex items-center gap-3 group">
               <span className="font-serif italic font-bold text-3xl text-white group-hover:text-cyan-400 transition-colors">YRM</span>
               <div className="flex flex-col justify-center">
@@ -183,23 +186,6 @@ export default function Portfolio() {
                 <span className="text-slate-400 text-[11px] font-light tracking-wide uppercase">Software Engineer</span>
               </div>
             </a>
-
-            <div className="h-8 w-px bg-white/10 hidden sm:block"></div>
-
-            <div className="hidden sm:flex items-center gap-4">
-              <a href="#" className="text-slate-400 hover:text-white transition-colors" aria-label="Medium">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.46-.58 6.26-1.31 6.26-.73 0-1.31-2.8-1.31-6.26S21.96 5.74 22.69 5.74c.73 0 1.31 2.8 1.31 6.26" /></svg>
-              </a>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors" aria-label="Instagram">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
-              </a>
-              <a href="https://www.linkedin.com/in/yosua-reynaldi-manurun/" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-white transition-colors" aria-label="LinkedIn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>
-              </a>
-              <a href="https://github.com/Yosua13" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-white transition-colors" aria-label="GitHub">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
-              </a>
-            </div>
           </div>
 
           {/* Center: Floating Navigation */}
@@ -228,6 +214,22 @@ export default function Portfolio() {
               ))}
             </div>
           </div>
+
+          {/* Right: Socials */}
+          <div className="pointer-events-auto hidden sm:flex items-center gap-6">
+            <a href="#" className="text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="Medium">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.46-.58 6.26-1.31 6.26-.73 0-1.31-2.8-1.31-6.26S21.96 5.74 22.69 5.74c.73 0 1.31 2.8 1.31 6.26" /></svg>
+            </a>
+            <a href="#" className="text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="Instagram">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/yosua-reynaldi-manurun/" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="LinkedIn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>
+            </a>
+            <a href="https://github.com/Yosua13" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="GitHub">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
+            </a>
+          </div>
         </div>
       </nav>
 
@@ -236,28 +238,44 @@ export default function Portfolio() {
         className="fixed inset-0 z-0 flex flex-col justify-center items-center pointer-events-none"
         style={{
           filter: useTransform(blurValue, v => `blur(${v}px)`),
-          opacity: opacityValue
+          opacity: opacityValue,
+          perspective: 1200
         }}
       >
         <motion.div
           className="w-full flex flex-col items-center justify-center relative"
-          style={{ x: textX, y: textY }}
+          style={{ 
+            x: textX, 
+            y: textY,
+            rotateX,
+            rotateY,
+            transformStyle: "preserve-3d"
+          }}
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
         >
           <motion.div variants={fadeInUp} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-600/10 rounded-full blur-[150px] -z-10 pointer-events-none"></motion.div>
 
-          <motion.div variants={fadeInUp} className="relative w-full max-w-7xl mx-auto h-[25vh] sm:h-[35vh] md:h-[45vh] lg:h-[55vh] flex items-center justify-center overflow-hidden">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover opacity-90 brightness-75"
-            >
-              <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
-            </video>
+          <motion.div 
+            variants={fadeInUp} 
+            className="relative w-full max-w-7xl mx-auto h-[25vh] sm:h-[35vh] md:h-[45vh] lg:h-[55vh] flex items-center justify-center overflow-hidden"
+            style={{ 
+              transform: "translateZ(80px)",
+              mixBlendMode: "screen"
+            }}
+          >
+            <div className="absolute inset-0 bg-black">
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover opacity-90 brightness-75"
+              >
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+              </video>
+            </div>
 
             <div className="absolute inset-0 bg-black mix-blend-multiply flex items-center justify-center pointer-events-none">
               <h1
