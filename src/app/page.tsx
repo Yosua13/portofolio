@@ -1,9 +1,123 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, useScroll, useSpring, useTransform, useMotionValue } from "framer-motion";
-import { Mail, FileText, Code2, Smartphone, Terminal, Database, Globe } from "lucide-react";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { motion, useScroll, useSpring, useTransform, useMotionValue, AnimatePresence, useMotionValueEvent } from "framer-motion";
+import { Mail, FileText, Code2, Smartphone, Terminal, Database, Globe, Layers, AppWindow, Cpu, Server, Cloud, PenTool, GitBranch, Box, Briefcase, GraduationCap, Flame, MapPin, Calendar, Trophy, ExternalLink } from "lucide-react";
 import Image from "next/image";
+
+function ClimaxEffect() {
+  const embers = useMemo(() => {
+    return Array.from({ length: 80 }).map((_, i) => {
+      const angle = Math.random() * Math.PI * 2;
+      const radius = Math.random() * 20;
+      const velocity = Math.random() * 400 + 100;
+      return {
+        x: Math.cos(angle) * radius,
+        y: Math.sin(angle) * radius,
+        tx: Math.cos(angle) * velocity,
+        ty: Math.sin(angle) * velocity - 300, // Strong upward drift (heat)
+        size: Math.random() * 4 + 2,
+        delay: Math.random() * 0.1,
+        duration: 1 + Math.random() * 1.5,
+      };
+    });
+  }, []);
+
+  return (
+    <div className="absolute bottom-0 left-[22px] md:left-[42px] pointer-events-none z-[100]">
+      {/* Background Deep Glow */}
+      <motion.div 
+        initial={{ x: "-50%", y: "-50%", opacity: 0 }}
+        animate={{ x: "-50%", y: "-50%", opacity: [0, 0.5, 0] }}
+        transition={{ duration: 2.5, ease: "easeOut" }}
+        className="absolute w-[150vw] h-[150vh] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-900/40 via-orange-600/10 to-transparent rounded-full"
+      />
+
+      {/* Dragon Wings / Slash Aura */}
+      <motion.div
+        initial={{ x: "-50%", y: "-50%", scaleX: 0, scaleY: 0, opacity: 0.8, rotate: -25 }}
+        animate={{ x: "-50%", y: "-50%", scaleX: [0, 3, 4], scaleY: [0, 0.5, 0], opacity: [0.8, 0], rotate: -25 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        className="absolute w-[60vw] h-12 bg-gradient-to-r from-transparent via-red-500 to-transparent blur-xl origin-center"
+      />
+      <motion.div
+        initial={{ x: "-50%", y: "-50%", scaleX: 0, scaleY: 0, opacity: 0.8, rotate: 25 }}
+        animate={{ x: "-50%", y: "-50%", scaleX: [0, 3, 4], scaleY: [0, 0.5, 0], opacity: [0.8, 0], rotate: 25 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        className="absolute w-[60vw] h-12 bg-gradient-to-r from-transparent via-orange-500 to-transparent blur-xl origin-center"
+      />
+
+      {/* The Dragon's Pillar (Vertical Energy Beam) */}
+      <motion.div
+        initial={{ x: "-50%", scaleY: 0, opacity: 1 }}
+        animate={{ x: "-50%", scaleY: [0, 1, 1], opacity: [1, 1, 0] }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+        className="absolute bottom-0 w-2 bg-white blur-[2px] origin-bottom"
+        style={{ 
+          height: "100vh",
+          boxShadow: "0 0 50px 15px #ef4444, 0 0 100px 30px #f97316" 
+        }}
+      />
+      
+      {/* Expanding Dragon Aura */}
+      <motion.div
+        initial={{ x: "-50%", y: "-50%", scale: 0, opacity: 1 }}
+        animate={{ x: "-50%", y: "-50%", scale: 5, opacity: 0 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        className="absolute w-32 h-32 border-[2px] border-white rounded-full"
+        style={{ boxShadow: "0 0 40px #ef4444, inset 0 0 40px #ef4444" }}
+      />
+      <motion.div
+        initial={{ x: "-50%", y: "-50%", scale: 0, opacity: 1 }}
+        animate={{ x: "-50%", y: "-50%", scale: 4, opacity: 0 }}
+        transition={{ duration: 1.5, ease: "easeOut", delay: 0.1 }}
+        className="absolute w-48 h-48 border-[6px] border-orange-500 rounded-full blur-[2px]"
+        style={{ boxShadow: "0 0 60px #f97316, inset 0 0 60px #f97316" }}
+      />
+      <motion.div
+        initial={{ x: "-50%", y: "-50%", scale: 0, opacity: 0.8 }}
+        animate={{ x: "-50%", y: "-50%", scale: 6, opacity: 0 }}
+        transition={{ duration: 1.8, ease: "easeOut", delay: 0.2 }}
+        className="absolute w-48 h-48 border-[10px] border-red-600 rounded-full blur-md"
+      />
+
+      {/* Blinding Core Flare */}
+      <motion.div
+        initial={{ x: "-50%", y: "-50%", scale: 0, opacity: 1 }}
+        animate={{ x: "-50%", y: "-50%", scale: [0, 2, 0], opacity: [1, 1, 0] }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="absolute w-40 h-40 bg-white rounded-full blur-3xl"
+      />
+
+      {/* Soaring Embers */}
+      {embers.map((ember, i) => (
+        <motion.div
+          key={i}
+          initial={{ x: ember.x, y: ember.y, opacity: 1, scale: 1 }}
+          animate={{ 
+            x: ember.tx,
+            y: ember.ty,
+            opacity: 0,
+            scale: 0
+          }}
+          transition={{
+            duration: ember.duration,
+            delay: ember.delay,
+            ease: "easeOut"
+          }}
+          className="absolute rounded-full bg-white"
+          style={{ 
+            width: ember.size, 
+            height: ember.size,
+            boxShadow: "0 0 15px #fde047, 0 0 30px #f97316",
+            marginLeft: -ember.size/2,
+            marginTop: -ember.size/2
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 function StarCanvas() {
   useEffect(() => {
@@ -96,8 +210,92 @@ function StarCanvas() {
   return <canvas id="star-canvas" className="fixed inset-0 z-0 pointer-events-none opacity-80 mix-blend-screen" />;
 }
 
+const journeyData = [
+  {
+    type: "career",
+    title: "Software Engineer",
+    company: "Tech Corp",
+    location: "Bandung, Indonesia",
+    status: "Contract",
+    isActive: true,
+    date: "Aug 2025 - Present",
+    image: "/company1.png",
+    description: "Tech Corp is a leading technology solutions provider based in Bandung, Indonesia, specializing in high-performance backend systems and enterprise software architecture.",
+    achievements: [
+      "Developed high-performance backend microservices using Java and Spring Boot.",
+      "Optimized database queries, reducing response times by 30%.",
+      "Collaborated with cross-functional teams to deliver features on schedule."
+    ],
+    website: "https://example.com"
+  },
+  {
+    type: "career",
+    title: "Frontend Developer Intern",
+    company: "Creative Studio",
+    location: "Jakarta, Indonesia",
+    status: "Internship",
+    isActive: false,
+    date: "Jan 2025 - Jul 2025",
+    image: "/company2.png",
+    description: "Creative Studio is an innovative digital agency in Jakarta, focusing on crafting immersive and interactive user experiences for global brands.",
+    achievements: [
+      "Built interactive UI components using React and Framer Motion.",
+      "Assisted in migrating legacy codebase to Next.js.",
+      "Implemented responsive designs for mobile and web platforms."
+    ],
+    website: "https://example.com"
+  },
+  {
+    type: "education",
+    title: "Bachelor of Computer Science",
+    company: "University of Technology",
+    location: "Bandung, Indonesia",
+    status: "Student",
+    isActive: false,
+    date: "Aug 2021 - Jan 2025",
+    image: "/university.png",
+    description: "The University of Technology is a premier institution in Bandung, known for its rigorous computer science program and active tech community.",
+    achievements: [
+      "Graduated with honors, GPA 3.8/4.0.",
+      "Lead developer for the university's official student portal.",
+      "Active member of the programming club and hackathon participant."
+    ],
+    website: "https://example.com"
+  }
+];
+
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  const timelineContainerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: timelineScrollY } = useScroll({
+    target: timelineContainerRef,
+    offset: ["start center", "end center"]
+  });
+  const timelineHeight = useTransform(timelineScrollY, [0, 1], ["0%", "100%"]);
+  
+  const hasReachedBottom = useRef(false);
+  const [showFireworks, setShowFireworks] = useState(false);
+
+  useMotionValueEvent(timelineScrollY, "change", (latest) => {
+    if (latest >= 0.999) {
+      if (!hasReachedBottom.current) {
+        hasReachedBottom.current = true;
+        setShowFireworks(true);
+      }
+    } else {
+      hasReachedBottom.current = false;
+    }
+  });
+
+  useEffect(() => {
+    if (showFireworks) {
+      const timer = setTimeout(() => setShowFireworks(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showFireworks]);
+
   const { scrollYProgress, scrollY } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -244,8 +442,8 @@ export default function Portfolio() {
       >
         <motion.div
           className="w-full flex flex-col items-center justify-center relative"
-          style={{ 
-            x: textX, 
+          style={{
+            x: textX,
             y: textY,
             rotateX,
             rotateY,
@@ -257,10 +455,10 @@ export default function Portfolio() {
         >
           <motion.div variants={fadeInUp} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-600/10 rounded-full blur-[150px] -z-10 pointer-events-none"></motion.div>
 
-          <motion.div 
-            variants={fadeInUp} 
+          <motion.div
+            variants={fadeInUp}
             className="relative w-full max-w-7xl mx-auto h-[25vh] sm:h-[35vh] md:h-[45vh] lg:h-[55vh] flex items-center justify-center overflow-hidden"
-            style={{ 
+            style={{
               transform: "translateZ(80px)",
               mixBlendMode: "screen"
             }}
@@ -356,50 +554,308 @@ export default function Portfolio() {
           viewport={{ once: true, margin: "-100px" }}
           variants={fadeInUp}
           id="profile"
-          className="space-y-20 scroll-mt-32"
+          className="space-y-24 scroll-mt-32"
         >
+          {/* About Me */}
           <div className="space-y-10">
             <div className="flex items-center gap-6">
               <h2 className="text-4xl font-bold text-white tracking-tight">Profile & About</h2>
               <div className="h-px bg-white/10 flex-1"></div>
             </div>
-            <div className="grid md:grid-cols-2 gap-12 text-slate-400 leading-relaxed text-lg font-light">
-              <p>
-                I am a passionate Web and Mobile Programmer dedicated to crafting elegant, highly responsive, and user-centric digital experiences. With a strong foundation in modern frontend technologies, I bridge the gap between design and robust engineering.
-              </p>
-              <p>
-                Whether it's building complex web dashboards or smooth, native-feeling mobile applications, I thrive on solving technical challenges and delivering solutions that make a meaningful impact.
-              </p>
+
+            <div className="flex flex-col md:flex-row gap-12 items-center md:items-start">
+              {/* Profile Photo */}
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="relative w-64 h-64 md:w-80 md:h-80 shrink-0 rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-cyan-500/20 bg-slate-800"
+              >
+                <Image
+                  src="/profile.jpg"
+                  alt="Yosua Reynaldi Manurun"
+                  fill
+                  className="object-cover"
+                />
+              </motion.div>
+
+              {/* Profile Text */}
+              <div className="space-y-6 text-slate-400 leading-relaxed text-lg font-light flex-1">
+                <p className="text-2xl font-medium text-white mb-2">
+                  Hello, my name is <span className="text-cyan-400">Yosua Reynaldi Manurun</span> as a Software Engineer.
+                </p>
+                <p>
+                  I am interested in mobile and website development, both frontend and backend.
+                  With a strong foundation in modern technologies, I bridge the gap between design and robust engineering to craft elegant, highly responsive, and user-centric digital experiences.
+                </p>
+                <p>
+                  I have <span className="text-white font-medium">2 years of working experience</span>. Whether it's building complex web dashboards or smooth, native-feeling mobile applications, I thrive on solving technical challenges and delivering solutions that make a meaningful impact.
+                </p>
+              </div>
             </div>
           </div>
 
+          {/* Skill Set Submenu */}
           <div className="space-y-10">
             <motion.div variants={fadeInUp} className="flex items-center gap-6">
-              <h2 className="text-4xl font-bold text-white tracking-tight">Tech Stack</h2>
+              <h2 className="text-4xl font-bold text-white tracking-tight">Skill Set</h2>
               <div className="h-px bg-white/10 flex-1"></div>
             </motion.div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              {[
-                { name: "React", icon: <Globe className="w-8 h-8 mb-4 stroke-1" /> },
-                { name: "Next.js", icon: <Terminal className="w-8 h-8 mb-4 stroke-1" /> },
-                { name: "React Native", icon: <Smartphone className="w-8 h-8 mb-4 stroke-1" /> },
-                { name: "Flutter", icon: <Smartphone className="w-8 h-8 mb-4 stroke-1" /> },
-                { name: "Tailwind CSS", icon: <Code2 className="w-8 h-8 mb-4 stroke-1" /> },
-                { name: "TypeScript", icon: <Code2 className="w-8 h-8 mb-4 stroke-1" /> },
-                { name: "Node.js", icon: <Database className="w-8 h-8 mb-4 stroke-1" /> },
-                { name: "UI/UX Design", icon: <FileText className="w-8 h-8 mb-4 stroke-1" /> },
-              ].map((skill, index) => (
-                <motion.div
-                  key={index}
-                  variants={fadeInUp}
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  className="p-8 bg-white/[0.02] border border-white/5 rounded-3xl flex flex-col items-center justify-center text-center hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300 backdrop-blur-sm group"
+            {/* Submenu Tabs */}
+            <div className="flex flex-wrap items-center gap-4">
+              {["All", "Frontend", "Backend", "Utilities"].map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setActiveCategory(category)}
+                  className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${activeCategory === category
+                    ? "bg-cyan-500 text-[#0a0a0a] shadow-lg shadow-cyan-500/25"
+                    : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white border border-white/5"
+                    }`}
                 >
-                  <div className="text-slate-500 group-hover:text-cyan-400 transition-colors">{skill.icon}</div>
-                  <span className="font-medium text-slate-300 group-hover:text-white transition-colors">{skill.name}</span>
-                </motion.div>
+                  {category}
+                </button>
               ))}
+            </div>
+
+            {/* Submenu Info Text */}
+            <motion.div
+              key={activeCategory}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-slate-400 font-light"
+            >
+              {activeCategory === "All"
+                ? "16 skills across 3 categories."
+                : `${activeCategory === 'Frontend' ? 5 : activeCategory === 'Backend' ? 7 : 4} skills in ${activeCategory}.`}
+            </motion.div>
+
+            {/* Skills Grid */}
+            <motion.div layout className="flex flex-col gap-8">
+              <AnimatePresence mode="popLayout">
+                {["Frontend", "Backend", "Utilities"]
+                  .filter(cat => activeCategory === "All" || activeCategory === cat)
+                  .map(category => (
+                    <motion.div
+                      key={category}
+                      layout
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="bg-white/[0.02] border border-white/5 rounded-3xl p-6 md:p-8"
+                    >
+                      <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-4">
+                        <span className="text-cyan-400 capitalize">{category}</span>
+                        <div className="h-px bg-white/10 flex-1"></div>
+                      </h3>
+
+                      <div className="flex flex-wrap gap-3 md:gap-4">
+                        {[
+                          { name: "React", cat: "Frontend", icon: <Globe className="w-4 h-4" /> },
+                          { name: "Next.js", cat: "Frontend", icon: <Layers className="w-4 h-4" /> },
+                          { name: "Flutter", cat: "Frontend", icon: <Smartphone className="w-4 h-4" /> },
+                          { name: "KMP", cat: "Frontend", icon: <Smartphone className="w-4 h-4" /> },
+                          { name: "Angular", cat: "Frontend", icon: <AppWindow className="w-4 h-4" /> },
+                          { name: "Java", cat: "Backend", icon: <Cpu className="w-4 h-4" /> },
+                          { name: "Golang", cat: "Backend", icon: <Server className="w-4 h-4" /> },
+                          { name: "Node.js", cat: "Backend", icon: <Terminal className="w-4 h-4" /> },
+                          { name: "Postgresql", cat: "Backend", icon: <Database className="w-4 h-4" /> },
+                          { name: "Firebase", cat: "Backend", icon: <Cloud className="w-4 h-4" /> },
+                          { name: "Supabase", cat: "Backend", icon: <Cloud className="w-4 h-4" /> },
+                          { name: "Mysql", cat: "Backend", icon: <Database className="w-4 h-4" /> },
+                          { name: "Figma", cat: "Utilities", icon: <PenTool className="w-4 h-4" /> },
+                          { name: "Github", cat: "Utilities", icon: <GitBranch className="w-4 h-4" /> },
+                          { name: "Gitlab", cat: "Utilities", icon: <GitBranch className="w-4 h-4" /> },
+                          { name: "Postman", cat: "Utilities", icon: <Box className="w-4 h-4" /> }
+                        ].filter(skill => skill.cat === category)
+                          .map((skill) => (
+                            <motion.div
+                              key={skill.name}
+                              whileHover={{ scale: 1.05 }}
+                              className="px-4 py-2 bg-[#0a0a0a] border border-white/5 rounded-xl flex items-center gap-2.5 hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all duration-300 group cursor-default shadow-sm"
+                            >
+                              <span className="text-slate-500 group-hover:text-cyan-400 transition-colors">{skill.icon}</span>
+                              <span className="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">{skill.name}</span>
+                            </motion.div>
+                          ))}
+                      </div>
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
+            </motion.div>
+          </div>
+
+          {/* Mastered Technologies */}
+          <div className="space-y-10 pt-10">
+            <motion.div variants={fadeInUp} className="flex items-center gap-6">
+              <h2 className="text-4xl font-bold text-white tracking-tight">Top Expertise</h2>
+              <div className="h-px bg-white/10 flex-1"></div>
+            </motion.div>
+
+            <div className="flex flex-col md:flex-row items-center gap-12 bg-gradient-to-r from-cyan-500/10 to-transparent p-8 md:p-10 rounded-3xl border border-cyan-500/20">
+              <div className="flex gap-6 md:gap-8 items-center shrink-0">
+                <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden border border-white/10 bg-[#0a0a0a] p-4 flex items-center justify-center group shadow-xl">
+                  <Image src="/java.png" alt="Java" fill className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" />
+                </div>
+                <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden border border-white/10 bg-[#0a0a0a] p-4 flex items-center justify-center group shadow-xl">
+                  <Image src="/ts.png" alt="TypeScript" fill className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" />
+                </div>
+              </div>
+
+              <div className="space-y-4 text-center md:text-left">
+                <h3 className="text-2xl font-bold text-white">Java & TypeScript</h3>
+                <p className="text-slate-400 text-lg font-light leading-relaxed">
+                  I am proficient in <span className="text-cyan-400 font-medium">TypeScript</span> / <span className="text-cyan-400 font-medium">Java</span>. I use these languages extensively for my day-to-day work, building scalable backend services and dynamic frontend architectures.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Career & Education Journey */}
+          <div className="space-y-12 pt-10">
+            <motion.div variants={fadeInUp} className="flex items-center gap-6">
+              <h2 className="text-4xl font-bold text-white tracking-tight">My Career and Education Journey</h2>
+              <div className="h-px bg-white/10 flex-1"></div>
+            </motion.div>
+
+            <div className="relative w-full max-w-[1400px] mx-auto" ref={timelineContainerRef}>
+              {/* Timeline Line */}
+              <div className="absolute left-[20px] md:left-[40px] top-0 bottom-0 w-1 bg-white/5 rounded-full overflow-hidden">
+                <motion.div 
+                  className="absolute top-0 left-0 w-full bg-gradient-to-b from-orange-400 to-red-600 rounded-full"
+                  style={{ height: timelineHeight }}
+                >
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[4px] h-[4px] shadow-[0_0_20px_10px_rgba(239,68,68,1)] bg-white rounded-full"></div>
+                </motion.div>
+              </div>
+              
+              {showFireworks && <ClimaxEffect />}
+
+              <div className="space-y-12 xl:space-y-16 relative pb-10">
+                {journeyData.map((item, index) => {
+                  return (
+                    <div key={index} className="relative flex items-center w-full">
+                      
+                      {/* Node with Fire Effect */}
+                      <div className="absolute left-[13px] md:left-[33px] z-10 flex justify-center items-center">
+                        <motion.div
+                          initial="inactive"
+                          whileInView="active"
+                          viewport={{ margin: "10000px 0px -50% 0px" }}
+                          variants={{
+                            inactive: { backgroundColor: "#1e293b", borderColor: "#0f172a", boxShadow: "0 0 0px rgba(239,68,68,0)", scale: 1 },
+                            active: { backgroundColor: "#ef4444", borderColor: "#fca5a5", boxShadow: "0 0 30px 10px rgba(239,68,68,0.9)", scale: 1.2 }
+                          }}
+                          className="w-[18px] h-[18px] rounded-full border-[3px] transition-all duration-500 flex items-center justify-center"
+                        >
+                          <motion.div variants={{ inactive: { opacity: 0, scale: 0 }, active: { opacity: 1, scale: 1 } }} transition={{ duration: 0.3 }}>
+                            <Flame className="w-2.5 h-2.5 text-yellow-300 fill-yellow-300" />
+                          </motion.div>
+                        </motion.div>
+                      </div>
+
+                      {/* Content Container */}
+                      <div className="w-full flex justify-start">
+                        <div className="w-full pl-[56px] md:pl-[96px] pr-4 md:pr-0">
+                          <motion.div 
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-100px" }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                          >
+                            <div className="bg-[#0a0a0a]/80 backdrop-blur-md border border-white/10 rounded-3xl p-5 sm:p-8 w-full hover:border-red-500/30 transition-all duration-300 relative overflow-hidden group shadow-xl">
+                              
+                              {/* Subtle gradient background on hover */}
+                              <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                              {/* Header Info */}
+                              <div className="flex flex-col sm:flex-row gap-6 lg:gap-8 items-start relative z-10">
+                                <div className="w-[80px] h-[80px] sm:w-[120px] sm:h-[120px] shrink-0 rounded-2xl overflow-hidden border border-white/5 bg-[#0f0f0f] flex items-center justify-center p-2 sm:p-3">
+                                  <Image src={item.image} alt={item.company} width={100} height={100} className="object-contain w-full h-full" />
+                                </div>
+                                
+                                {/* Right Header Content */}
+                                <div className="flex flex-col flex-1 w-full min-w-0">
+                                  {/* Location */}
+                                  <div className="flex items-center gap-1.5 text-[9px] sm:text-[10px] tracking-[0.2em] text-slate-300 uppercase font-bold mb-1.5 sm:mb-2">
+                                    <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-pink-500" />
+                                    {item.location}
+                                  </div>
+                                  
+                                  {/* Title */}
+                                  <h3 className="text-xl sm:text-2xl xl:text-3xl font-bold text-white mb-2 sm:mb-3 tracking-tight whitespace-nowrap">{item.title}</h3>
+                                  
+                                  {/* Badges */}
+                                  <div className="flex flex-row flex-nowrap items-center gap-1.5 sm:gap-2 mb-3">
+                                    {/* Type Label */}
+                                    <div className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-[10px] sm:text-[12px] font-bold flex items-center gap-1.5 whitespace-nowrap">
+                                      <div className="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
+                                      {item.type === "education" ? <GraduationCap className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-orange-400" /> : <Briefcase className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-600" />}
+                                      <span className="capitalize">{item.type === "education" ? "Education" : "Work"}</span>
+                                    </div>
+                                    
+                                    {/* Status Label */}
+                                    <div className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] sm:text-[12px] font-bold flex items-center gap-1.5 whitespace-nowrap">
+                                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+                                      {item.status}
+                                    </div>
+                                    
+                                    {/* Active Badge */}
+                                    {item.isActive && (
+                                      <div className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] sm:text-[12px] font-bold flex items-center gap-1.5 whitespace-nowrap">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></div>
+                                        Active
+                                      </div>
+                                    )}
+                                  </div>
+                                  
+                                  {/* Date */}
+                                  <div className="flex items-center gap-2 text-sm font-semibold text-amber-100/70">
+                                    <Calendar className="w-4 h-4 text-blue-300" />
+                                    {item.date}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Description Box */}
+                              <div className="mt-6 bg-[#0d0f18] border border-[#1a1f35] rounded-xl p-5 text-slate-300 text-[15px] leading-relaxed relative z-10 shadow-inner">
+                                {item.description}
+                              </div>
+
+                              {/* Achievements */}
+                              <div className="mt-6 space-y-4 relative z-10">
+                                <h4 className="flex items-center gap-2 text-[16px] font-bold text-purple-400">
+                                  <Trophy className="w-5 h-5" />
+                                  Key Achievements
+                                </h4>
+                                <ul className="space-y-3.5">
+                                  {item.achievements.map((ach, i) => (
+                                    <li key={i} className="flex items-start gap-3.5 text-slate-200 text-[15px] leading-relaxed">
+                                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0 mt-2 shadow-[0_0_8px_rgba(59,130,246,0.8)]"></div>
+                                      <span className="flex-1">{ach}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+
+                              {/* Visit Website Button */}
+                              {item.website && (
+                                <div className="mt-8 flex justify-end relative z-10">
+                                  <a href={item.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2.5 px-5 py-2.5 bg-[#111424] hover:bg-[#1a2035] border border-[#1e2540] rounded-xl text-sm font-bold text-white transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                                    <Globe className="w-4 h-4 text-blue-400" />
+                                    Visit Website
+                                    <ExternalLink className="w-3.5 h-3.5 text-slate-400 ml-1" />
+                                  </a>
+                                </div>
+                              )}
+
+                            </div>
+                          </motion.div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </motion.section>
