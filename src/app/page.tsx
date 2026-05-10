@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
-import { motion, useScroll, useSpring, useTransform, useMotionValue, AnimatePresence, useMotionValueEvent } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform, AnimatePresence, useMotionValueEvent } from "framer-motion";
 import { Mail, FileText, Code2, Smartphone, Terminal, Database, Globe, Layers, AppWindow, Cpu, Server, Cloud, PenTool, GitBranch, Box, Briefcase, GraduationCap, Flame, MapPin, Calendar, Trophy, ExternalLink } from "lucide-react";
 import Image from "next/image";
+import HeroSection from "@/components/HeroSection";
 
 function ClimaxEffect() {
   const embers = useMemo(() => {
@@ -119,96 +120,6 @@ function ClimaxEffect() {
   );
 }
 
-function StarCanvas() {
-  useEffect(() => {
-    const canvas = document.getElementById("star-canvas") as HTMLCanvasElement;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-
-    const stars: { basex: number, basey: number, radius: number, vx: number, vy: number }[] = [];
-    for (let i = 0; i < 200; i++) {
-      stars.push({
-        basex: Math.random() * width,
-        basey: Math.random() * height,
-        radius: Math.random() * 1.5,
-        vx: (Math.random() - 0.5) * 0.15,
-        vy: (Math.random() - 0.5) * 0.15
-      });
-    }
-
-    let mouseX = width / 2;
-    let mouseY = height / 2;
-    let targetX = width / 2;
-    let targetY = height / 2;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      targetX = e.clientX;
-      targetY = e.clientY;
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-
-    let animationFrameId: number;
-
-    const animate = () => {
-      ctx.clearRect(0, 0, width, height);
-
-      mouseX += (targetX - mouseX) * 0.05;
-      mouseY += (targetY - mouseY) * 0.05;
-
-      const dx = (mouseX - width / 2) * 0.02;
-      const dy = (mouseY - height / 2) * 0.02;
-
-      stars.forEach(star => {
-        star.basex += star.vx;
-        star.basey += star.vy;
-
-        if (star.basex < 0) star.basex += width;
-        if (star.basex > width) star.basex -= width;
-        if (star.basey < 0) star.basey += height;
-        if (star.basey > height) star.basey -= height;
-
-        let nx = star.basex - dx * star.radius * 2;
-        let ny = star.basey - dy * star.radius * 2;
-
-        if (nx < 0) nx += width;
-        if (nx > width) nx -= width;
-        if (ny < 0) ny += height;
-        if (ny > height) ny -= height;
-
-        ctx.beginPath();
-        ctx.arc(nx, ny, star.radius, 0, Math.PI * 2);
-        const alpha = 0.3 + (Math.sin(Date.now() * 0.001 * star.radius) + 1) * 0.35;
-        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-        ctx.fill();
-      });
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-    animate();
-
-    const handleResize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-    };
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
-  return <canvas id="star-canvas" className="fixed inset-0 z-0 pointer-events-none opacity-80 mix-blend-screen" />;
-}
 
 const journeyData = [
   {
@@ -296,35 +207,12 @@ export default function Portfolio() {
     }
   }, [showFireworks]);
 
-  const { scrollYProgress, scrollY } = useScroll();
+  const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001
   });
-
-  const blurValue = useTransform(scrollY, [0, 800], [0, 20]);
-  const opacityValue = useTransform(scrollY, [0, 800], [1, 0.3]);
-
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const springConfig = { damping: 25, stiffness: 150 };
-  const textX = useSpring(mouseX, springConfig);
-  const textY = useSpring(mouseY, springConfig);
-
-  const rotateX = useTransform(textY, [-30, 30], [20, -20]);
-  const rotateY = useTransform(textX, [-30, 30], [-20, 20]);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 60;
-      const y = (e.clientY / window.innerHeight - 0.5) * 60;
-      mouseX.set(x);
-      mouseY.set(y);
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY]);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -364,11 +252,10 @@ export default function Portfolio() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-slate-200 font-sans selection:bg-cyan-500/30 relative">
-      <StarCanvas />
+    <div className="min-h-screen bg-[#050508] text-slate-200 font-sans selection:bg-indigo-500/30 relative">
       {/* Top Scroll Progress Bar */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-cyan-400 origin-left z-[60]"
+        className="fixed top-0 left-0 right-0 h-1 bg-indigo-500 origin-left z-[60]"
         style={{ scaleX }}
       />
 
@@ -378,9 +265,9 @@ export default function Portfolio() {
           {/* Left: Logo */}
           <div className="pointer-events-auto flex items-center">
             <a href="#hero" className="flex items-center gap-3 group">
-              <span className="font-serif italic font-bold text-3xl text-white group-hover:text-cyan-400 transition-colors">YRM</span>
+              <span className="font-serif italic font-bold text-3xl text-white group-hover:text-indigo-400 transition-colors">YRM</span>
               <div className="flex flex-col justify-center">
-                <span className="text-cyan-400 font-medium tracking-tight text-lg leading-tight">Yos'z</span>
+                <span className="text-indigo-400 font-medium tracking-tight text-lg leading-tight">Yos&apos;z</span>
                 <span className="text-slate-400 text-[11px] font-light tracking-wide uppercase">Software Engineer</span>
               </div>
             </a>
@@ -397,13 +284,13 @@ export default function Portfolio() {
                 <a
                   key={item.id}
                   href={`#${item.id}`}
-                  className={`relative px-5 py-2 text-sm font-medium transition-colors ${activeSection === item.id ? 'text-cyan-400' : 'text-slate-400 hover:text-slate-200'}`}
+                  className={`relative px-5 py-2 text-sm font-medium transition-colors ${activeSection === item.id ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200'}`}
                 >
                   {item.label}
                   {activeSection === item.id && (
                     <motion.div
                       layoutId="nav-indicator"
-                      className="absolute bottom-1 left-5 right-5 h-[2px] bg-cyan-400"
+                      className="absolute bottom-1 left-5 right-5 h-[2px] bg-indigo-400"
                       initial={false}
                       transition={{ type: "spring", stiffness: 500, damping: 30 }}
                     />
@@ -431,64 +318,10 @@ export default function Portfolio() {
         </div>
       </nav>
 
-      {/* Fixed Hero Background */}
-      <motion.div
-        className="fixed inset-0 z-0 flex flex-col justify-center items-center pointer-events-none"
-        style={{
-          filter: useTransform(blurValue, v => `blur(${v}px)`),
-          opacity: opacityValue,
-          perspective: 1200
-        }}
-      >
-        <motion.div
-          className="w-full flex flex-col items-center justify-center relative"
-          style={{
-            x: textX,
-            y: textY,
-            rotateX,
-            rotateY,
-            transformStyle: "preserve-3d"
-          }}
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
-        >
-          <motion.div variants={fadeInUp} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-600/10 rounded-full blur-[150px] -z-10 pointer-events-none"></motion.div>
+      {/* Hero Section */}
+      <HeroSection />
 
-          <motion.div
-            variants={fadeInUp}
-            className="relative w-full max-w-7xl mx-auto h-[25vh] sm:h-[35vh] md:h-[45vh] lg:h-[55vh] flex items-center justify-center overflow-hidden"
-            style={{
-              transform: "translateZ(80px)",
-              mixBlendMode: "screen"
-            }}
-          >
-            <div className="absolute inset-0 bg-black">
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-full object-cover opacity-90 brightness-75"
-              >
-                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
-              </video>
-            </div>
-
-            <div className="absolute inset-0 bg-black mix-blend-multiply flex items-center justify-center pointer-events-none">
-              <h1
-                className="text-white text-[25vw] sm:text-[22vw] md:text-[20vw] font-black leading-none select-none tracking-[0.1em] ml-[0.1em]"
-                style={{ fontFamily: "'Impact', 'Arial Black', sans-serif" }}
-              >
-                YOSUA
-              </h1>
-            </div>
-          </motion.div>
-        </motion.div>
-      </motion.div>
-
-      <main className="relative z-10 pt-[100vh] pb-24 px-6 max-w-6xl mx-auto space-y-40">
-        <div id="hero" className="absolute top-0 left-0 w-full h-[50vh] pointer-events-none"></div>
+      <main className="relative z-10 pb-24 px-6 max-w-6xl mx-auto space-y-40">
 
         {/* Projects Section */}
         <motion.section
