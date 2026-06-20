@@ -121,7 +121,7 @@ export default function HeroSection() {
   const techStack = ["Next.js", "Angular", "TypeScript", "Java", "Springboot"];
 
   const stats = [
-    { value: "12+", label: "Projects" },
+    { value: "5+", label: "Projects" },
     { value: "3yr", label: "Exp." },
     { value: "100%", label: "Passion" },
   ];

@@ -5,6 +5,7 @@ import { motion, useScroll, useSpring, useTransform, AnimatePresence, useMotionV
 import { Mail, FileText, Code2, Smartphone, Terminal, Database, Globe, Layers, AppWindow, Cpu, Server, Cloud, PenTool, GitBranch, Box, Briefcase, GraduationCap, Flame, MapPin, Calendar, Trophy, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import HeroSection from "@/components/HeroSection";
+import MusicPlayer from "@/components/MusicPlayer";
 
 function SectionHeader({
   topText,
@@ -20,7 +21,7 @@ function SectionHeader({
   watermark?: string;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-2 mb-20 relative py-12 overflow-hidden">
+    <div className="flex flex-col items-center justify-center text-center space-y-2 mb-6 relative pt-12 pb-6 overflow-hidden">
       {/* Watermark in background */}
       <div className="absolute text-[16vw] md:text-[18vw] font-black text-white/[0.018] select-none pointer-events-none uppercase tracking-[0.1em] z-0 top-1/2 -translate-y-1/2 font-sans filter blur-[6px] w-full text-center">
         {watermark}
@@ -269,6 +270,37 @@ export default function Portfolio() {
   
   const hasReachedBottom = useRef(false);
   const [showFireworks, setShowFireworks] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > window.innerHeight * 0.3) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const anchor = target.closest("a");
+      if (anchor && anchor.hash && anchor.hash.startsWith("#")) {
+        const targetId = anchor.hash.substring(1);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          e.preventDefault();
+          targetElement.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    };
+
+    document.addEventListener("click", handleAnchorClick);
+    return () => document.removeEventListener("click", handleAnchorClick);
+  }, []);
 
   useMotionValueEvent(timelineScrollY, "change", (latest) => {
     if (latest >= 0.999) {
@@ -356,7 +388,7 @@ export default function Portfolio() {
 
           {/* Center: Floating Navigation */}
           <div className="absolute left-1/2 -translate-x-1/2 pointer-events-auto hidden md:block">
-            <div className="flex items-center bg-[#111111]/80 backdrop-blur-xl border border-white/5 rounded-full px-2 py-1.5 shadow-2xl">
+            <div className="flex items-center bg-white/[0.08] backdrop-blur-md backdrop-saturate-[140%] border border-white/10 rounded-full px-2 py-1.5 shadow-2xl">
               {[
                 { id: 'projects', label: 'Projects' },
                 { id: 'profile', label: 'Profile' },
@@ -945,6 +977,40 @@ export default function Portfolio() {
               </div>
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+      <MusicPlayer />
+
+      {/* Scroll Top Button (Fixed Top-Right) */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="fixed top-24 right-8 z-[60] flex flex-col items-center gap-1 group text-slate-400 hover:text-white transition-colors cursor-pointer select-none"
+          >
+            {/* Custom Swipe Up / Hand Pointer SVG */}
+            <svg
+              className="w-5 h-5 group-hover:-translate-y-1 transition-transform duration-300"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              {/* Arrow pointing up */}
+              <path d="m14 7-3-3-3 3" />
+              <path d="M11 4v8" />
+              {/* Hand contour */}
+              <path d="M15 15v-3a2 2 0 0 0-4 0v4h-1v-2a1.5 1.5 0 0 0-3 0v5a5 5 0 0 0 10 0v-4Z" />
+            </svg>
+            <span className="text-[9px] font-bold uppercase tracking-[0.15em] font-sans">
+              Scroll Top
+            </span>
+          </motion.button>
         )}
       </AnimatePresence>
     </div>
