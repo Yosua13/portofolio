@@ -21,7 +21,7 @@ function SectionHeader({
   watermark?: string;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-2 mb-20 relative py-12 overflow-hidden">
+    <div className="flex flex-col items-center justify-center text-center space-y-2 mb-6 relative pt-12 pb-6 overflow-hidden">
       {/* Watermark in background */}
       <div className="absolute text-[16vw] md:text-[18vw] font-black text-white/[0.018] select-none pointer-events-none uppercase tracking-[0.1em] z-0 top-1/2 -translate-y-1/2 font-sans filter blur-[6px] w-full text-center">
         {watermark}
@@ -388,7 +388,7 @@ export default function Portfolio() {
 
           {/* Center: Floating Navigation */}
           <div className="absolute left-1/2 -translate-x-1/2 pointer-events-auto hidden md:block">
-            <div className="flex items-center bg-[#111111]/80 backdrop-blur-xl border border-white/5 rounded-full px-2 py-1.5 shadow-2xl">
+            <div className="flex items-center bg-white/[0.08] backdrop-blur-md backdrop-saturate-[140%] border border-white/10 rounded-full px-2 py-1.5 shadow-2xl">
               {[
                 { id: 'projects', label: 'Projects' },
                 { id: 'profile', label: 'Profile' },
