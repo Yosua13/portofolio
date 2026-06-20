@@ -6,6 +6,45 @@ import { Mail, FileText, Code2, Smartphone, Terminal, Database, Globe, Layers, A
 import Image from "next/image";
 import HeroSection from "@/components/HeroSection";
 
+function SectionHeader({
+  topText,
+  mainText,
+  subText,
+  bottomText,
+  watermark = "YOSUA",
+}: {
+  topText: string;
+  mainText: string;
+  subText: string;
+  bottomText: string;
+  watermark?: string;
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center text-center space-y-2 mb-20 relative py-12 overflow-hidden">
+      {/* Watermark in background */}
+      <div className="absolute text-[16vw] md:text-[18vw] font-black text-white/[0.018] select-none pointer-events-none uppercase tracking-[0.1em] z-0 top-1/2 -translate-y-1/2 font-sans filter blur-[6px] w-full text-center">
+        {watermark}
+      </div>
+      
+      <span className="text-xs sm:text-sm font-bold text-slate-500 uppercase tracking-[0.25em] z-10 font-sans">
+        {topText}
+      </span>
+      
+      <h2 className="text-6xl sm:text-8xl md:text-9xl lg:text-[9.5rem] font-extrabold text-white uppercase tracking-tight leading-none z-10 font-sans">
+        {mainText}
+      </h2>
+      
+      <span className="text-sm sm:text-base font-bold text-indigo-400 uppercase tracking-[0.3em] z-10 font-sans pt-3">
+        {subText}
+      </span>
+      
+      <span className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-[0.2em] z-10 font-sans">
+        {bottomText}
+      </span>
+    </div>
+  );
+}
+
 function ClimaxEffect() {
   const embers = useMemo(() => {
     return Array.from({ length: 80 }).map((_, i) => {
@@ -175,9 +214,51 @@ const journeyData = [
   }
 ];
 
+const projectsData = [
+  {
+    id: "lapor-kos",
+    title: "Lapor Kos",
+    location: "2026 | BANDUNG, INDONESIA",
+    role: "FULLSTACK DEV",
+    headline: "AN INTEGRATED BOARDING HOUSE MANAGEMENT AND COMPLAINT SYSTEM",
+    description: "A comprehensive web application for boarding house management, facilitating room inventory, tenant contracts, billing/payments, and tenant complaint ticketing.",
+    fullDescription: "Lapor Kos is an all-in-one boarding house management system designed to streamline communication and operations between landlords and tenants. The platform handles room availability tracking, digital rental agreements/contracts, automated billing, payment records, and a structured ticketing pipeline for complaints and maintenance reports.",
+    image: "/portofolio.png",
+    tags: ["Next.js", "Golang", "Supabase"],
+    techStack: ["Next.js", "Tailwind CSS", "Golang", "Gin", "Supabase", "Fonnte (WA Gateway)", "Vercel", "Railway"],
+    link: "https://lapor-kos.vercel.app/"
+  },
+  {
+    id: "health-tracker-app",
+    title: "Health Tracker App",
+    location: "2026 | BANDUNG, INDONESIA",
+    role: "MOBILE DEV",
+    headline: "A HEALTH AND FITNESS TRACKING COMPANION WITH BEAUTIFUL UI",
+    description: "A beautiful mobile application for health and fitness tracking, featuring glassmorphism design and vibrant data visualizations.",
+    fullDescription: "Health Tracker is a cross-platform mobile application that helps users track their daily health metrics. Features include steps tracking, sleep monitoring, heart rate analysis, calorie logging, and personalized habit builders. Designed with high-performance glassmorphism UI/UX elements.",
+    image: "/project2.png",
+    tags: ["React Native", "Expo"],
+    techStack: ["React Native", "Expo", "Framer Motion", "Reanimated", "TypeScript", "Tailwind CSS"],
+    link: "https://example.com"
+  }
+];
+
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+
+  // Disable body scroll when modal is active
+  useEffect(() => {
+    if (selectedProject) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedProject]);
 
   const timelineContainerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: timelineScrollY } = useScroll({
@@ -332,51 +413,100 @@ export default function Portfolio() {
           id="projects"
           className="space-y-10 scroll-mt-32"
         >
-          <motion.div variants={fadeInUp} className="flex items-center gap-6">
-            <h2 className="text-4xl font-bold text-white tracking-tight">Selected Works</h2>
-            <div className="h-px bg-white/10 flex-1"></div>
+          <motion.div variants={fadeInUp}>
+            <SectionHeader
+              topText="Featured Works"
+              mainText="Projects"
+              subText="Overview"
+              bottomText="List of Featured Portfolio"
+              watermark="YOSUA"
+            />
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <motion.div variants={fadeInUp} className="group relative rounded-3xl overflow-hidden bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors">
-              <div className="aspect-[4/3] relative overflow-hidden bg-slate-900">
-                <Image
-                  src="/project1.png"
-                  alt="E-commerce Dashboard"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent opacity-80"></div>
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                <h3 className="text-3xl font-bold text-white mb-3">E-Commerce Dashboard</h3>
-                <p className="text-slate-400 mb-6 font-light line-clamp-2">A sleek, modern web dashboard for managing products and sales data with beautiful charts and a dark mode interface.</p>
-                <div className="flex flex-wrap gap-2 text-sm">
-                  <span className="px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-white/90">Next.js</span>
-                  <span className="px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-white/90">Tailwind</span>
+          <div className="flex flex-col gap-16">
+            {projectsData.map((project) => (
+              <motion.div
+                key={project.id}
+                variants={fadeInUp}
+                className="group relative rounded-none overflow-hidden border border-white/10 bg-[#0d0f18]/45 min-h-[500px] flex flex-col md:flex-row items-stretch transition-colors hover:bg-[#0d0f18]/70"
+              >
+                {/* Background Image with Dark Overlay */}
+                <div className="absolute inset-0 z-0">
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover opacity-15 filter blur-[4px] group-hover:scale-105 transition-transform duration-700 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent"></div>
                 </div>
-              </div>
-            </motion.div>
 
-            <motion.div variants={fadeInUp} className="group relative rounded-3xl overflow-hidden bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors">
-              <div className="aspect-[4/3] relative overflow-hidden bg-slate-900">
-                <Image
-                  src="/project2.png"
-                  alt="Health Tracker Mobile App"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent opacity-80"></div>
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                <h3 className="text-3xl font-bold text-white mb-3">Health Tracker App</h3>
-                <p className="text-slate-400 mb-6 font-light line-clamp-2">A beautiful mobile application for health and fitness tracking, featuring glassmorphism design and vibrant data visualizations.</p>
-                <div className="flex flex-wrap gap-2 text-sm">
-                  <span className="px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-white/90">React Native</span>
-                  <span className="px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-white/90">Expo</span>
+                {/* Left Side: Info */}
+                <div className="relative z-10 w-full md:w-[50%] p-8 md:p-12 flex flex-col justify-between space-y-8">
+                  <div className="space-y-4">
+                    {/* Project Header */}
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-2xl font-black text-white tracking-widest uppercase font-sans">
+                          {project.title}
+                        </h3>
+                        <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
+                      </div>
+                      <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
+                        {project.location}
+                      </span>
+                    </div>
+
+                    {/* Role Tag */}
+                    <span className="inline-block text-[10px] font-bold text-indigo-400 border border-indigo-500/30 px-2.5 py-0.5 uppercase tracking-[0.2em] bg-indigo-500/5">
+                      {project.role}
+                    </span>
+
+                    {/* Headline */}
+                    <h4 className="text-xl md:text-2xl font-extrabold text-white tracking-tight uppercase leading-snug font-sans">
+                      {project.headline}
+                    </h4>
+
+                    {/* Description */}
+                    <p className="text-sm text-slate-400 font-light leading-relaxed">
+                      {project.description}
+                    </p>
+                  </div>
+
+                  {/* Tech stack & CTA */}
+                  <div className="space-y-6 pt-4">
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag) => (
+                        <span key={tag} className="px-3 py-1 bg-white/5 border border-white/5 text-[10px] font-bold uppercase tracking-wider text-slate-300">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    <div>
+                      <button
+                        onClick={() => setSelectedProject(project)}
+                        className="inline-flex items-center justify-center px-6 py-3 border border-white/20 hover:border-white text-white hover:bg-white hover:text-black font-bold uppercase tracking-widest text-[10px] transition-all duration-300 rounded-none cursor-pointer"
+                      >
+                        View Details
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+
+                {/* Right Side: Mockup Screenshot */}
+                <div className="relative z-10 w-full md:w-[50%] p-8 md:p-12 flex items-center justify-center bg-black/30 md:bg-transparent overflow-hidden">
+                  <div className="relative w-full aspect-[16/10] border border-white/10 shadow-2xl shadow-black/80 transform md:rotate-[-2deg] group-hover:rotate-0 md:translate-x-6 group-hover:translate-x-2 transition-all duration-500 ease-out overflow-hidden bg-slate-950">
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-contain opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </motion.section>
 
@@ -391,10 +521,13 @@ export default function Portfolio() {
         >
           {/* About Me */}
           <div className="space-y-10">
-            <div className="flex items-center gap-6">
-              <h2 className="text-4xl font-bold text-white tracking-tight">Profile & About</h2>
-              <div className="h-px bg-white/10 flex-1"></div>
-            </div>
+            <SectionHeader
+              topText="Get To Know Me"
+              mainText="Profile"
+              subText="About Me"
+              bottomText="Summary of my background"
+              watermark="YOSUA"
+            />
 
             <div className="flex flex-col md:flex-row gap-12 items-center md:items-start">
               {/* Profile Photo */}
@@ -703,7 +836,13 @@ export default function Portfolio() {
           className="py-20 text-center space-y-8 bg-gradient-to-b from-cyan-500/10 to-transparent rounded-3xl border border-cyan-500/20 relative overflow-hidden scroll-mt-32"
         >
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight relative z-10">Let's Work Together</h2>
+          <SectionHeader
+            topText="Get In Touch"
+            mainText="Contact"
+            subText="Say Hello"
+            bottomText="Let's build something together"
+            watermark="YOSUA"
+          />
           <p className="text-xl text-slate-400 max-w-2xl mx-auto font-light relative z-10">
             I'm currently available for freelance work or full-time opportunities. If you have a project that needs some creative touch, I'd love to hear about it.
           </p>
@@ -717,6 +856,97 @@ export default function Portfolio() {
       <footer className="border-t border-white/5 py-12 text-center text-slate-600 text-sm font-light">
         <p>© {new Date().getFullYear()} Yosua Reynaldi Manurun. Built with Next.js, Tailwind CSS & Framer Motion.</p>
       </footer>
+
+      {/* Project Modal */}
+      <AnimatePresence>
+        {selectedProject && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-10">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedProject(null)}
+              className="absolute inset-0 bg-black/85 backdrop-blur-md"
+            />
+            
+            {/* Modal Body */}
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              transition={{ type: "spring", duration: 0.4 }}
+              className="bg-[#070709] border border-white/10 rounded-none w-full max-w-2xl relative z-10 overflow-hidden flex flex-col max-h-[90vh]"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors z-20 bg-black/40 p-2 border border-white/5 rounded-none cursor-pointer"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              {/* Scrollable Container */}
+              <div className="overflow-y-auto w-full">
+                {/* Modal Image */}
+                <div className="aspect-[16/9] relative w-full bg-slate-900 shrink-0">
+                  <Image
+                    src={selectedProject.image}
+                    alt={selectedProject.title}
+                    fill
+                    className="object-contain"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#070709] via-[#070709]/30 to-transparent"></div>
+                </div>
+
+                {/* Modal Content */}
+                <div className="p-6 md:p-8 space-y-6">
+                  <div>
+                    <h3 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight font-sans">
+                      {selectedProject.title}
+                    </h3>
+                    <p className="text-indigo-400 text-xs md:text-sm font-semibold tracking-wider uppercase mt-1">
+                      {selectedProject.tags.join(" • ")}
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">About the Project</h4>
+                    <p className="text-slate-300 font-light leading-relaxed text-sm md:text-base">
+                      {selectedProject.fullDescription}
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Technologies Used</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProject.techStack.map((tech: string) => (
+                        <span key={tech} className="px-3 py-1 bg-white/5 border border-white/5 text-slate-300 text-xs font-semibold uppercase tracking-wider rounded-none">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-4 flex justify-end">
+                    <a
+                      href={selectedProject.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-[#0a0a0a] font-bold hover:bg-slate-200 transition-colors uppercase tracking-wider text-xs rounded-none"
+                    >
+                      Visit Live Website
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

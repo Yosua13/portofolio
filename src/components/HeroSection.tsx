@@ -59,8 +59,12 @@ function StarCanvas() {
       ctx.clearRect(0, 0, width, height);
 
       /* Smooth‑lerp mouse position */
-      currentMX += (targetMX - currentMX) * LERP;
-      currentMY += (targetMY - currentMY) * LERP;
+      const isScrolledDown = window.scrollY > window.innerHeight * 0.5;
+      const actualTargetX = isScrolledDown ? 0 : targetMX;
+      const actualTargetY = isScrolledDown ? 0 : targetMY;
+
+      currentMX += (actualTargetX - currentMX) * LERP;
+      currentMY += (actualTargetY - currentMY) * LERP;
 
       for (const s of stars) {
         const shift = s.depth * MAX_SHIFT;
@@ -147,8 +151,12 @@ export default function HeroSection() {
 
     const tick = () => {
       const LERP = 0.06;
-      nameCurrent.current.x += (nameTarget.current.x - nameCurrent.current.x) * LERP;
-      nameCurrent.current.y += (nameTarget.current.y - nameCurrent.current.y) * LERP;
+      const isScrolledDown = window.scrollY > window.innerHeight * 0.5;
+      const tx = isScrolledDown ? 0 : nameTarget.current.x;
+      const ty = isScrolledDown ? 0 : nameTarget.current.y;
+
+      nameCurrent.current.x += (tx - nameCurrent.current.x) * LERP;
+      nameCurrent.current.y += (ty - nameCurrent.current.y) * LERP;
 
       if (nameRef.current) {
         nameRef.current.style.transform =
@@ -171,8 +179,8 @@ export default function HeroSection() {
     const onScroll = () => {
       const el = heroRef.current;
       if (!el) return;
-      const triggerStart = window.innerHeight * 0.6;       /* 60vh */
-      const triggerEnd   = window.innerHeight * 1.8;       /* full effect range */
+      const triggerStart = window.innerHeight * 0.1;       /* 10vh */
+      const triggerEnd   = window.innerHeight * 0.7;       /* full effect range */
       const scrollY = window.scrollY;
 
       if (scrollY <= triggerStart) {
@@ -183,9 +191,9 @@ export default function HeroSection() {
       }
 
       const progress = Math.min((scrollY - triggerStart) / (triggerEnd - triggerStart), 1);
-      const blur   = progress * 12;                        /* max 12px */
+      const blur   = progress * 24;                        /* max 24px */
       const scale  = 1 - progress * 0.04;                 /* min 0.96 */
-      const opacity = 1 - progress * 0.7;                 /* min 0.3 */
+      const opacity = 1 - progress * 1.0;                 /* min 0.0 */
 
       el.style.filter = `blur(${blur}px)`;
       el.style.transform = `scale(${scale})`;
@@ -543,7 +551,7 @@ export default function HeroSection() {
 
         /* ── Scroll spacer ───────────────────────────── */
         .hero-scroll-spacer {
-          height: 200vh;
+          height: 100vh;
           position: relative;
           z-index: 0;
           pointer-events: none;
