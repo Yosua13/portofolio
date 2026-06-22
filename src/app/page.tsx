@@ -169,6 +169,29 @@ export default function Portfolio() {
     offset: ["start center", "end center"]
   });
   const timelineHeight = useTransform(timelineScrollY, [0, 1], ["0%", "100%"]);
+
+  const firstItemRef = useRef<HTMLDivElement>(null);
+  const lastItemRef = useRef<HTMLDivElement>(null);
+  const [firstItemHeight, setFirstItemHeight] = useState(0);
+  const [lastItemHeight, setLastItemHeight] = useState(0);
+
+  useEffect(() => {
+    const measure = () => {
+      if (firstItemRef.current) {
+        setFirstItemHeight(firstItemRef.current.offsetHeight);
+      }
+      if (lastItemRef.current) {
+        setLastItemHeight(lastItemRef.current.offsetHeight);
+      }
+    };
+    measure();
+    const timer = setTimeout(measure, 100);
+    window.addEventListener("resize", measure);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
   
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -603,7 +626,13 @@ export default function Portfolio() {
 
             <div className="relative w-full max-w-[1400px] mx-auto" ref={timelineContainerRef}>
               {/* Timeline Line */}
-              <div className="absolute left-[20px] md:left-[40px] top-0 bottom-0 w-1 bg-white/5 rounded-full overflow-hidden">
+              <div 
+                className="absolute left-[20px] md:left-[40px] w-1 bg-white/5 rounded-full overflow-hidden"
+                style={{ 
+                  top: firstItemHeight ? `${firstItemHeight / 2}px` : "0px",
+                  bottom: lastItemHeight ? `${lastItemHeight / 2}px` : "0px"
+                }}
+              >
                 <motion.div 
                   className="absolute top-0 left-0 w-full bg-gradient-to-b from-cyan-400 to-indigo-500 rounded-full"
                   style={{ height: timelineHeight }}
@@ -614,8 +643,14 @@ export default function Portfolio() {
 
               <div className="space-y-12 xl:space-y-16 relative pb-10">
                 {journeyData.map((item, index) => {
+                  const isFirst = index === 0;
+                  const isLast = index === journeyData.length - 1;
                   return (
-                    <div key={index} className="relative flex items-center w-full">
+                    <div 
+                      key={index} 
+                      ref={isFirst ? firstItemRef : isLast ? lastItemRef : null}
+                      className="relative flex items-center w-full"
+                    >
                       
                       {/* Node */}
                       <div className="absolute left-[13px] md:left-[33px] z-10 flex justify-center items-center">
