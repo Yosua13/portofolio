@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import { motion, useScroll, useSpring, useTransform, AnimatePresence, useMotionValueEvent } from "framer-motion";
-import { Mail, FileText, Code2, Smartphone, Terminal, Database, Globe, Layers, AppWindow, Cpu, Server, Cloud, PenTool, GitBranch, Box, Briefcase, GraduationCap, MapPin, Calendar, Trophy, ExternalLink, Gamepad2, HelpCircle, X, Sparkles } from "lucide-react";
+import { Mail, FileText, Code2, Smartphone, Terminal, Database, Globe, Layers, AppWindow, Cpu, Server, Cloud, PenTool, GitBranch, Box, Briefcase, GraduationCap, MapPin, Calendar, Trophy, ExternalLink, Gamepad2, HelpCircle, X, Sparkles, Phone } from "lucide-react";
 import Image from "next/image";
 import HeroSection from "@/components/HeroSection";
 import MusicPlayer from "@/components/MusicPlayer";
@@ -320,9 +320,6 @@ export default function Portfolio() {
 
           {/* Right: Socials */}
           <div className="pointer-events-auto hidden sm:flex items-center gap-6">
-            <a href="#" className="text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="Medium">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.46-.58 6.26-1.31 6.26-.73 0-1.31-2.8-1.31-6.26S21.96 5.74 22.69 5.74c.73 0 1.31 2.8 1.31 6.26" /></svg>
-            </a>
             <a href="#" className="text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="Instagram">
               <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
             </a>
@@ -629,8 +626,8 @@ export default function Portfolio() {
               <div 
                 className="absolute left-[20px] md:left-[40px] w-1 bg-white/5 rounded-full overflow-hidden"
                 style={{ 
-                  top: "45px",
-                  bottom: lastItemHeight ? `${lastItemHeight - 45}px` : "0px"
+                  top: firstItemHeight ? `${firstItemHeight / 2}px` : "0px",
+                  bottom: lastItemHeight ? `${lastItemHeight / 2}px` : "0px"
                 }}
               >
                 <motion.div 
@@ -649,11 +646,11 @@ export default function Portfolio() {
                     <div 
                       key={index} 
                       ref={isFirst ? firstItemRef : isLast ? lastItemRef : null}
-                      className="relative flex items-start w-full"
+                      className="relative flex items-center w-full"
                     >
                       
                       {/* Node */}
-                      <div className="absolute left-[13px] md:left-[33px] top-[36px] z-10 flex justify-center items-center">
+                      <div className="absolute left-[13px] md:left-[33px] z-10 flex justify-center items-center">
                         <motion.div
                           initial="inactive"
                           whileInView="active"
@@ -799,7 +796,26 @@ export default function Portfolio() {
           <p className="text-xl text-slate-400 max-w-2xl mx-auto font-light relative z-10">
             I'm currently available for freelance work or full-time opportunities. If you have a project that needs some creative touch, I'd love to hear about it.
           </p>
-          <a href="mailto:hello@example.com" className="inline-flex items-center gap-3 px-8 py-4 bg-white text-[#0a0a0a] font-semibold rounded-full hover:scale-105 hover:bg-slate-200 transition-all mt-6 shadow-xl shadow-white/10 relative z-10">
+
+          {/* Contact Info Cards */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10 mt-4">
+            <div className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-sm">
+              <Mail className="w-5 h-5 text-cyan-400" />
+              <div className="text-left">
+                <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold block">Email</span>
+                <a href="mailto:reyyosua29@gmail.com" className="text-sm text-white font-medium hover:text-cyan-400 transition-colors">reyyosua29@gmail.com</a>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-sm">
+              <Phone className="w-5 h-5 text-cyan-400" />
+              <div className="text-left">
+                <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold block">Phone</span>
+                <span className="text-sm text-white font-medium">082251396690</span>
+              </div>
+            </div>
+          </div>
+
+          <a href="mailto:reyyosua29@gmail.com" className="inline-flex items-center gap-3 px-8 py-4 bg-white text-[#0a0a0a] font-semibold rounded-full hover:scale-105 hover:bg-slate-200 transition-all mt-6 shadow-xl shadow-white/10 relative z-10">
             <Mail className="w-5 h-5" />
             Say Hello
           </a>
