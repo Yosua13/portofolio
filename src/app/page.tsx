@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import { motion, useScroll, useSpring, useTransform, AnimatePresence, useMotionValueEvent } from "framer-motion";
-import { Mail, FileText, Code2, Smartphone, Terminal, Database, Globe, Layers, AppWindow, Cpu, Server, Cloud, PenTool, GitBranch, Box, Briefcase, GraduationCap, Flame, MapPin, Calendar, Trophy, ExternalLink } from "lucide-react";
+import { Mail, FileText, Code2, Smartphone, Terminal, Database, Globe, Layers, AppWindow, Cpu, Server, Cloud, PenTool, GitBranch, Box, Briefcase, GraduationCap, Flame, MapPin, Calendar, Trophy, ExternalLink, Gamepad2, HelpCircle, X, Sparkles } from "lucide-react";
 import Image from "next/image";
 import HeroSection from "@/components/HeroSection";
 import MusicPlayer from "@/components/MusicPlayer";
+import WelcomeScreen from "@/components/WelcomeScreen";
 
 function SectionHeader({
   topText,
@@ -228,19 +229,6 @@ const projectsData = [
     tags: ["Next.js", "Golang", "Supabase"],
     techStack: ["Next.js", "Tailwind CSS", "Golang", "Gin", "Supabase", "Fonnte (WA Gateway)", "Vercel", "Railway"],
     link: "https://lapor-kos.vercel.app/"
-  },
-  {
-    id: "health-tracker-app",
-    title: "Health Tracker App",
-    location: "2026 | BANDUNG, INDONESIA",
-    role: "MOBILE DEV",
-    headline: "A HEALTH AND FITNESS TRACKING COMPANION WITH BEAUTIFUL UI",
-    description: "A beautiful mobile application for health and fitness tracking, featuring glassmorphism design and vibrant data visualizations.",
-    fullDescription: "Health Tracker is a cross-platform mobile application that helps users track their daily health metrics. Features include steps tracking, sleep monitoring, heart rate analysis, calorie logging, and personalized habit builders. Designed with high-performance glassmorphism UI/UX elements.",
-    image: "/project2.png",
-    tags: ["React Native", "Expo"],
-    techStack: ["React Native", "Expo", "Framer Motion", "Reanimated", "TypeScript", "Tailwind CSS"],
-    link: "https://example.com"
   }
 ];
 
@@ -248,10 +236,14 @@ export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [playMusicOnStart, setPlayMusicOnStart] = useState(false);
+  const [showControlsGuide, setShowControlsGuide] = useState(false);
+  const [showGreeting, setShowGreeting] = useState(false);
 
-  // Disable body scroll when modal is active
+  // Disable body scroll when modal or welcome screen is active
   useEffect(() => {
-    if (selectedProject) {
+    if (selectedProject || showWelcome) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -259,7 +251,29 @@ export default function Portfolio() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [selectedProject]);
+  }, [selectedProject, showWelcome]);
+
+  const handleWelcomeComplete = (sound: boolean, destination: string) => {
+    setPlayMusicOnStart(sound);
+    setShowWelcome(false);
+    
+    // Show greeting toast 1.5s after welcome screen starts fading out
+    setTimeout(() => {
+      setShowGreeting(true);
+      // Auto-hide after 6 seconds
+      setTimeout(() => {
+        setShowGreeting(false);
+      }, 6000);
+    }, 1500);
+
+    // Wait for the exit fade transition of welcome screen to complete, then scroll
+    setTimeout(() => {
+      const element = document.getElementById(destination);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 500);
+  };
 
   const timelineContainerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: timelineScrollY } = useScroll({
@@ -432,7 +446,7 @@ export default function Portfolio() {
       </nav>
 
       {/* Hero Section */}
-      <HeroSection />
+      <HeroSection showGreeting={showGreeting} onCloseGreeting={() => setShowGreeting(false)} />
 
       <main className="relative z-10 pb-24 px-6 max-w-6xl mx-auto space-y-40">
 
@@ -468,6 +482,7 @@ export default function Portfolio() {
                     src={project.image}
                     alt={project.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover opacity-15 filter blur-[4px] group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent"></div>
@@ -533,6 +548,7 @@ export default function Portfolio() {
                       src={project.image}
                       alt={project.title}
                       fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-contain opacity-90 group-hover:opacity-100 transition-opacity duration-300"
                     />
                   </div>
@@ -564,14 +580,16 @@ export default function Portfolio() {
             <div className="flex flex-col md:flex-row gap-12 items-center md:items-start">
               {/* Profile Photo */}
               <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="relative w-64 h-64 md:w-80 md:h-80 shrink-0 rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-cyan-500/20 bg-slate-800"
+                whileHover={{ scale: 1.05 }}
+                className="relative w-64 h-64 md:w-80 md:h-80 shrink-0 rounded-3xl overflow-hidden border border-white/15 shadow-2xl shadow-cyan-500/20 bg-slate-800 md:order-last group"
               >
                 <Image
-                  src="/profile.jpg"
+                  src="/yosua_profile.png"
                   alt="Yosua Reynaldi Manurun"
                   fill
-                  className="object-cover"
+                  priority
+                  sizes="(max-width: 768px) 100vw, 320px"
+                  className="object-cover object-[center_25%] brightness-110 contrast-[1.05] group-hover:scale-105 transition-all duration-500"
                 />
               </motion.div>
 
@@ -886,7 +904,7 @@ export default function Portfolio() {
       </main>
 
       <footer className="border-t border-white/5 py-12 text-center text-slate-600 text-sm font-light">
-        <p>© {new Date().getFullYear()} Yosua Reynaldi Manurun. Built with Next.js, Tailwind CSS & Framer Motion.</p>
+        <p>© {new Date().getFullYear()} Yosua Reynaldi Manurun.</p>
       </footer>
 
       {/* Project Modal */}
@@ -928,6 +946,7 @@ export default function Portfolio() {
                     src={selectedProject.image}
                     alt={selectedProject.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-contain"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#070709] via-[#070709]/30 to-transparent"></div>
@@ -979,7 +998,126 @@ export default function Portfolio() {
           </div>
         )}
       </AnimatePresence>
-      <MusicPlayer />
+      <MusicPlayer playOnStart={playMusicOnStart} onOpenGuide={() => setShowControlsGuide(true)} />
+
+      {/* Controls Guide Modal */}
+      <AnimatePresence>
+        {showControlsGuide && (
+          <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowControlsGuide(false)}
+              className="absolute inset-0 bg-black/85 backdrop-blur-md"
+            />
+            {/* Modal Body */}
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 15 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 15 }}
+              transition={{ type: "spring", duration: 0.4 }}
+              className="bg-[#0b0c16] border border-white/10 rounded-2xl p-6 md:p-8 max-w-md w-full relative z-10 text-center shadow-2xl flex flex-col items-center"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setShowControlsGuide(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors cursor-pointer bg-white/5 p-1.5 border border-white/5 rounded-lg"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              <Gamepad2 className="w-10 h-10 text-cyan-400 mb-3 animate-pulse" />
+              <h2 className="text-xl md:text-2xl font-extrabold text-white tracking-tight uppercase font-sans mb-6">
+                Controls Guide
+              </h2>
+
+              {/* Grid of Controls */}
+              <div className="w-full space-y-5 text-left mb-8">
+                {/* Control 1: WASD Flight */}
+                <div className="flex gap-4 items-start">
+                  <div className="flex flex-col items-center gap-1 font-mono shrink-0">
+                    <div className="w-7 h-7 flex items-center justify-center bg-[#151726] border border-white/15 rounded-md shadow-md text-[10px] font-bold text-white">
+                      W
+                    </div>
+                    <div className="flex gap-1">
+                      <div className="w-7 h-7 flex items-center justify-center bg-[#151726] border border-white/15 rounded-md shadow-md text-[10px] font-bold text-white">
+                        A
+                      </div>
+                      <div className="w-7 h-7 flex items-center justify-center bg-[#151726] border border-white/15 rounded-md shadow-md text-[10px] font-bold text-white">
+                        S
+                      </div>
+                      <div className="w-7 h-7 flex items-center justify-center bg-[#151726] border border-white/15 rounded-md shadow-md text-[10px] font-bold text-white">
+                        D
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-0.5 pt-1">
+                    <span className="block text-xs font-bold text-slate-300 uppercase font-sans tracking-wide">Kemudi Pesawat</span>
+                    <p className="text-[11px] text-slate-400 leading-normal font-light">
+                      Tekan &amp; Tahan tombol **WASD** untuk menerbangkan pesawat menjelajah ke berbagai arah secara dinamis di halaman utama.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Control 2: Space Shoot */}
+                <div className="flex gap-4 items-start">
+                  <div className="w-16 flex items-center justify-center shrink-0">
+                    <div className="w-full py-1.5 bg-[#151726] border border-white/15 rounded-md shadow-md text-[9px] font-bold text-cyan-400 uppercase tracking-wider font-mono text-center">
+                      Space
+                    </div>
+                  </div>
+                  <div className="space-y-0.5">
+                    <span className="block text-xs font-bold text-slate-300 uppercase font-sans tracking-wide">Menembak Laser</span>
+                    <p className="text-[11px] text-slate-400 leading-normal font-light">
+                      Tekan tombol **Spasi (Spacebar)** pada keyboard untuk menembak laser ke arah depan.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Control 3: Challenge */}
+                <div className="flex gap-4 items-start">
+                  <div className="w-10 flex items-center justify-center shrink-0">
+                    <div className="w-6 h-6 rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center">
+                      <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                    </div>
+                  </div>
+                  <div className="space-y-0.5">
+                    <span className="block text-xs font-bold text-slate-300 uppercase font-sans tracking-wide">Game Tantangan</span>
+                    <p className="text-[11px] text-slate-400 leading-normal font-light">
+                      Hancurkan Asteroid (+50 poin) dan Drone musuh (+100 poin). Jaga tameng pelindung Anda dari tabrakan!
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowControlsGuide(false)}
+                className="w-full py-3 bg-white text-[#0a0a0a] hover:bg-slate-200 font-bold uppercase tracking-wider text-xs rounded-xl transition-colors cursor-pointer"
+              >
+                Close Guide
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+
+
+      {/* Welcome Onboarding Screen */}
+      <AnimatePresence>
+        {showWelcome && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="fixed inset-0 z-[200]"
+          >
+            <WelcomeScreen onComplete={handleWelcomeComplete} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Scroll Top Button (Fixed Top-Right) */}
       <AnimatePresence>

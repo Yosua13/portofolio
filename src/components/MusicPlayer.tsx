@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Play, Pause, SkipForward, SkipBack, Volume2, VolumeX, Maximize2, Minimize2, Music } from "lucide-react";
+import { Play, Pause, SkipForward, SkipBack, Volume2, VolumeX, Maximize2, Minimize2, Music, Gamepad2 } from "lucide-react";
 
 interface Track {
   title: string;
@@ -49,7 +49,13 @@ const TRACKS: Track[] = [
   }
 ];
 
-export default function MusicPlayer() {
+export default function MusicPlayer({ 
+  playOnStart = false,
+  onOpenGuide
+}: { 
+  playOnStart?: boolean;
+  onOpenGuide?: () => void;
+}) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -59,6 +65,16 @@ export default function MusicPlayer() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Play immediately when playOnStart prop becomes true
+  useEffect(() => {
+    if (playOnStart) {
+      setIsPlaying(true);
+      if (audioRef.current) {
+        audioRef.current.play().catch((err) => console.log("Auto-play error:", err));
+      }
+    }
+  }, [playOnStart]);
   const currentTrack = TRACKS[currentTrackIndex];
 
   // Initialize Audio
@@ -152,10 +168,19 @@ export default function MusicPlayer() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 font-sans">
+    <div className="fixed bottom-6 right-6 z-50 font-sans flex items-end gap-3 select-none">
+      {/* Floating Controls Guide Button (Gamepad Icon) */}
+      <button
+        onClick={onOpenGuide}
+        className="flex items-center justify-center w-12 h-12 rounded-full border border-slate-200 bg-white hover:scale-105 active:scale-95 shadow-xl transition-all cursor-pointer text-slate-800 hover:text-indigo-600 group shrink-0"
+        title="Open Controls Guide"
+      >
+        <Gamepad2 className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+      </button>
+
       {isExpanded ? (
         /* Expanded Player Card (White Theme, Smaller size, rounded corners) */
-        <div className="w-64 border border-slate-200 bg-white p-4 shadow-2xl flex flex-col space-y-3 rounded-xl select-none">
+        <div className="w-64 border border-slate-200 bg-white p-4 shadow-2xl flex flex-col space-y-3 rounded-xl select-none shrink-0">
           {/* Top Bar with Album Art and Collapse Button */}
           <div className="relative aspect-[16/10] w-full bg-slate-100 overflow-hidden rounded-lg border border-slate-100">
             <img
@@ -255,42 +280,43 @@ export default function MusicPlayer() {
           </div>
         </div>
       ) : (
-        /* Collapsed Pill-style Trigger Button (Width w-64 matching Expanded Card) */
-        <button
-          onClick={() => setIsExpanded(true)}
-          className="relative flex items-center gap-3 px-4 py-2.5 bg-white border border-slate-200 shadow-xl cursor-pointer hover:scale-102 active:scale-98 transition-all rounded-xl select-none w-64"
-        >
-          {/* Cover Image */}
-          <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 relative">
+        /* Collapsed Pill-style Trigger Button (Minimized to a tiny premium icon/pill) */
+        <>
+          <style>{`
+            @keyframes miniEqualizer {
+              0%, 100% { height: 4px; }
+              50% { height: 14px; }
+            }
+            .mini-eq-bar-1 { animation: miniEqualizer 0.7s ease-in-out infinite; }
+            .mini-eq-bar-2 { animation: miniEqualizer 0.9s ease-in-out infinite 0.2s; }
+            .mini-eq-bar-3 { animation: miniEqualizer 0.6s ease-in-out infinite 0.4s; }
+          `}</style>
+          <button
+            onClick={() => setIsExpanded(true)}
+            className="relative flex items-center justify-center w-12 h-12 bg-white border border-slate-200 shadow-xl cursor-pointer hover:scale-105 active:scale-95 transition-all rounded-full select-none"
+            title="Open Music Player"
+          >
+            {/* Cover Image */}
             <img
               src={currentTrack.cover}
               alt={currentTrack.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-full"
             />
-            {isPlaying && (
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <div className="flex items-end gap-[2px] h-3">
-                  <span className="w-[2px] bg-white animate-[pulse_1s_infinite] h-2" />
-                  <span className="w-[2px] bg-white animate-[pulse_1s_infinite_150ms] h-3" />
-                  <span className="w-[2px] bg-white animate-[pulse_1s_infinite_300ms] h-1.5" />
+            {/* Semi-transparent dark overlay */}
+            <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center">
+              {isPlaying ? (
+                /* Mini animated equalizer bars */
+                <div className="flex items-end gap-[1.5px] h-3.5">
+                  <span className="w-[1.5px] bg-white h-2.5 mini-eq-bar-1" />
+                  <span className="w-[1.5px] bg-white h-3.5 mini-eq-bar-2" />
+                  <span className="w-[1.5px] bg-white h-1.5 mini-eq-bar-3" />
                 </div>
-              </div>
-            )}
-          </div>
-
-          {/* Details */}
-          <div className="text-left flex flex-col justify-center pr-2 flex-1 min-w-0">
-            <span className="font-sans text-xs font-semibold text-slate-800 tracking-tight leading-none block truncate">
-              {currentTrack.artist}
-            </span>
-            <span className="font-sans text-[11px] text-indigo-600 font-medium leading-normal block pt-0.5 truncate">
-              {currentTrack.title}
-            </span>
-          </div>
-
-          {/* Down Triangle Indicator */}
-          <div className="absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.1)]" />
-        </button>
+              ) : (
+                <Music className="w-4 h-4 text-white" />
+              )}
+            </div>
+          </button>
+        </>
       )}
     </div>
   );
