@@ -629,8 +629,8 @@ export default function Portfolio() {
               <div 
                 className="absolute left-[20px] md:left-[40px] w-1 bg-white/5 rounded-full overflow-hidden"
                 style={{ 
-                  top: firstItemHeight ? `${firstItemHeight / 2}px` : "0px",
-                  bottom: lastItemHeight ? `${lastItemHeight / 2}px` : "0px"
+                  top: "45px",
+                  bottom: lastItemHeight ? `${lastItemHeight - 45}px` : "0px"
                 }}
               >
                 <motion.div 
@@ -649,11 +649,11 @@ export default function Portfolio() {
                     <div 
                       key={index} 
                       ref={isFirst ? firstItemRef : isLast ? lastItemRef : null}
-                      className="relative flex items-center w-full"
+                      className="relative flex items-start w-full"
                     >
                       
                       {/* Node */}
-                      <div className="absolute left-[13px] md:left-[33px] z-10 flex justify-center items-center">
+                      <div className="absolute left-[13px] md:left-[33px] top-[36px] z-10 flex justify-center items-center">
                         <motion.div
                           initial="inactive"
                           whileInView="active"
