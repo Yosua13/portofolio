@@ -51,10 +51,12 @@ const TRACKS: Track[] = [
 
 export default function MusicPlayer({ 
   playOnStart = false,
-  onOpenGuide
+  playMode = false,
+  setPlayMode
 }: { 
   playOnStart?: boolean;
-  onOpenGuide?: () => void;
+  playMode?: boolean;
+  setPlayMode?: (val: boolean) => void;
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -66,15 +68,41 @@ export default function MusicPlayer({
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Handle Play/Pause
+  const togglePlay = () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play().catch((err) => console.log("Playback error: ", err));
+      setIsPlaying(true);
+    }
+  };
+
+  // Skip Next
+  const handleNext = () => {
+    setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % TRACKS.length);
+  };
+
+  // Skip Prev
+  const handlePrev = () => {
+    setCurrentTrackIndex((prevIndex) => (prevIndex - 1 + TRACKS.length) % TRACKS.length);
+  };
+
   // Play immediately when playOnStart prop becomes true
   useEffect(() => {
     if (playOnStart) {
-      setIsPlaying(true);
+      const timer = setTimeout(() => {
+        setIsPlaying(true);
+      }, 0);
       if (audioRef.current) {
         audioRef.current.play().catch((err) => console.log("Auto-play error:", err));
       }
+      return () => clearTimeout(timer);
     }
   }, [playOnStart]);
+
   const currentTrack = TRACKS[currentTrackIndex];
 
   // Initialize Audio
@@ -103,28 +131,6 @@ export default function MusicPlayer({
       audio.removeEventListener("ended", onEnded);
     };
   }, [currentTrackIndex]);
-
-  // Handle Play/Pause
-  const togglePlay = () => {
-    if (!audioRef.current) return;
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      audioRef.current.play().catch((err) => console.log("Playback error: ", err));
-      setIsPlaying(true);
-    }
-  };
-
-  // Skip Next
-  const handleNext = () => {
-    setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % TRACKS.length);
-  };
-
-  // Skip Prev
-  const handlePrev = () => {
-    setCurrentTrackIndex((prevIndex) => (prevIndex - 1 + TRACKS.length) % TRACKS.length);
-  };
 
   // Handle Scrubber Seek
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -169,20 +175,24 @@ export default function MusicPlayer({
 
   return (
     <div className="fixed bottom-6 right-6 z-50 font-sans flex items-end gap-3 select-none">
-      {/* Floating Controls Guide Button (Gamepad Icon) */}
+      {/* Floating Game Toggle Button (Gamepad Icon) */}
       <button
-        onClick={onOpenGuide}
-        className="flex items-center justify-center w-12 h-12 rounded-full border border-slate-200 bg-white hover:scale-105 active:scale-95 shadow-xl transition-all cursor-pointer text-slate-800 hover:text-indigo-600 group shrink-0"
-        title="Open Controls Guide"
+        onClick={() => setPlayMode?.(!playMode)}
+        className={`flex items-center justify-center w-12 h-12 rounded-full border hover:scale-105 active:scale-95 shadow-xl transition-all cursor-pointer group shrink-0 ${
+          playMode 
+            ? "border-cyan-500 bg-cyan-950/80 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.4)]" 
+            : "border-slate-800 bg-[#090b16]/90 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/50"
+        }`}
+        title={playMode ? "Exit Flight Game" : "Start Flight Game"}
       >
-        <Gamepad2 className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+        <Gamepad2 className={`w-5 h-5 group-hover:rotate-12 transition-transform duration-300 ${playMode ? "animate-pulse" : ""}`} />
       </button>
 
       {isExpanded ? (
-        /* Expanded Player Card (White Theme, Smaller size, rounded corners) */
-        <div className="w-64 border border-slate-200 bg-white p-4 shadow-2xl flex flex-col space-y-3 rounded-xl select-none shrink-0">
+        /* Expanded Player Card (Dark Glass Theme, Smaller size, rounded corners) */
+        <div className="w-64 border border-white/10 bg-[#090b16]/90 backdrop-blur-md p-4 shadow-2xl flex flex-col space-y-3 rounded-xl select-none shrink-0 text-slate-200">
           {/* Top Bar with Album Art and Collapse Button */}
-          <div className="relative aspect-[16/10] w-full bg-slate-100 overflow-hidden rounded-lg border border-slate-100">
+          <div className="relative aspect-[16/10] w-full bg-slate-900/50 overflow-hidden rounded-lg border border-white/5">
             <img
               src={currentTrack.cover}
               alt={currentTrack.title}
@@ -209,7 +219,7 @@ export default function MusicPlayer({
               max={duration || 100}
               value={currentTime}
               onChange={handleSeek}
-              className="w-full h-1 bg-slate-200 appearance-none cursor-pointer accent-indigo-600 rounded-none"
+              className="w-full h-1 bg-white/10 appearance-none cursor-pointer accent-indigo-400 rounded-none"
             />
             <div className="flex justify-between text-[9px] text-slate-400 font-bold uppercase tracking-wider">
               <span>{formatTime(currentTime)}</span>
@@ -219,10 +229,10 @@ export default function MusicPlayer({
 
           {/* Track Details */}
           <div className="text-center space-y-0.5">
-            <h4 className="text-slate-800 font-extrabold text-sm tracking-tight truncate px-2 leading-tight">
+            <h4 className="text-white font-extrabold text-sm tracking-tight truncate px-2 leading-tight">
               {currentTrack.title}
             </h4>
-            <p className="text-indigo-600 text-[10px] font-bold uppercase tracking-widest truncate">
+            <p className="text-indigo-400 text-[10px] font-bold uppercase tracking-widest truncate">
               {currentTrack.artist}
             </p>
           </div>
@@ -231,13 +241,13 @@ export default function MusicPlayer({
           <div className="flex items-center justify-center gap-4 pt-1">
             <button
               onClick={handlePrev}
-              className="text-slate-400 hover:text-slate-800 transition-colors cursor-pointer p-1"
+              className="text-slate-400 hover:text-white transition-colors cursor-pointer p-1"
             >
               <SkipBack className="w-4 h-4" />
             </button>
             <button
               onClick={togglePlay}
-              className="w-9 h-9 bg-slate-900 text-white rounded-full hover:bg-slate-800 flex items-center justify-center transition-all cursor-pointer active:scale-95"
+              className="w-9 h-9 bg-white text-[#0a0a0a] rounded-full hover:bg-slate-200 flex items-center justify-center transition-all cursor-pointer active:scale-95"
             >
               {isPlaying ? (
                 <Pause className="w-4 h-4 fill-current" />
@@ -247,17 +257,17 @@ export default function MusicPlayer({
             </button>
             <button
               onClick={handleNext}
-              className="text-slate-400 hover:text-slate-800 transition-colors cursor-pointer p-1"
+              className="text-slate-400 hover:text-white transition-colors cursor-pointer p-1"
             >
               <SkipForward className="w-4 h-4" />
             </button>
           </div>
 
           {/* Volume Control */}
-          <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+          <div className="flex items-center gap-2 pt-2 border-t border-white/5">
             <button
               onClick={toggleMute}
-              className="text-slate-400 hover:text-slate-800 transition-colors cursor-pointer"
+              className="text-slate-400 hover:text-white transition-colors cursor-pointer"
             >
               {isMuted || volume === 0 ? (
                 <VolumeX className="w-3.5 h-3.5" />
@@ -272,7 +282,7 @@ export default function MusicPlayer({
               step="0.01"
               value={isMuted ? 0 : volume}
               onChange={handleVolumeChange}
-              className="flex-1 h-1 bg-slate-200 appearance-none cursor-pointer accent-indigo-600 rounded-none"
+              className="flex-1 h-1 bg-white/10 appearance-none cursor-pointer accent-indigo-400 rounded-none"
             />
             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest w-7 text-right">
               {isMuted ? "0%" : `${Math.round(volume * 100)}%`}
