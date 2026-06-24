@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Play, Pause, SkipForward, SkipBack, Volume2, VolumeX, Maximize2, Minimize2, Music, Gamepad2 } from "lucide-react";
+import { Play, Pause, SkipForward, SkipBack, Volume2, VolumeX, Minimize2, Music, Gamepad2 } from "lucide-react";
 
 interface Track {
   title: string;

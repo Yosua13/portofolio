@@ -109,7 +109,7 @@ export default function ProjectsSection({ setSelectedProject }: ProjectsSectionP
                     </h3>
                     <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
                   </div>
-                  <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
+                  <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
                     {project.location}
                   </span>
                 </div>
@@ -125,7 +125,7 @@ export default function ProjectsSection({ setSelectedProject }: ProjectsSectionP
                 </h4>
 
                 {/* Description */}
-                <p className="text-sm text-slate-400 font-light leading-relaxed">
+                <p className="text-sm text-slate-300 font-light leading-relaxed">
                   {project.description}
                 </p>
               </div>

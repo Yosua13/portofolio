@@ -46,7 +46,7 @@ export default function ProfileSection() {
           </motion.div>
 
           {/* Profile Text */}
-          <div className="space-y-6 text-slate-400 leading-relaxed text-lg font-light flex-1">
+          <div className="space-y-6 text-slate-300 leading-relaxed text-lg font-light flex-1">
             <p className="text-2xl font-medium text-white mb-2">
               Hello, my name is <span className="text-cyan-400">Yosua Reynaldi Manurun</span> as a Software Engineer.
             </p>

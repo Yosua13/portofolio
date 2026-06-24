@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-import { FileText, Download, ExternalLink } from "lucide-react";
+import { Download, ExternalLink } from "lucide-react";
 
 const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -41,7 +41,7 @@ export default function CvSection() {
           </h2>
 
           {/* Description */}
-          <p className="text-sm sm:text-base text-slate-400 font-light leading-relaxed max-w-xl">
+          <p className="text-sm sm:text-base text-slate-300 font-light leading-relaxed max-w-xl">
             The complete printable curriculum vitae — formal education, technical stack, professional history, and project ledger. Document formatted to professional engineering standards.
           </p>
 

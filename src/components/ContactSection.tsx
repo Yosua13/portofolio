@@ -61,7 +61,7 @@ export default function ContactSection() {
             <h3 className="text-xl font-bold text-white font-sans tracking-wide">
               Let&apos;s build something great
             </h3>
-            <p className="text-slate-400 text-sm font-light leading-relaxed">
+            <p className="text-slate-300 text-sm font-light leading-relaxed">
               I am always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Feel free to reach out via email, phone, or any of my social channels.
             </p>
           </div>
@@ -120,7 +120,7 @@ export default function ContactSection() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Name field */}
               <div className="space-y-2">
-                <label htmlFor="form-name" className="text-xs font-bold text-slate-400 uppercase tracking-wider">Your Name</label>
+                <label htmlFor="form-name" className="text-xs font-bold text-slate-300 uppercase tracking-wider">Your Name</label>
                 <input
                   id="form-name"
                   type="text"
@@ -135,7 +135,7 @@ export default function ContactSection() {
               
               {/* Email field */}
               <div className="space-y-2">
-                <label htmlFor="form-email" className="text-xs font-bold text-slate-400 uppercase tracking-wider">Your Email</label>
+                <label htmlFor="form-email" className="text-xs font-bold text-slate-300 uppercase tracking-wider">Your Email</label>
                 <input
                   id="form-email"
                   type="email"
@@ -151,7 +151,7 @@ export default function ContactSection() {
 
             {/* Message field */}
             <div className="space-y-2">
-              <label htmlFor="form-message" className="text-xs font-bold text-slate-400 uppercase tracking-wider">Your Message</label>
+              <label htmlFor="form-message" className="text-xs font-bold text-slate-300 uppercase tracking-wider">Your Message</label>
               <textarea
                 id="form-message"
                 name="message"

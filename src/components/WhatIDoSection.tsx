@@ -98,7 +98,7 @@ export default function WhatIDoSection() {
               <h3 className="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors tracking-wide">
                 {service.title}
               </h3>
-              <p className="text-xs sm:text-sm text-slate-400 font-light leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
                 {service.description}
               </p>
             </div>

@@ -217,7 +217,7 @@ export default function JourneySection() {
                             </div>
                             
                             {/* Date */}
-                            <div className="flex items-center gap-2 text-sm font-semibold text-amber-100/70">
+                            <div className="flex items-center gap-2 text-sm font-semibold text-amber-200/95">
                               <Calendar className="w-4 h-4 text-blue-300" />
                               {item.date}
                             </div>
