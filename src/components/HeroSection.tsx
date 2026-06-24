@@ -66,7 +66,8 @@ function StarCanvas({
     scene.add(blueLight);
 
     // 3D Starfield points
-    const starCount = 200;
+    const isMobileDevice = typeof window !== "undefined" && (window.innerWidth < 768 || navigator.maxTouchPoints > 0);
+    const starCount = isMobileDevice ? 85 : 200;
     const starGeometry = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
     const starSpeeds: number[] = [];
@@ -354,7 +355,7 @@ function StarCanvas({
     }
 
     const targets: Target[] = [];
-    const maxTargets = 5;
+    const maxTargets = isMobileDevice ? 2 : 5;
 
     const asteroidGeom = new THREE.DodecahedronGeometry(0.45, 1);
     const asteroidMat = new THREE.MeshStandardMaterial({
