@@ -38,12 +38,19 @@ export default function SkillsSection() {
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
-              className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${activeCategory === category
-                ? "bg-cyan-500 text-[#0a0a0a] shadow-lg shadow-cyan-500/25"
-                : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white border border-white/5"
+              className={`relative px-6 py-2.5 rounded-full text-sm font-medium transition-colors duration-300 overflow-hidden border border-white/5 cursor-pointer ${activeCategory === category
+                ? "text-[#0a0a0a] shadow-lg shadow-cyan-500/25"
+                : "bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
                 }`}
             >
-              {category}
+              <span className="relative z-10">{category}</span>
+              {activeCategory === category && (
+                <motion.div
+                  layoutId="active-skill-tab"
+                  className="absolute inset-0 bg-cyan-500"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
             </button>
           ))}
         </div>
@@ -53,7 +60,7 @@ export default function SkillsSection() {
           key={activeCategory}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-slate-400 font-light"
+          className="text-slate-300 font-light"
         >
           {activeCategory === "All"
             ? "23 skills across 4 categories."
@@ -82,41 +89,46 @@ export default function SkillsSection() {
 
                   <div className="flex flex-wrap gap-3 md:gap-4">
                     {[
-                      { name: "React", cat: "Frontend", icon: <Globe className="w-4 h-4" /> },
-                      { name: "Next.js", cat: "Frontend", icon: <Layers className="w-4 h-4" /> },
-                      { name: "TypeScript", cat: "Frontend", icon: <Globe className="w-4 h-4" /> },
-                      { name: "Tailwind CSS", cat: "Frontend", icon: <Layers className="w-4 h-4" /> },
-                      { name: "Flutter", cat: "Frontend", icon: <Smartphone className="w-4 h-4" /> },
-                      { name: "KMP", cat: "Frontend", icon: <Smartphone className="w-4 h-4" /> },
-                      { name: "Angular", cat: "Frontend", icon: <AppWindow className="w-4 h-4" /> },
+                      { name: "React", cat: "Frontend", icon: <Globe className="w-4 h-4" />, level: "Proficient" },
+                      { name: "Next.js", cat: "Frontend", icon: <Layers className="w-4 h-4" />, level: "Proficient" },
+                      { name: "TypeScript", cat: "Frontend", icon: <Globe className="w-4 h-4" />, level: "Expert" },
+                      { name: "Tailwind CSS", cat: "Frontend", icon: <Layers className="w-4 h-4" />, level: "Expert" },
+                      { name: "Flutter", cat: "Frontend", icon: <Smartphone className="w-4 h-4" />, level: "Proficient" },
+                      { name: "KMP", cat: "Frontend", icon: <Smartphone className="w-4 h-4" />, level: "Intermediate" },
+                      { name: "Angular", cat: "Frontend", icon: <AppWindow className="w-4 h-4" />, level: "Intermediate" },
                       
-                      { name: "Java", cat: "Backend", icon: <Cpu className="w-4 h-4" /> },
-                      { name: "Spring Boot", cat: "Backend", icon: <Server className="w-4 h-4" /> },
-                      { name: "Golang", cat: "Backend", icon: <Server className="w-4 h-4" /> },
-                      { name: "Node.js", cat: "Backend", icon: <Terminal className="w-4 h-4" /> },
+                      { name: "Java", cat: "Backend", icon: <Cpu className="w-4 h-4" />, level: "Expert" },
+                      { name: "Spring Boot", cat: "Backend", icon: <Server className="w-4 h-4" />, level: "Expert" },
+                      { name: "Golang", cat: "Backend", icon: <Server className="w-4 h-4" />, level: "Expert" },
+                      { name: "Node.js", cat: "Backend", icon: <Terminal className="w-4 h-4" />, level: "Proficient" },
                       
-                      { name: "SQL Server", cat: "Database", icon: <Database className="w-4 h-4" /> },
-                      { name: "PostgreSQL", cat: "Database", icon: <Database className="w-4 h-4" /> },
-                      { name: "MySQL", cat: "Database", icon: <Database className="w-4 h-4" /> },
-                      { name: "Firebase", cat: "Database", icon: <Cloud className="w-4 h-4" /> },
-                      { name: "Supabase", cat: "Database", icon: <Cloud className="w-4 h-4" /> },
+                      { name: "SQL Server", cat: "Database", icon: <Database className="w-4 h-4" />, level: "Expert" },
+                      { name: "PostgreSQL", cat: "Database", icon: <Database className="w-4 h-4" />, level: "Expert" },
+                      { name: "MySQL", cat: "Database", icon: <Database className="w-4 h-4" />, level: "Proficient" },
+                      { name: "Firebase", cat: "Database", icon: <Cloud className="w-4 h-4" />, level: "Proficient" },
+                      { name: "Supabase", cat: "Database", icon: <Cloud className="w-4 h-4" />, level: "Expert" },
                       
-                      { name: "Git", cat: "Tools", icon: <GitBranch className="w-4 h-4" /> },
-                      { name: "Docker", cat: "Tools", icon: <Box className="w-4 h-4" /> },
-                      { name: "REST API", cat: "Tools", icon: <Terminal className="w-4 h-4" /> },
-                      { name: "Postman", cat: "Tools", icon: <Box className="w-4 h-4" /> },
-                      { name: "GitHub", cat: "Tools", icon: <GitBranch className="w-4 h-4" /> },
-                      { name: "GitLab", cat: "Tools", icon: <GitBranch className="w-4 h-4" /> },
-                      { name: "Figma", cat: "Tools", icon: <PenTool className="w-4 h-4" /> }
+                      { name: "Git", cat: "Tools", icon: <GitBranch className="w-4 h-4" />, level: "Expert" },
+                      { name: "Docker", cat: "Tools", icon: <Box className="w-4 h-4" />, level: "Proficient" },
+                      { name: "REST API", cat: "Tools", icon: <Terminal className="w-4 h-4" />, level: "Expert" },
+                      { name: "Postman", cat: "Tools", icon: <Box className="w-4 h-4" />, level: "Expert" },
+                      { name: "GitHub", cat: "Tools", icon: <GitBranch className="w-4 h-4" />, level: "Expert" },
+                      { name: "GitLab", cat: "Tools", icon: <GitBranch className="w-4 h-4" />, level: "Proficient" },
+                      { name: "Figma", cat: "Tools", icon: <PenTool className="w-4 h-4" />, level: "Intermediate" }
                     ].filter(skill => skill.cat === category)
                       .map((skill) => (
                         <motion.div
                           key={skill.name}
                           whileHover={{ scale: 1.05 }}
-                          className="px-4 py-2 bg-[#0a0a0a] border border-white/5 rounded-xl flex items-center gap-2.5 hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all duration-300 group cursor-default shadow-sm"
+                          className="px-4 py-2 bg-[#0a0a0a] border border-white/5 rounded-xl flex items-center justify-between gap-4 hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all duration-300 group cursor-default shadow-sm min-h-[44px]"
                         >
-                          <span className="text-slate-500 group-hover:text-cyan-400 transition-colors">{skill.icon}</span>
-                          <span className="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">{skill.name}</span>
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-slate-500 group-hover:text-cyan-400 transition-colors">{skill.icon}</span>
+                            <span className="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">{skill.name}</span>
+                          </div>
+                          <span className="text-[8px] px-1.5 py-0.5 bg-white/5 text-slate-500 rounded group-hover:bg-cyan-500/20 group-hover:text-cyan-300 transition-colors uppercase tracking-wider font-bold shrink-0">
+                            {skill.level}
+                          </span>
                         </motion.div>
                       ))}
                   </div>
