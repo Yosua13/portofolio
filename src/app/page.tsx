@@ -39,6 +39,22 @@ export default function Portfolio() {
   const [playMusicOnStart, setPlayMusicOnStart] = useState(false);
   const [showControlsGuide, setShowControlsGuide] = useState(false);
   const [playMode, setPlayMode] = useState(false);
+  const [theme, setTheme] = useState("dark");
+  const toggleTheme = () => {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+    if (typeof document !== "undefined") {
+      if (newTheme === "light") {
+        document.documentElement.classList.add("light");
+        document.body.style.filter = "invert(0.9) hue-rotate(180deg)";
+        document.body.style.background = "#fff";
+      } else {
+        document.documentElement.classList.remove("light");
+        document.body.style.filter = "";
+        document.body.style.background = "";
+      }
+    }
+  };
 
 
   // Disable body scroll when modal or welcome screen is active
@@ -185,13 +201,13 @@ export default function Portfolio() {
                 <a
                   key={item.id}
                   href={`#${item.id}`}
-                  className={`relative px-5 py-2 text-sm font-medium transition-colors ${activeSection === item.id ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200'}`}
+                  className={`relative px-5 py-3 text-sm font-medium transition-colors ${activeSection === item.id ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200'}`}
                 >
                   {item.label}
                   {activeSection === item.id && (
                     <motion.div
                       layoutId="nav-indicator"
-                      className="absolute bottom-1 left-5 right-5 h-[2px] bg-indigo-400"
+                      className="absolute bottom-2 left-5 right-5 h-[2px] bg-indigo-400"
                       initial={false}
                       transition={{ type: "spring", stiffness: 500, damping: 30 }}
                     />
@@ -201,17 +217,56 @@ export default function Portfolio() {
             </div>
           </div>
 
-          {/* Right: Socials */}
-          <div className="pointer-events-auto hidden sm:flex items-center gap-6">
-            <a href="#" className="text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="Instagram">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
-            </a>
-            <a href="https://www.linkedin.com/in/yosua-reynaldi-manurun/" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="LinkedIn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>
-            </a>
-            <a href="https://github.com/Yosua13" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="GitHub">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
-            </a>
+          {/* Right: Socials & Theme Toggle */}
+          <div className="pointer-events-auto hidden sm:flex items-center gap-2">
+            {/* GitHub */}
+            <div className="relative group">
+              <a href="https://github.com/Yosua13" target="_blank" rel="noreferrer" className="flex items-center justify-center w-11 h-11 text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="GitHub">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
+              </a>
+              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 border border-white/10 text-[10px] text-white uppercase font-bold tracking-wider rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl whitespace-nowrap z-50">
+                GitHub
+              </div>
+            </div>
+            {/* LinkedIn */}
+            <div className="relative group">
+              <a href="https://www.linkedin.com/in/yosua-reynaldi-manurun/" target="_blank" rel="noreferrer" className="flex items-center justify-center w-11 h-11 text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="LinkedIn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>
+              </a>
+              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 border border-white/10 text-[10px] text-white uppercase font-bold tracking-wider rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl whitespace-nowrap z-50">
+                LinkedIn
+              </div>
+            </div>
+            {/* Email */}
+            <div className="relative group">
+              <a href="mailto:reyyosua29@gmail.com" className="flex items-center justify-center w-11 h-11 text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="Email">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+              </a>
+              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 border border-white/10 text-[10px] text-white uppercase font-bold tracking-wider rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl whitespace-nowrap z-50">
+                Email
+              </div>
+            </div>
+            {/* Divider */}
+            <span className="w-px h-4 bg-white/10 mx-1" />
+            {/* Theme Toggle Switcher */}
+            <div className="relative group">
+              <button
+                onClick={toggleTheme}
+                className="flex items-center justify-center w-11 h-11 text-slate-400 hover:text-white transition-colors hover:scale-110 cursor-pointer"
+                aria-label="Toggle Theme"
+              >
+                {theme === "dark" ? (
+                  /* Sun Icon */
+                  <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                ) : (
+                  /* Moon Icon */
+                  <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                )}
+              </button>
+              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 border border-white/10 text-[10px] text-white uppercase font-bold tracking-wider rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl whitespace-nowrap z-50">
+                {theme === "dark" ? "Light Mode" : "Dark Mode"}
+              </div>
+            </div>
           </div>
         </div>
       </nav>

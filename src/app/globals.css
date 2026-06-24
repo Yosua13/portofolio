@@ -46,3 +46,13 @@ body::-webkit-scrollbar,
   height: 0 !important;
 }
 
+/* Re-invert media assets and canvases in light mode so they display natural colors */
+html.light img,
+html.light video,
+html.light iframe,
+html.light canvas,
+html.light .no-invert {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+
