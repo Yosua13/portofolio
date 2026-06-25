@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import Image from "next/image";
 import { X, Flame } from "lucide-react";
 
 /* ───────────────────────────────────────────
@@ -839,7 +840,7 @@ function StarCanvas({
       rocketMat.dispose();
       renderer.dispose();
     };
-  }, []);
+  }, [onGameOver, registerReset]);
 
   return (
     <div className="absolute inset-0 w-full h-full pointer-events-none">
@@ -904,10 +905,14 @@ export default function HeroSection({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleGameOver = (score: number) => {
+  const handleGameOver = useCallback((score: number) => {
     setFinalScore(score);
     setIsGameOver(true);
-  };
+  }, []);
+
+  const registerGameReset = useCallback((resetFn: () => void) => {
+    resetGameRef.current = resetFn;
+  }, []);
 
   const handleRestart = () => {
     if (resetGameRef.current) {
@@ -915,10 +920,6 @@ export default function HeroSection({
     }
     setIsGameOver(false);
   };
-
-  const nameLetters = "YOSUA".split("");
-
-  const techStack = ["Next.js", "Angular", "TypeScript", "Java", "Spring Boot", "Golang"];
 
   const stats = [
     { value: "5+", label: "Projects Delivered" },
@@ -935,6 +936,14 @@ export default function HeroSection({
     const onScroll = () => {
       const el = heroRef.current;
       if (!el) return;
+
+      if (window.innerWidth <= 900) {
+        el.style.filter = "blur(0px)";
+        el.style.transform = "scale(1)";
+        el.style.opacity = "1";
+        return;
+      }
+
       const triggerStart = window.innerHeight * 0.1;       /* 10vh */
       const triggerEnd   = window.innerHeight * 0.7;       /* full effect range */
       const scrollY = window.scrollY;
@@ -1362,26 +1371,35 @@ export default function HeroSection({
 
         /* ── Responsive ──────────────────────────────── */
         @media (max-width: 900px) {
+          .hero-sticky-wrap {
+            position: relative;
+          }
+          .hero-root {
+            height: auto;
+            min-height: 100svh;
+            overflow: visible;
+          }
           .hero-content {
-            flex-direction: column-reverse;
-            padding: 100px 24px 32px;
-            gap: 40px;
-            text-align: center;
-            justify-content: center;
+            flex-direction: column;
+            align-items: stretch;
+            padding: 96px 24px 32px;
+            gap: 28px;
+            text-align: left;
+            justify-content: flex-start;
           }
           .hero-left {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
           }
           .hero-desc {
-            text-align: center;
+            text-align: left;
           }
           .tech-pills {
-            justify-content: center;
+            justify-content: flex-start;
           }
           .cta-group {
-            justify-content: center;
+            justify-content: flex-start;
           }
           .profile-ring-wrap {
             width: 180px;
@@ -1408,6 +1426,9 @@ export default function HeroSection({
             padding: 14px 24px;
             gap: 12px;
           }
+          .hero-scroll-spacer {
+            height: 0;
+          }
         }
       `}</style>
 
@@ -1416,7 +1437,7 @@ export default function HeroSection({
         <section className="hero-root" id="hero" ref={heroRef}>
           {/* Background switcher based on playMode */}
           {playMode ? (
-            <StarCanvas playMode={playMode} onGameOver={handleGameOver} registerReset={(resetFn) => { resetGameRef.current = resetFn; }} />
+            <StarCanvas playMode={playMode} onGameOver={handleGameOver} registerReset={registerGameReset} />
           ) : (
             <div className="mesh-grid-bg">
               <div className="mesh-grid-pattern" />
@@ -1611,7 +1632,7 @@ export default function HeroSection({
                   </div>
 
                   {/* Testimonial & Social Proof */}
-                  <div className="mt-8 border border-white/10 bg-white/[0.01] backdrop-blur-md rounded-2xl p-5 max-w-lg relative group select-none text-left">
+                  <div className="mt-8 hidden sm:block border border-white/10 bg-white/[0.01] backdrop-blur-md rounded-2xl p-5 max-w-lg relative group select-none text-left">
                     <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-indigo-500/40"></div>
                     <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-indigo-500/40"></div>
                     
@@ -1707,13 +1728,12 @@ export default function HeroSection({
                   {/* Grid layout for Avatar and Text */}
                   <div className="flex gap-5 items-center">
                     <div className="w-20 h-20 rounded-xl border-2 border-cyan-500/40 relative overflow-hidden bg-cyan-950/20 shrink-0 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
-                      <img 
-                        src="/yosua_profile.png" 
+                      <Image
+                        src="/yosua_profile.png"
                         alt="Yosua Reynaldi" 
-                        className="w-full h-full object-cover object-[center_25%] brightness-110 contrast-105"
-                        onError={(e) => {
-                          (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80";
-                        }}
+                        fill
+                        sizes="80px"
+                        className="object-cover object-[center_25%] brightness-110 contrast-105"
                       />
                     </div>
 
@@ -1751,13 +1771,12 @@ export default function HeroSection({
                   
                   {/* Large Vertical Image Frame */}
                   <div className="relative aspect-[1/1] w-full overflow-hidden rounded-2xl border border-white/5 bg-slate-950/20 shadow-inner">
-                    <img 
-                      src="/yosua_profile.png" 
+                    <Image
+                      src="/yosua_profile.png"
                       alt="Yosua Reynaldi Manurun" 
-                      className="w-full h-full object-cover object-[center_15%] group-hover:scale-[1.03] transition-transform duration-700 ease-out"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80";
-                      }}
+                      fill
+                      sizes="(max-width: 900px) 90vw, 300px"
+                      className="object-cover object-[center_15%] group-hover:scale-[1.03] transition-transform duration-700 ease-out"
                     />
                     {/* Dynamic Overlay Gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#050508]/80 via-transparent to-transparent" />
