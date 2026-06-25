@@ -1,21 +1,29 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import Image from "next/image";
 import { X, Flame } from "lucide-react";
 
 /* ───────────────────────────────────────────
    Star‑field canvas with mouse parallax
    ─────────────────────────────────────────── */
 function StarCanvas({
+  playMode,
   onGameOver,
   registerReset,
 }: {
+  playMode: boolean;
   onGameOver: (score: number) => void;
   registerReset: (resetFn: () => void) => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const trailCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  const playModeRef = useRef(playMode);
+  useEffect(() => {
+    playModeRef.current = playMode;
+  }, [playMode]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -59,7 +67,8 @@ function StarCanvas({
     scene.add(blueLight);
 
     // 3D Starfield points
-    const starCount = 200;
+    const isMobileDevice = typeof window !== "undefined" && (window.innerWidth < 768 || navigator.maxTouchPoints > 0);
+    const starCount = isMobileDevice ? 85 : 200;
     const starGeometry = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
     const starSpeeds: number[] = [];
@@ -223,7 +232,7 @@ function StarCanvas({
     });
 
     const shootLaser = () => {
-      if (!gameActive) return;
+      if (!playModeRef.current || !gameActive) return;
       if (window.scrollY > 100) return;
       const spawnZ = spaceship.position.z - 0.9;
       const spawnY = spaceship.position.y - 0.02;
@@ -297,7 +306,7 @@ function StarCanvas({
     const pressedKeys = { w: false, a: false, s: false, d: false };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!gameActive) return;
+      if (!playModeRef.current || !gameActive) return;
       if (window.scrollY > 100) return;
       const target = e.target as HTMLElement;
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
@@ -347,7 +356,7 @@ function StarCanvas({
     }
 
     const targets: Target[] = [];
-    const maxTargets = 5;
+    const maxTargets = isMobileDevice ? 2 : 5;
 
     const asteroidGeom = new THREE.DodecahedronGeometry(0.45, 1);
     const asteroidMat = new THREE.MeshStandardMaterial({
@@ -525,9 +534,15 @@ function StarCanvas({
 
       // Planets animation removed
 
+      const inPlay = playModeRef.current;
+      spaceship.visible = inPlay && gameActive;
+      targets.forEach(t => {
+        t.mesh.visible = inPlay && gameActive;
+      });
+
       if (gameActive) {
-        if (isScrolledDown) {
-          // Gently center the ship when scrolled down
+        if (isScrolledDown || !inPlay) {
+          // Gently center the ship when scrolled down or not in playMode
           spaceship.position.x += (0 - spaceship.position.x) * 0.08;
           spaceship.position.y += (0 - spaceship.position.y) * 0.08;
           spaceship.rotation.set(0, 0, 0);
@@ -567,7 +582,7 @@ function StarCanvas({
           spaceship.rotation.y = vx * 0.6;
         }
 
-        if (!isScrolledDown) {
+        if (!isScrolledDown && inPlay) {
           // Update lasers and check collision
           for (let i = lasers.length - 1; i >= 0; i--) {
             const l = lasers[i];
@@ -677,7 +692,7 @@ function StarCanvas({
         }
       }
 
-      if (!isScrolledDown) {
+      if (!isScrolledDown && inPlay) {
         // Update explosion particles
         for (let i = particles.length - 1; i >= 0; i--) {
           const p = particles[i];
@@ -825,7 +840,7 @@ function StarCanvas({
       rocketMat.dispose();
       renderer.dispose();
     };
-  }, []);
+  }, [onGameOver, registerReset]);
 
   return (
     <div className="absolute inset-0 w-full h-full pointer-events-none">
@@ -845,16 +860,41 @@ function StarCanvas({
    Main Hero Component
    ─────────────────────────────────────────── */
 export default function HeroSection({
-  showGreeting,
-  onCloseGreeting,
+  playMode,
+  setPlayMode
 }: {
-  showGreeting: boolean;
-  onCloseGreeting: () => void;
+  playMode: boolean;
+  setPlayMode: (val: boolean) => void;
 }) {
+  const [showGreeting, setShowGreeting] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
   const resetGameRef = useRef<(() => void) | null>(null);
   const [scrollY, setScrollY] = useState(0);
+
+  const playModeRef = useRef(playMode);
+  useEffect(() => {
+    playModeRef.current = playMode;
+    if (playMode) {
+      if (resetGameRef.current) {
+        resetGameRef.current();
+      }
+      const timer = setTimeout(() => {
+        setShowGreeting(true);
+        const hideTimer = setTimeout(() => {
+          setShowGreeting(false);
+        }, 6000);
+        return () => clearTimeout(hideTimer);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else {
+      const timer = setTimeout(() => {
+        setShowGreeting(false);
+        setIsGameOver(false);
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [playMode]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -865,10 +905,14 @@ export default function HeroSection({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleGameOver = (score: number) => {
+  const handleGameOver = useCallback((score: number) => {
     setFinalScore(score);
     setIsGameOver(true);
-  };
+  }, []);
+
+  const registerGameReset = useCallback((resetFn: () => void) => {
+    resetGameRef.current = resetFn;
+  }, []);
 
   const handleRestart = () => {
     if (resetGameRef.current) {
@@ -877,61 +921,13 @@ export default function HeroSection({
     setIsGameOver(false);
   };
 
-  const nameLetters = "YOSUA".split("");
-
-  const techStack = ["Next.js", "Angular", "TypeScript", "Java", "Springboot"];
-
   const stats = [
-    { value: "5+", label: "Projects" },
-    { value: "3yr", label: "Exp." },
-    { value: "100%", label: "Passion" },
+    { value: "5+", label: "Projects Delivered" },
+    { value: "3yr", label: "Experience" },
+    { value: "10+", label: "APIs Built" },
   ];
 
-  /* ── Magnetic name refs ──────────────────── */
-  const nameRef = useRef<HTMLHeadingElement>(null);
-  const nameRaf = useRef<number>(0);
-  const nameTarget = useRef({ x: 0, y: 0 });
-  const nameCurrent = useRef({ x: 0, y: 0 });
-
-  const handleNameMouse = useCallback((e: MouseEvent) => {
-    const el = nameRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    const dx = e.clientX - cx;
-    const dy = e.clientY - cy;
-    const STRENGTH = 0.08;
-    const MAX = 30;
-    nameTarget.current.x = Math.max(-MAX, Math.min(MAX, dx * STRENGTH));
-    nameTarget.current.y = Math.max(-MAX, Math.min(MAX, dy * STRENGTH));
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener("mousemove", handleNameMouse);
-
-    const tick = () => {
-      const LERP = 0.06;
-      const isScrolledDown = window.scrollY > 100;
-      const tx = isScrolledDown ? 0 : nameTarget.current.x;
-      const ty = isScrolledDown ? 0 : nameTarget.current.y;
-
-      nameCurrent.current.x += (tx - nameCurrent.current.x) * LERP;
-      nameCurrent.current.y += (ty - nameCurrent.current.y) * LERP;
-
-      if (nameRef.current) {
-        nameRef.current.style.transform =
-          `translate(${nameCurrent.current.x}px, ${nameCurrent.current.y}px)`;
-      }
-      nameRaf.current = requestAnimationFrame(tick);
-    };
-    nameRaf.current = requestAnimationFrame(tick);
-
-    return () => {
-      window.removeEventListener("mousemove", handleNameMouse);
-      cancelAnimationFrame(nameRaf.current);
-    };
-  }, [handleNameMouse]);
+  /* ── Name ref (static, no magnetic effect) ── */
 
   /* ── Scroll‑based blur / scale / opacity ── */
   const heroRef = useRef<HTMLElement>(null);
@@ -940,6 +936,14 @@ export default function HeroSection({
     const onScroll = () => {
       const el = heroRef.current;
       if (!el) return;
+
+      if (window.innerWidth <= 900) {
+        el.style.filter = "blur(0px)";
+        el.style.transform = "scale(1)";
+        el.style.opacity = "1";
+        return;
+      }
+
       const triggerStart = window.innerHeight * 0.1;       /* 10vh */
       const triggerEnd   = window.innerHeight * 0.7;       /* full effect range */
       const scrollY = window.scrollY;
@@ -970,7 +974,7 @@ export default function HeroSection({
       {/* ── Inline CSS animations ────────────────────── */}
       <style>{`
         /* ── Fonts (Google) ───────────────────────────── */
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@900&display=swap');
 
         /* ── Spinning rings ──────────────────────────── */
         @keyframes spinRing   { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
@@ -1009,9 +1013,61 @@ export default function HeroSection({
           height: 100vh;
           display: flex;
           flex-direction: column;
-          background: #050508;
+          background: #030305;
           overflow: hidden;
           will-change: filter, transform, opacity;
+        }
+
+        /* ── Floating blobs for professional mesh background ── */
+        @keyframes floatBlob1 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33%      { transform: translate(30px, -50px) scale(1.1); }
+          66%      { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        @keyframes floatBlob2 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50%      { transform: translate(-40px, 40px) scale(1.15); }
+        }
+
+        .mesh-grid-bg {
+          position: absolute;
+          inset: 0;
+          background: #030305;
+          z-index: 0;
+          overflow: hidden;
+          pointer-events: none;
+        }
+        .mesh-grid-pattern {
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+          background-size: 32px 32px;
+          mask-image: radial-gradient(circle at center, black 40%, transparent 95%);
+          z-index: 1;
+        }
+        .blob-1 {
+          position: absolute;
+          top: 10%;
+          left: 15%;
+          width: 45vw;
+          height: 45vw;
+          background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+          border-radius: 50%;
+          filter: blur(60px);
+          animation: floatBlob1 20s infinite ease-in-out;
+          z-index: 0;
+        }
+        .blob-2 {
+          position: absolute;
+          bottom: 10%;
+          right: 15%;
+          width: 40vw;
+          height: 40vw;
+          background: radial-gradient(circle, rgba(6, 182, 212, 0.06) 0%, transparent 70%);
+          border-radius: 50%;
+          filter: blur(50px);
+          animation: floatBlob2 18s infinite ease-in-out;
+          z-index: 0;
         }
 
         /* ── Ambient glows ───────────────────────────── */
@@ -1043,6 +1099,8 @@ export default function HeroSection({
           padding: 100px 5vw 40px;
           width: 100%;
           gap: 48px;
+          position: relative;
+          z-index: 2;
         }
         .hero-left  { flex: 1; min-width: 0; }
         .hero-right {
@@ -1087,30 +1145,7 @@ export default function HeroSection({
         }
 
         /* ── Name ─────────────────────────────────────── */
-        .hero-name {
-          font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          font-weight: 800;
-          line-height: 1.05;
-          letter-spacing: -0.03em;
-          margin-bottom: 20px;
-          will-change: transform;
-        }
-        .hero-name .first {
-          display: block;
-          font-size: clamp(48px, 6vw, 80px);
-          color: #f1f5f9;
-        }
-        .hero-name .last {
-          display: block;
-          font-size: clamp(48px, 6vw, 80px);
-          background: linear-gradient(270deg, #818cf8, #c084fc, #f472b6, #818cf8);
-          background-size: 400% 400%;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          animation: gradientShift 6s ease infinite;
-          filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.45));
-        }
+        
 
         /* ── Description ──────────────────────────────── */
         .hero-desc {
@@ -1309,12 +1344,15 @@ export default function HeroSection({
         .hero-footer {
           display: flex;
           align-items: center;
+          justify-content: space-between;
           gap: 10px;
           padding: 16px 5vw;
           border-top: 1px solid rgba(255,255,255,.05);
           font-family: 'JetBrains Mono', monospace;
           font-size: 13px;
           color: #64748b;
+          position: relative;
+          z-index: 2;
         }
         .hero-footer .footer-dot {
           width: 8px; height: 8px;
@@ -1333,26 +1371,35 @@ export default function HeroSection({
 
         /* ── Responsive ──────────────────────────────── */
         @media (max-width: 900px) {
+          .hero-sticky-wrap {
+            position: relative;
+          }
+          .hero-root {
+            height: auto;
+            min-height: 100svh;
+            overflow: visible;
+          }
           .hero-content {
-            flex-direction: column-reverse;
-            padding: 100px 24px 32px;
-            gap: 40px;
-            text-align: center;
-            justify-content: center;
+            flex-direction: column;
+            align-items: stretch;
+            padding: 96px 24px 32px;
+            gap: 28px;
+            text-align: left;
+            justify-content: flex-start;
           }
           .hero-left {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
           }
           .hero-desc {
-            text-align: center;
+            text-align: left;
           }
           .tech-pills {
-            justify-content: center;
+            justify-content: flex-start;
           }
           .cta-group {
-            justify-content: center;
+            justify-content: flex-start;
           }
           .profile-ring-wrap {
             width: 180px;
@@ -1375,7 +1422,12 @@ export default function HeroSection({
           }
           .hero-footer {
             justify-content: center;
+            flex-wrap: wrap;
             padding: 14px 24px;
+            gap: 12px;
+          }
+          .hero-scroll-spacer {
+            height: 0;
           }
         }
       `}</style>
@@ -1383,14 +1435,20 @@ export default function HeroSection({
       {/* Sticky wrapper — hero pins to top while scrolling */}
       <div className="hero-sticky-wrap">
         <section className="hero-root" id="hero" ref={heroRef}>
-          {/* Star background with parallax */}
-          <StarCanvas onGameOver={handleGameOver} registerReset={(resetFn) => { resetGameRef.current = resetFn; }} />
+          {/* Background switcher based on playMode */}
+          {playMode ? (
+            <StarCanvas playMode={playMode} onGameOver={handleGameOver} registerReset={registerGameReset} />
+          ) : (
+            <div className="mesh-grid-bg">
+              <div className="mesh-grid-pattern" />
+              <div className="blob-1" />
+              <div className="blob-2" />
+            </div>
+          )}
 
-          {/* Ambient glows */}
+          {/* Ambient glows (always active for nice visual blending) */}
           <div className="glow-left" />
           <div className="glow-right" />
-
-
 
           {/* Floating Greeting Bubble Projected above the Spacecraft */}
           {showGreeting && (
@@ -1408,7 +1466,7 @@ export default function HeroSection({
                   </p>
                 </div>
                 <button
-                  onClick={onCloseGreeting}
+                  onClick={() => setShowGreeting(false)}
                   className="text-slate-400 hover:text-white transition-colors cursor-pointer bg-white/5 p-1 rounded-lg border border-white/5 flex items-center justify-center shrink-0"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -1423,160 +1481,367 @@ export default function HeroSection({
           <div className="hero-content">
             {/* LEFT COLUMN */}
             <div className="hero-left">
-              {/* Available badge */}
-              <div className="badge-available">
-                <span className="badge-dot" />
-                Available for work
-              </div>
+              {playMode ? (
+                <div className="space-y-6">
+                  {/* Game Status Tag */}
+                  <div className="space-y-1">
+                    <span className="font-mono text-xs uppercase tracking-[0.3em] text-cyan-400 font-bold">
+                      MISSION CONSOLE INITIATED
+                    </span>
+                    <div className="h-[2px] w-12 bg-cyan-400 rounded-full animate-pulse" />
+                  </div>
 
-              {/* Monospace label */}
-              <p className="label-mono">{"// software engineer"}</p>
+                  <h2 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-sans leading-tight">
+                    Intercept the Anomalies.
+                  </h2>
 
-              {/* Name — magnetic follow‑mouse */}
-              <h1 className="hero-name" ref={nameRef}>
-                <span className="first">Yosua</span>
-                <span className="last">Reynaldi M.</span>
-              </h1>
+                  <p className="text-sm text-slate-400 font-light leading-relaxed max-w-md">
+                    Steer your spacecraft to clear space debris and glowing drones. Protect system integrity at all costs. Use keyboard keys to operate weapon systems and navigation thrusters.
+                  </p>
 
-              {/* Tech stack pills */}
-              <div className="tech-pills">
-                {techStack.map((t) => (
-                  <span key={t} className="tech-pill">{t}</span>
-                ))}
-              </div>
+                  {/* Keyboard Visual Controls */}
+                  <div className="bg-black/30 border border-white/5 p-4 rounded-xl max-w-sm space-y-4">
+                    <div className="flex gap-4 items-center">
+                      <div className="flex flex-col items-center gap-1 font-mono shrink-0 scale-90">
+                        <div className="w-7 h-7 flex items-center justify-center bg-[#151726] border border-white/15 rounded-md text-[10px] font-bold text-white shadow-md">W</div>
+                        <div className="flex gap-1">
+                          <div className="w-7 h-7 flex items-center justify-center bg-[#151726] border border-white/15 rounded-md text-[10px] font-bold text-white shadow-md">A</div>
+                          <div className="w-7 h-7 flex items-center justify-center bg-[#151726] border border-white/15 rounded-md text-[10px] font-bold text-white shadow-md">S</div>
+                          <div className="w-7 h-7 flex items-center justify-center bg-[#151726] border border-white/15 rounded-md text-[10px] font-bold text-white shadow-md">D</div>
+                        </div>
+                      </div>
+                      <div className="text-left">
+                        <span className="block text-xs font-bold text-slate-300 uppercase tracking-wide">Steer Ship</span>
+                        <span className="text-[10px] text-slate-500 font-mono">WASD KEYS</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-4 items-center">
+                      <div className="w-16 py-1.5 bg-[#151726] border border-white/15 rounded-md text-[9px] font-bold text-cyan-400 uppercase tracking-wider font-mono text-center shadow-md scale-90">
+                        Space
+                      </div>
+                      <div className="text-left">
+                        <span className="block text-xs font-bold text-slate-300 uppercase tracking-wide">Fire Laser</span>
+                        <span className="text-[10px] text-slate-500 font-mono">SPACEBAR</span>
+                      </div>
+                    </div>
+                  </div>
 
-              {/* CTA buttons */}
-              <div className="cta-group">
-                <a href="#projects" className="cta-solid">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                  Lihat Projects
-                </a>
-                <a href="/cv/Yosua Reynaldi Manurun-resume.pdf" download className="cta-ghost">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  Download CV
-                </a>
-              </div>
+                  {/* Exit Game Button */}
+                  <div className="pt-2">
+                    <button 
+                      onClick={() => setPlayMode(false)}
+                      className="inline-flex items-center gap-2.5 px-6 py-3 bg-red-950/20 hover:bg-red-950/45 border border-red-500/35 hover:border-red-500/60 text-red-400 hover:text-red-300 font-bold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg shadow-red-500/5 hover:shadow-red-500/15"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                      Close Console
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {/* Available badge */}
+                  <div className="badge-available">
+                    <span className="badge-dot" />
+                    Available for work
+                  </div>
+
+                  {/* Monospace label */}
+                  <p className="label-mono">{"Hi, I'm"}</p>
+
+                  {/* Name with video mask background following jesky.dev */}
+                  <div className="relative w-full max-w-2xl select-none mb-4 overflow-visible">
+                    <svg viewBox="0 0 600 150" width="100%" height="100%" className="overflow-visible">
+                      <defs>
+                        <mask id="video-text-mask" x="0" y="0" width="100%" height="100%">
+                          <rect x="0" y="0" width="100%" height="100%" fill="black" />
+                          <text
+                            x="0"
+                            y="50%"
+                            fill="white"
+                            fontFamily="Montserrat, sans-serif"
+                            fontWeight="900"
+                            fontSize="115"
+                            textAnchor="start"
+                            dominantBaseline="central"
+                            letterSpacing="-4"
+                          >
+                            YOSUA
+                          </text>
+                        </mask>
+                      </defs>
+                      <g mask="url(#video-text-mask)">
+                        <foreignObject x="0" y="0" width="100%" height="100%">
+                          <video
+                            className="w-full h-full object-cover"
+                            src="/videos/landscape.mp4"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                          />
+                        </foreignObject>
+                      </g>
+                    </svg>
+                  </div>
+
+                  {/* Professional Headline & Subtitle */}
+                  <div className="text-left space-y-3">
+                    <h2 className="text-2xl sm:text-3xl font-extrabold text-indigo-400 tracking-wide uppercase font-sans leading-none">
+                      Fullstack Software Engineer
+                    </h2>
+                    <p className="text-slate-400 font-light leading-relaxed max-w-lg text-sm sm:text-base">
+                      I build scalable backend systems and modern web applications using Java, Spring Boot, Golang, Next.js, and TypeScript. Experienced in developing business applications, database workflows, and clean user interfaces.
+                    </p>
+                  </div>
+
+                  {/* CTA buttons */}
+                  <div className="flex flex-wrap gap-4 items-center mt-6">
+                    <a 
+                      href="#projects" 
+                      className="inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg shadow-indigo-500/15 hover:shadow-indigo-500/25 active:scale-95 duration-300"
+                    >
+                      View Projects
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    </a>
+                    <a 
+                      href="/cv/Yosua Reynaldi Manurun-resume.pdf" 
+                      download 
+                      className="inline-flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg active:scale-95 duration-300"
+                    >
+                      Download CV
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </a>
+                    <a 
+                      href="#contact" 
+                      className="inline-flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg active:scale-95 duration-300"
+                    >
+                      Contact Me
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                    </a>
+                  </div>
+
+                  {/* Stats Cards (Relocated under CTA buttons) */}
+                  <div className="flex gap-3 w-full max-w-lg mt-8">
+                    {stats.map((s) => (
+                      <div key={s.label} className="flex-1 flex flex-col items-center justify-center p-3 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-md hover:border-indigo-500/35 hover:bg-indigo-500/5 transition-all duration-300 transform hover:-translate-y-1">
+                        <span className="text-xl sm:text-2xl font-black text-white tracking-tight font-sans leading-none">{s.value}</span>
+                        <span className="text-[9px] sm:text-[10px] text-slate-500 font-bold tracking-wider uppercase mt-1.5 text-center leading-tight">{s.label}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Testimonial & Social Proof */}
+                  <div className="mt-8 hidden sm:block border border-white/10 bg-white/[0.01] backdrop-blur-md rounded-2xl p-5 max-w-lg relative group select-none text-left">
+                    <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-indigo-500/40"></div>
+                    <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-indigo-500/40"></div>
+                    
+                    <span className="text-[9px] font-mono font-bold text-indigo-400 uppercase tracking-widest block mb-2">
+                      Trusted By Clients & Colleagues
+                    </span>
+                    
+                    <p className="text-[12px] sm:text-xs text-slate-400 italic leading-relaxed font-light mb-3">
+                      &ldquo;Yosua adalah engineer yang sangat bertanggung jawab, solutif, dan mampu menghasilkan kualitas kode yang tinggi. Komunikasinya juga sangat baik.&rdquo;
+                    </p>
+                    
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="text-left">
+                        <span className="block text-xs font-bold text-white leading-tight">Ardi Pratama</span>
+                        <span className="block text-[9px] text-slate-500">CTO at Tech Solution</span>
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-1.5 items-center justify-end max-w-[200px]">
+                        {["Tech Solution", "Nexa Systems", "DataKita"].map((logo) => (
+                          <span key={logo} className="text-[8px] font-bold text-slate-600 font-mono tracking-tighter uppercase px-1.5 py-0.5 border border-white/5 bg-white/[0.02] rounded">
+                            {logo}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* RIGHT COLUMN */}
             <div className="hero-right">
-              {/* Mission Console HUD (Integrated directly in column stack) */}
-              <div className="w-full bg-[#050508]/60 backdrop-blur-xl border border-white/5 p-4 rounded-xl flex flex-col gap-3 select-none shadow-[0_10px_40px_rgba(0,0,0,0.6)] relative overflow-hidden">
-                {/* Corner Brackets */}
-                <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t border-l border-cyan-500/80"></div>
-                <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-cyan-500/80"></div>
-                <div className="absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l border-cyan-500/80"></div>
-                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r border-cyan-500/80"></div>
+              {/* Mission Console HUD (Only when playMode is active) */}
+              {playMode && (
+                <div className="w-full bg-[#050508]/60 backdrop-blur-xl border border-white/5 p-4 rounded-xl flex flex-col gap-3 select-none shadow-[0_10px_40px_rgba(0,0,0,0.6)] relative overflow-hidden">
+                  {/* Corner Brackets */}
+                  <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t border-l border-cyan-500/80"></div>
+                  <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-cyan-500/80"></div>
+                  <div className="absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l border-cyan-500/80"></div>
+                  <div className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r border-cyan-500/80"></div>
 
-                {/* Header */}
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-cyan-400 font-bold tracking-widest font-mono uppercase">
-                    SYSTEM STATUS: ONLINE
-                  </span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981] animate-pulse"></span>
-                </div>
-
-                {/* Separator */}
-                <div className="w-full h-px bg-white/5"></div>
-
-                {/* Focus Project Info */}
-                <div className="flex flex-col gap-0.5 font-mono text-left">
-                  <span className="text-[8px] text-slate-500 uppercase tracking-wider">Focus Project</span>
-                  <span className="text-[11px] text-slate-200 font-bold">Lapor Kos</span>
-                </div>
-
-                {/* Shipped Projects */}
-                <div className="flex items-center justify-between font-mono">
-                  <span className="text-[9px] text-slate-500 uppercase tracking-wider">Projects Shipped:</span>
-                  <span className="text-[11px] font-bold text-white bg-indigo-500/10 px-2 py-0.5 border border-indigo-500/20 rounded">5+</span>
-                </div>
-
-                {/* Availability progress bar */}
-                <div className="flex flex-col gap-1 font-mono text-left">
-                  <div className="flex items-center justify-between text-[9px]">
-                    <span className="text-slate-500 uppercase tracking-wider">System Integrity:</span>
-                    <span id="hud-shield-val" className="font-bold text-cyan-400">100%</span>
+                  {/* Header */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-cyan-400 font-bold tracking-widest font-mono uppercase">
+                      SYSTEM STATUS: ONLINE
+                    </span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981] animate-pulse"></span>
                   </div>
-                  <div className="w-full h-1.5 bg-white/5 border border-white/10 rounded-full overflow-hidden">
-                    <div id="hud-shield-bar" className="h-full bg-cyan-500 transition-all duration-300 w-full"></div>
+
+                  {/* Separator */}
+                  <div className="w-full h-px bg-white/5"></div>
+
+                  {/* Focus Project Info */}
+                  <div className="flex flex-col gap-0.5 font-mono text-left">
+                    <span className="text-[8px] text-slate-500 uppercase tracking-wider">Focus Project</span>
+                    <span className="text-[11px] text-slate-200 font-bold">Lapor Kos</span>
+                  </div>
+
+                  {/* Shipped Projects */}
+                  <div className="flex items-center justify-between font-mono">
+                    <span className="text-[9px] text-slate-500 uppercase tracking-wider">Projects Shipped:</span>
+                    <span className="text-[11px] font-bold text-white bg-indigo-500/10 px-2 py-0.5 border border-indigo-500/20 rounded">5+</span>
+                  </div>
+
+                  {/* Availability progress bar */}
+                  <div className="flex flex-col gap-1 font-mono text-left">
+                    <div className="flex items-center justify-between text-[9px]">
+                      <span className="text-slate-500 uppercase tracking-wider">System Integrity:</span>
+                      <span id="hud-shield-val" className="font-bold text-cyan-400">100%</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-white/5 border border-white/10 rounded-full overflow-hidden">
+                      <div id="hud-shield-bar" className="h-full bg-cyan-500 transition-all duration-300 w-full"></div>
+                    </div>
+                  </div>
+
+                  {/* Score represented as anomalies cleared */}
+                  <div className="flex items-center justify-between font-mono">
+                    <span className="text-[9px] text-slate-500 uppercase tracking-wider">Anomali Diatasi:</span>
+                    <span id="hud-score-val" className="text-xs font-bold text-slate-200 font-mono tracking-widest">00000</span>
                   </div>
                 </div>
+              )}
 
-                {/* Score represented as anomalies cleared */}
-                <div className="flex items-center justify-between font-mono">
-                  <span className="text-[9px] text-slate-500 uppercase tracking-wider">Anomali Diatasi:</span>
-                  <span id="hud-score-val" className="text-xs font-bold text-slate-200 font-mono tracking-widest">00000</span>
+              {/* Developer Info Card */}
+              {playMode ? (
+                /* High-Tech Developer ID Card for Gaming Mode */
+                <div className="w-full bg-[#070814]/75 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex flex-col gap-5 select-none relative shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden">
+                  <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t-2 border-l-2 border-cyan-500/70 rounded-tl-sm"></div>
+                  <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t-2 border-r-2 border-cyan-500/70 rounded-tr-sm"></div>
+                  <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b-2 border-l-2 border-cyan-500/70 rounded-bl-sm"></div>
+                  <div className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b-2 border-r-2 border-cyan-500/70 rounded-br-sm"></div>
+
+                  {/* Grid layout for Avatar and Text */}
+                  <div className="flex gap-5 items-center">
+                    <div className="w-20 h-20 rounded-xl border-2 border-cyan-500/40 relative overflow-hidden bg-cyan-950/20 shrink-0 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
+                      <Image
+                        src="/yosua_profile.png"
+                        alt="Yosua Reynaldi" 
+                        fill
+                        sizes="80px"
+                        className="object-cover object-[center_25%] brightness-110 contrast-105"
+                      />
+                    </div>
+
+                    <div className="flex flex-col text-left font-mono min-w-0">
+                      <span className="text-[9px] text-cyan-400 font-extrabold uppercase tracking-widest">DEVELOPER PROFILE</span>
+                      <h3 className="text-lg font-black text-white tracking-wide truncate font-sans mt-1">Yosua Reynaldi M.</h3>
+                      <span className="text-xs text-slate-300 mt-1 font-sans font-medium flex items-center gap-1">
+                        Bandung, Indonesia
+                      </span>
+                      <span className="text-[10px] text-indigo-400 font-extrabold mt-1 tracking-wider uppercase">Fullstack Developer / SE</span>
+                    </div>
+                  </div>
+
+                  <div className="w-full h-px bg-white/10"></div>
+                  
+                  <div className="grid grid-cols-2 gap-3 text-left font-mono text-[10px] text-slate-400">
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-slate-500 uppercase tracking-widest text-[8px] font-bold">Expertise</span>
+                      <span className="text-slate-200 font-bold font-sans">Web & Mobile</span>
+                    </div>
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-slate-500 uppercase tracking-widest text-[8px] font-bold">Status</span>
+                      <span className="text-emerald-400 font-bold font-sans flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Open for Work
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-
-              {/* High-Tech Developer ID Card */}
-              <div className="w-full bg-[#070814]/75 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex flex-col gap-5 select-none relative shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden">
-                {/* Corner brackets decoration */}
-                <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t-2 border-l-2 border-cyan-500/70 rounded-tl-sm"></div>
-                <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t-2 border-r-2 border-cyan-500/70 rounded-tr-sm"></div>
-                <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b-2 border-l-2 border-cyan-500/70 rounded-bl-sm"></div>
-                <div className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b-2 border-r-2 border-cyan-500/70 rounded-br-sm"></div>
-
-                {/* Grid layout for Avatar and Text */}
-                <div className="flex gap-5 items-center">
-                  {/* Holographic Avatar container - Made larger */}
-                  <div className="w-20 h-20 rounded-xl border-2 border-cyan-500/40 relative overflow-hidden bg-cyan-950/20 shrink-0 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
-                    <img 
-                      src="/yosua_profile.png" 
-                      alt="Yosua Reynaldi" 
-                      className="w-full h-full object-cover object-[center_25%] brightness-110 contrast-105"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80";
-                      }}
+              ) : (
+                /* Sleek Professional Profile Card for Branding Mode */
+                <div className="w-full bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-[24px] p-5 flex flex-col gap-4 relative shadow-[0_30px_60px_rgba(0,0,0,0.4)] overflow-hidden group">
+                  {/* Subtle Top Glow Accent */}
+                  <div className="absolute top-0 left-10 right-10 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
+                  
+                  {/* Large Vertical Image Frame */}
+                  <div className="relative aspect-[1/1] w-full overflow-hidden rounded-2xl border border-white/5 bg-slate-950/20 shadow-inner">
+                    <Image
+                      src="/yosua_profile.png"
+                      alt="Yosua Reynaldi Manurun" 
+                      fill
+                      sizes="(max-width: 900px) 90vw, 300px"
+                      className="object-cover object-[center_15%] group-hover:scale-[1.03] transition-transform duration-700 ease-out"
                     />
+                    {/* Dynamic Overlay Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#050508]/80 via-transparent to-transparent" />
+                    
+                    {/* Status badge embedded inside the picture corner */}
+                    <div className="absolute top-3 left-3 bg-black/45 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 flex items-center gap-1.5 select-none">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-[9px] font-mono font-bold text-slate-300 uppercase tracking-widest">Active Status</span>
+                    </div>
                   </div>
 
-                  {/* ID Details */}
-                  <div className="flex flex-col text-left font-mono min-w-0">
-                    <span className="text-[9px] text-cyan-400 font-extrabold uppercase tracking-widest">DEVELOPER PROFILE</span>
-                    <h3 className="text-lg font-black text-white tracking-wide truncate font-sans mt-1">Yosua Reynaldi M.</h3>
-                    <span className="text-xs text-slate-300 mt-1 font-sans font-medium flex items-center gap-1">
-                      Bandung, Indonesia
-                    </span>
-                    <span className="text-[10px] text-indigo-400 font-extrabold mt-1 tracking-wider uppercase">Fullstack Developer / SE</span>
+                  {/* Persona Details */}
+                  <div className="text-left space-y-1">
+                    <h3 className="text-xl font-black text-white tracking-wide uppercase font-sans leading-none">
+                      Yosua Reynaldi M.
+                    </h3>
+                    <p className="text-xs font-bold text-indigo-400 tracking-wider uppercase font-mono">
+                      Fullstack Software Engineer
+                    </p>
+                  </div>
+
+                  {/* Small Divider */}
+                  <div className="w-full h-px bg-white/5" />
+
+                  {/* Tech Stack Groups */}
+                  <div className="space-y-3 text-left select-none">
+                    <span className="text-[8px] text-slate-500 font-mono font-bold uppercase tracking-widest block">Tech Stack</span>
+                    <div className="flex flex-col gap-2.5 font-sans text-[11px] text-slate-400">
+                      {[
+                        { category: "Frontend", items: ["Next.js", "Angular", "TypeScript", "Tailwind CSS"] },
+                        { category: "Backend", items: ["Java", "Spring Boot", "Golang"] },
+                        { category: "Database & Cloud", items: ["SQL Server", "PostgreSQL", "MySQL"] },
+                        { category: "Tools", items: ["Git", "Docker", "REST API", "Postman"] }
+                      ].map((group, idx) => (
+                        <div key={idx} className="space-y-1">
+                          <span className="text-[8px] font-bold text-slate-500 uppercase tracking-wider block">{group.category}</span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {group.items.map((item) => (
+                              <span key={item} className="px-2 py-0.5 bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-[9px] font-medium rounded-md">
+                                {item}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-
-                {/* Separator */}
-                <div className="w-full h-px bg-white/10"></div>
-                
-                {/* Informative Stats Grid */}
-                <div className="grid grid-cols-2 gap-3 text-left font-mono text-[10px] text-slate-400">
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-slate-500 uppercase tracking-widest text-[8px] font-bold">Expertise</span>
-                    <span className="text-slate-200 font-bold font-sans">Web & Mobile</span>
-                  </div>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-slate-500 uppercase tracking-widest text-[8px] font-bold">Status</span>
-                    <span className="text-emerald-400 font-bold font-sans flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                      Open for Work
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Stat cards */}
-              <div className="stat-cards">
-                {stats.map((s) => (
-                  <div key={s.label} className="stat-card">
-                    <span className="stat-value">{s.value}</span>
-                    <span className="stat-label">{s.label}</span>
-                  </div>
-                ))}
-              </div>
+              )}
             </div>
           </div>
 
           {/* ── Footer strip ────────────────────────────── */}
-          <div className="hero-footer">
-            <span className="footer-dot" />
-            <span>Open to freelance &amp; full-time — Bandung, ID</span>
+          <div className="hero-footer flex items-center justify-between w-full pointer-events-auto">
+            <div className="flex items-center gap-2">
+              <span className="footer-dot" />
+              <span className="text-slate-400 text-xs font-light">Open to freelance &amp; full-time opportunities | Bandung, ID</span>
+            </div>
+            <a 
+              href="mailto:reyyosua29@gmail.com" 
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/35 hover:border-indigo-500/50 rounded-full text-[10px] font-mono font-bold text-indigo-400 hover:text-indigo-300 transition-all uppercase tracking-wider"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+              Email Me
+            </a>
           </div>
         </section>
       </div>
