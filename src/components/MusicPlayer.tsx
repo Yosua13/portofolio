@@ -53,11 +53,13 @@ const TRACKS: Track[] = [
 export default function MusicPlayer({ 
   playOnStart = false,
   playMode = false,
-  setPlayMode
+  setPlayMode,
+  inline = false
 }: { 
   playOnStart?: boolean;
   playMode?: boolean;
   setPlayMode?: (val: boolean) => void;
+  inline?: boolean;
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -184,23 +186,31 @@ export default function MusicPlayer({
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 font-sans flex items-end gap-3 select-none">
+    <div className={`${
+      inline 
+        ? "relative flex items-center gap-2 select-none" 
+        : "fixed bottom-6 md:bottom-20 right-6 z-50 flex items-end gap-3 select-none"
+    } font-sans`}>
       {/* Floating Game Toggle Button (Gamepad Icon) */}
       <button
         onClick={() => setPlayMode?.(!playMode)}
-        className={`flex items-center justify-center w-12 h-12 rounded-full border hover:scale-105 active:scale-95 shadow-xl transition-all cursor-pointer group shrink-0 ${
+        className={`flex items-center justify-center rounded-full border hover:scale-105 active:scale-95 transition-all cursor-pointer group shrink-0 ${
+          inline ? "w-8 h-8" : "w-12 h-12 shadow-xl"
+        } ${
           playMode 
             ? "border-cyan-500 bg-cyan-950/80 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.4)]" 
             : "border-slate-800 bg-[#090b16]/90 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/50"
         }`}
         title={playMode ? "Exit Flight Game" : "Start Flight Game"}
       >
-        <Gamepad2 className={`w-5 h-5 group-hover:rotate-12 transition-transform duration-300 ${playMode ? "animate-pulse" : ""}`} />
+        <Gamepad2 className={`${inline ? "w-4 h-4" : "w-5 h-5"} group-hover:rotate-12 transition-transform duration-300 ${playMode ? "animate-pulse" : ""}`} />
       </button>
 
       {isExpanded ? (
         /* Expanded Player Card (Dark Glass Theme, Smaller size, rounded corners) */
-        <div className="w-64 border border-white/10 bg-[#090b16]/90 backdrop-blur-md p-4 shadow-2xl flex flex-col space-y-3 rounded-xl select-none shrink-0 text-slate-200">
+        <div className={`w-64 border border-white/10 bg-[#090b16]/90 backdrop-blur-md p-4 shadow-2xl flex flex-col space-y-3 rounded-xl select-none shrink-0 text-slate-200 ${
+          inline ? "absolute bottom-12 right-0 z-[100]" : ""
+        }`}>
           {/* Top Bar with Album Art and Collapse Button */}
           <div className="relative aspect-[16/10] w-full bg-slate-900/50 overflow-hidden rounded-lg border border-white/5">
             <Image
@@ -315,7 +325,9 @@ export default function MusicPlayer({
           `}</style>
           <button
             onClick={() => setIsExpanded(true)}
-            className="relative flex items-center justify-center w-12 h-12 bg-white border border-slate-200 shadow-xl cursor-pointer hover:scale-105 active:scale-95 transition-all rounded-full select-none"
+            className={`relative flex items-center justify-center bg-white border border-slate-200 cursor-pointer hover:scale-105 active:scale-95 transition-all rounded-full select-none ${
+              inline ? "w-8 h-8" : "w-12 h-12 shadow-xl"
+            }`}
             title="Open Music Player"
           >
             {/* Cover Image */}
@@ -323,7 +335,7 @@ export default function MusicPlayer({
               src={currentTrack.cover}
               alt={currentTrack.title}
               fill
-              sizes="48px"
+              sizes={inline ? "32px" : "48px"}
               className="object-cover rounded-full"
             />
             {/* Semi-transparent dark overlay */}

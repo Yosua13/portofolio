@@ -3,9 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
 import { ExternalLink, Gamepad2, Menu, X } from "lucide-react";
-import Image from "next/image";
 import HeroSection from "@/components/HeroSection";
-import MusicPlayer from "@/components/MusicPlayer";
 import WelcomeScreen from "@/components/WelcomeScreen";
 import ProjectsSection from "@/components/ProjectsSection";
 import WhatIDoSection from "@/components/WhatIDoSection";
@@ -32,6 +30,55 @@ interface ProjectType {
   tags: string[];
   techStack: string[];
   link?: string;
+  previewTone: string;
+  screens: {
+    title: string;
+    caption: string;
+  }[];
+}
+
+function ProjectWireframe({ title, caption, index }: { title: string; caption: string; index: number }) {
+  return (
+    <div className="group/wire relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+      <div className="mb-3 flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-red-400" />
+          <span className="h-2 w-2 rounded-full bg-amber-300" />
+          <span className="h-2 w-2 rounded-full bg-emerald-300" />
+        </div>
+        <span className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-500">
+          Screen {index + 1}
+        </span>
+      </div>
+
+      <div className="grid aspect-[16/10] grid-cols-[0.34fr_1fr] gap-3 rounded-xl border border-white/10 bg-slate-950/70 p-3">
+        <div className="space-y-2 border-r border-white/10 pr-3">
+          <span className="block h-3 w-16 rounded-full bg-white/30" />
+          {[0, 1, 2, 3].map((item) => (
+            <span key={item} className="block h-7 rounded-lg bg-white/10" />
+          ))}
+        </div>
+        <div className="space-y-3">
+          <span className="block h-5 w-2/5 rounded-full bg-white/30" />
+          <div className="grid grid-cols-3 gap-2">
+            {[0, 1, 2].map((item) => (
+              <span key={item} className="block h-12 rounded-xl bg-indigo-400/20" />
+            ))}
+          </div>
+          <div className="space-y-2 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+            {[0, 1, 2, 3].map((item) => (
+              <span key={item} className="block h-3 rounded-full bg-white/15" />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-3">
+        <h5 className="text-sm font-black text-white">{title}</h5>
+        <p className="mt-1 text-xs leading-relaxed text-slate-400">{caption}</p>
+      </div>
+    </div>
+  );
 }
 
 export default function Portfolio() {
@@ -239,7 +286,7 @@ export default function Portfolio() {
               <a href="https://github.com/Yosua13" target="_blank" rel="noreferrer" className="flex items-center justify-center w-11 h-11 text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="GitHub">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
               </a>
-              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 border border-white/10 text-[10px] text-white uppercase font-bold tracking-wider rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl whitespace-nowrap z-50">
+              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2.5 py-1 custom-tooltip text-[10px] text-white uppercase font-bold tracking-wider rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl whitespace-nowrap z-50">
                 GitHub
               </div>
             </div>
@@ -248,7 +295,7 @@ export default function Portfolio() {
               <a href="https://www.linkedin.com/in/yosua-reynaldi-manurun/" target="_blank" rel="noreferrer" className="flex items-center justify-center w-11 h-11 text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="LinkedIn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>
               </a>
-              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 border border-white/10 text-[10px] text-white uppercase font-bold tracking-wider rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl whitespace-nowrap z-50">
+              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2.5 py-1 custom-tooltip text-[10px] text-white uppercase font-bold tracking-wider rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl whitespace-nowrap z-50">
                 LinkedIn
               </div>
             </div>
@@ -257,7 +304,7 @@ export default function Portfolio() {
               <a href="mailto:reyyosua29@gmail.com" className="flex items-center justify-center w-11 h-11 text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="Email">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
               </a>
-              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 border border-white/10 text-[10px] text-white uppercase font-bold tracking-wider rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl whitespace-nowrap z-50">
+              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2.5 py-1 custom-tooltip text-[10px] text-white uppercase font-bold tracking-wider rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl whitespace-nowrap z-50">
                 Email
               </div>
             </div>
@@ -278,7 +325,7 @@ export default function Portfolio() {
                   <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                 )}
               </button>
-              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 border border-white/10 text-[10px] text-white uppercase font-bold tracking-wider rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl whitespace-nowrap z-50">
+              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2.5 py-1 custom-tooltip text-[10px] text-white uppercase font-bold tracking-wider rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl whitespace-nowrap z-50">
                 {theme === "dark" ? "Light Mode" : "Dark Mode"}
               </div>
             </div>
@@ -336,7 +383,7 @@ export default function Portfolio() {
       </AnimatePresence>
 
       {/* Hero Section */}
-      <HeroSection playMode={playMode} setPlayMode={setPlayMode} />
+      <HeroSection playMode={playMode} setPlayMode={setPlayMode} playMusicOnStart={playMusicOnStart} />
 
       <main className="relative z-10 pb-24 px-8 md:px-16 max-w-[1300px] mx-auto space-y-40">
         <RecruiterSnapshot />
@@ -363,7 +410,7 @@ export default function Portfolio() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedProject(null)}
-              className="absolute inset-0 bg-black/85 backdrop-blur-md"
+              className="project-modal-backdrop absolute inset-0 bg-black/85 backdrop-blur-md"
             />
             
             {/* Modal Body */}
@@ -388,16 +435,45 @@ export default function Portfolio() {
 
               {/* Scrollable Container */}
               <div className="overflow-y-auto w-full">
-                {/* Modal Image */}
-                <div className="aspect-[16/9] relative w-full bg-slate-900 shrink-0">
-                  <Image
-                    src={selectedProject.image}
-                    alt={selectedProject.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-contain"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#070709] via-[#070709]/30 to-transparent"></div>
+                {/* Modal Wireframe Preview */}
+                <div className="relative w-full shrink-0 overflow-hidden bg-slate-950 p-5 sm:p-8">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(99,102,241,0.35),transparent_32%),radial-gradient(circle_at_80%_10%,rgba(6,182,212,0.22),transparent_28%),linear-gradient(135deg,rgba(15,23,42,0.96),rgba(3,7,18,0.98))]" />
+                  <div className="relative mx-auto max-w-3xl rounded-[24px] border border-white/10 bg-black/35 p-4 shadow-2xl shadow-black/60 backdrop-blur-md">
+                    <div className="mb-4 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
+                        <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
+                        <span className="h-2.5 w-2.5 rounded-full bg-emerald-300" />
+                      </div>
+                      <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/60">
+                        Wireframe Preview
+                      </span>
+                    </div>
+                    <div className="grid aspect-[16/9] grid-cols-[0.28fr_1fr] gap-4 rounded-2xl border border-white/10 bg-slate-950/80 p-4">
+                      <div className="space-y-3 border-r border-white/10 pr-4">
+                        <span className="block h-4 w-20 rounded-full bg-white/35" />
+                        {[0, 1, 2, 3, 4].map((item) => (
+                          <span key={item} className="block h-8 rounded-xl bg-white/10" />
+                        ))}
+                      </div>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between gap-4">
+                          <span className="block h-6 w-2/5 rounded-full bg-white/35" />
+                          <span className="block h-8 w-28 rounded-full bg-indigo-400/35" />
+                        </div>
+                        <div className="grid grid-cols-3 gap-3">
+                          {[0, 1, 2].map((item) => (
+                            <span key={item} className="block h-20 rounded-2xl bg-white/10" />
+                          ))}
+                        </div>
+                        <div className="grid grid-cols-[1fr_0.7fr] gap-3">
+                          <span className="block h-28 rounded-2xl bg-cyan-400/15" />
+                          <span className="block h-28 rounded-2xl bg-white/10" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#070709] to-transparent" />
                 </div>
 
                 {/* Modal Content */}
@@ -446,6 +522,20 @@ export default function Portfolio() {
                   )}
 
                   <div className="space-y-3">
+                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Application Screenshots Wireframe</h4>
+                    <div className="grid gap-4 md:grid-cols-3">
+                      {selectedProject.screens.map((screen, index) => (
+                        <ProjectWireframe
+                          key={screen.title}
+                          title={screen.title}
+                          caption={screen.caption}
+                          index={index}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
                     <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Technologies Used</h4>
                     <div className="flex flex-wrap gap-2">
                       {selectedProject.techStack.map((tech: string) => (
@@ -479,7 +569,6 @@ export default function Portfolio() {
           </div>
         )}
       </AnimatePresence>
-      <MusicPlayer playOnStart={playMusicOnStart} playMode={playMode} setPlayMode={setPlayMode} />
 
       <AnimatePresence>
         {playMode && (

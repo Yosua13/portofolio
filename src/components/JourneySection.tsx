@@ -113,7 +113,7 @@ export default function JourneySection() {
         watermark="JOURNEY"
       />
 
-      <div className="relative w-full max-w-[1400px] mx-auto" ref={timelineContainerRef}>
+      <div className="relative w-full max-w-[1400px] mx-auto" style={{ position: "relative" }} ref={timelineContainerRef}>
         <div
           className="absolute left-[20px] md:left-[40px] w-1 bg-white/5 rounded-full overflow-hidden"
           style={{

@@ -49,11 +49,14 @@ html.light .bg-\[\#0d0f18\]\/45,
 html.light .bg-\[\#0d0f18\],
 html.light .bg-\[\#080a12\]\/95,
 html.light .bg-\[\#090b16\]\/90,
+html.light .bg-slate-950,
+html.light .bg-slate-950\/70,
+html.light .bg-slate-950\/80,
 html.light .bg-white\/\[0\.02\],
 html.light .bg-white\/\[0\.03\],
 html.light .bg-white\/\[0\.05\],
 html.light .bg-white\/\[0\.08\] {
-  background-color: rgba(255, 255, 255, 0.72) !important;
+  background-color: rgba(255, 255, 255, 0.88) !important;
 }
 
 html.light .text-white,
@@ -65,21 +68,86 @@ html.light .text-slate-200 {
 html.light .text-slate-300,
 html.light .text-slate-400,
 html.light .text-slate-500 {
+  color: #334155 !important;
+}
+
+html.light .text-slate-600 {
   color: #475569 !important;
+}
+
+html.light .text-indigo-300,
+html.light .text-indigo-400,
+html.light .text-cyan-300,
+html.light .text-cyan-400,
+html.light .text-emerald-300,
+html.light .text-emerald-400 {
+  color: #3730a3 !important;
 }
 
 html.light .border-white\/5,
 html.light .border-white\/10,
 html.light .border-white\/15,
 html.light .border-white\/20 {
-  border-color: rgba(15, 23, 42, 0.12) !important;
+  border-color: rgba(15, 23, 42, 0.18) !important;
+}
+
+html.light .bg-black\/25,
+html.light .bg-black\/30,
+html.light .bg-black\/35,
+html.light .bg-black\/40,
+html.light .bg-black\/45,
+html.light .bg-black\/85,
+html.light .bg-black\/90 {
+  background-color: rgba(255, 255, 255, 0.76) !important;
+}
+
+html.light .from-black,
+html.light .via-black\/85,
+html.light .via-black\/90,
+html.light .to-black\/30 {
+  --tw-gradient-from: rgba(255, 255, 255, 0.96) var(--tw-gradient-from-position) !important;
+  --tw-gradient-via: rgba(255, 255, 255, 0.88) var(--tw-gradient-via-position) !important;
+  --tw-gradient-to: rgba(226, 232, 240, 0.58) var(--tw-gradient-to-position) !important;
+}
+
+html.light .bg-indigo-500\/15,
+html.light .bg-indigo-500\/20,
+html.light .bg-indigo-500\/5 {
+  background-color: rgba(79, 70, 229, 0.14) !important;
+}
+
+html.light .bg-emerald-500\/5,
+html.light .bg-emerald-500\/10 {
+  background-color: rgba(5, 150, 105, 0.12) !important;
+}
+
+html.light input,
+html.light textarea {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+  border-color: rgba(15, 23, 42, 0.18) !important;
+  color: #0f172a !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #64748b !important;
 }
 
 html.light .shadow-black\/80 {
   --tw-shadow-color: rgba(15, 23, 42, 0.22) !important;
 }
 
+.project-modal-backdrop,
+html.light .project-modal-backdrop {
+  background-color: rgba(2, 6, 23, 0.82) !important;
+}
+
 /* Hide scrollbar for all elements, including root */
+html, body, * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
 html, body, * {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
@@ -99,3 +167,15 @@ body::-webkit-scrollbar,
   height: 0 !important;
 }
 
+/* Custom Tooltip styling to support light/dark modes correctly */
+.custom-tooltip {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+html.light .custom-tooltip {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(15, 23, 42, 0.15) !important;
+}
