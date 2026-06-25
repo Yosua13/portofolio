@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { Play, Pause, SkipForward, SkipBack, Volume2, VolumeX, Minimize2, Music, Gamepad2 } from "lucide-react";
 
 interface Track {
@@ -62,11 +63,12 @@ export default function MusicPlayer({
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1); // Default volume 20%
+  const [volume, setVolume] = useState(0.2);
   const [isMuted, setIsMuted] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const volumeRef = useRef(volume);
 
   // Handle Play/Pause
   const togglePlay = () => {
@@ -81,14 +83,14 @@ export default function MusicPlayer({
   };
 
   // Skip Next
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % TRACKS.length);
-  };
+  }, []);
 
   // Skip Prev
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     setCurrentTrackIndex((prevIndex) => (prevIndex - 1 + TRACKS.length) % TRACKS.length);
-  };
+  }, []);
 
   // Play immediately when playOnStart prop becomes true
   useEffect(() => {
@@ -105,11 +107,19 @@ export default function MusicPlayer({
 
   const currentTrack = TRACKS[currentTrackIndex];
 
+  useEffect(() => {
+    volumeRef.current = volume;
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+      audioRef.current.muted = isMuted || volume === 0;
+    }
+  }, [isMuted, volume]);
+
   // Initialize Audio
   useEffect(() => {
     const audio = new Audio(currentTrack.url);
     audioRef.current = audio;
-    audio.volume = volume;
+    audio.volume = volumeRef.current;
 
     const onTimeUpdate = () => setCurrentTime(audio.currentTime);
     const onLoadedMetadata = () => setDuration(audio.duration);
@@ -130,7 +140,7 @@ export default function MusicPlayer({
       audio.removeEventListener("loadedmetadata", onLoadedMetadata);
       audio.removeEventListener("ended", onEnded);
     };
-  }, [currentTrackIndex]);
+  }, [currentTrack.url, handleNext, isPlaying]);
 
   // Handle Scrubber Seek
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,10 +203,12 @@ export default function MusicPlayer({
         <div className="w-64 border border-white/10 bg-[#090b16]/90 backdrop-blur-md p-4 shadow-2xl flex flex-col space-y-3 rounded-xl select-none shrink-0 text-slate-200">
           {/* Top Bar with Album Art and Collapse Button */}
           <div className="relative aspect-[16/10] w-full bg-slate-900/50 overflow-hidden rounded-lg border border-white/5">
-            <img
+            <Image
               src={currentTrack.cover}
               alt={currentTrack.title}
-              className={`w-full h-full object-cover opacity-90 transition-transform duration-1000 ${isPlaying ? 'scale-105' : 'scale-100'}`}
+              fill
+              sizes="256px"
+              className={`object-cover opacity-90 transition-transform duration-1000 ${isPlaying ? 'scale-105' : 'scale-100'}`}
             />
             {/* Dark overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
@@ -307,10 +319,12 @@ export default function MusicPlayer({
             title="Open Music Player"
           >
             {/* Cover Image */}
-            <img
+            <Image
               src={currentTrack.cover}
               alt={currentTrack.title}
-              className="w-full h-full object-cover rounded-full"
+              fill
+              sizes="48px"
+              className="object-cover rounded-full"
             />
             {/* Semi-transparent dark overlay */}
             <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center">

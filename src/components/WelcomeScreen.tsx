@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface WelcomeScreenProps {
@@ -8,11 +7,7 @@ interface WelcomeScreenProps {
 }
 
 export default function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
-  const [loaded, setLoaded] = useState(true);
-
-  useEffect(() => {
-    // Buttons are displayed immediately
-  }, []);
+  const loaded = true;
 
   return (
     <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#030305] overflow-hidden select-none">
