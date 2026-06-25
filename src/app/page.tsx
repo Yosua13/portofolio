@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
 import { ExternalLink, Gamepad2, Menu, X } from "lucide-react";
+import Image from "next/image";
 import HeroSection from "@/components/HeroSection";
 import WelcomeScreen from "@/components/WelcomeScreen";
 import ProjectsSection from "@/components/ProjectsSection";
@@ -27,6 +28,7 @@ interface ProjectType {
   contribution?: string;
   impact?: string;
   image: string;
+  video: string;
   tags: string[];
   techStack: string[];
   link?: string;
@@ -34,12 +36,13 @@ interface ProjectType {
   screens: {
     title: string;
     caption: string;
+    image: string;
   }[];
 }
 
-function ProjectWireframe({ title, caption, index }: { title: string; caption: string; index: number }) {
+function ProjectScreenshot({ title, caption, image, index }: { title: string; caption: string; image: string; index: number }) {
   return (
-    <div className="group/wire relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+    <div className="group/screen relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-3 transition-colors hover:border-indigo-500/35">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-red-400" />
@@ -51,26 +54,14 @@ function ProjectWireframe({ title, caption, index }: { title: string; caption: s
         </span>
       </div>
 
-      <div className="grid aspect-[16/10] grid-cols-[0.34fr_1fr] gap-3 rounded-xl border border-white/10 bg-slate-950/70 p-3">
-        <div className="space-y-2 border-r border-white/10 pr-3">
-          <span className="block h-3 w-16 rounded-full bg-white/30" />
-          {[0, 1, 2, 3].map((item) => (
-            <span key={item} className="block h-7 rounded-lg bg-white/10" />
-          ))}
-        </div>
-        <div className="space-y-3">
-          <span className="block h-5 w-2/5 rounded-full bg-white/30" />
-          <div className="grid grid-cols-3 gap-2">
-            {[0, 1, 2].map((item) => (
-              <span key={item} className="block h-12 rounded-xl bg-indigo-400/20" />
-            ))}
-          </div>
-          <div className="space-y-2 rounded-xl border border-white/10 bg-white/[0.04] p-3">
-            {[0, 1, 2, 3].map((item) => (
-              <span key={item} className="block h-3 rounded-full bg-white/15" />
-            ))}
-          </div>
-        </div>
+      <div className="relative aspect-[16/9] overflow-hidden rounded-xl border border-white/10 bg-slate-950/70">
+        <Image
+          src={image}
+          alt={`${title} screenshot`}
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="object-cover transition-transform duration-500 group-hover/screen:scale-[1.03]"
+        />
       </div>
 
       <div className="mt-3">
@@ -419,7 +410,7 @@ export default function Portfolio() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
               transition={{ type: "spring", duration: 0.4 }}
-              className="bg-[#070709] border border-white/10 rounded-none w-full max-w-2xl relative z-10 overflow-hidden flex flex-col max-h-[90vh]"
+              className="bg-[#070709] border border-white/10 rounded-none w-full max-w-6xl xl:max-w-7xl relative z-10 overflow-hidden flex flex-col max-h-[92vh]"
             >
               {/* Close Button */}
               <button
@@ -446,31 +437,27 @@ export default function Portfolio() {
                         <span className="h-2.5 w-2.5 rounded-full bg-emerald-300" />
                       </div>
                       <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/60">
-                        Wireframe Preview
+                        15s Application Demo
                       </span>
                     </div>
-                    <div className="grid aspect-[16/9] grid-cols-[0.28fr_1fr] gap-4 rounded-2xl border border-white/10 bg-slate-950/80 p-4">
-                      <div className="space-y-3 border-r border-white/10 pr-4">
-                        <span className="block h-4 w-20 rounded-full bg-white/35" />
-                        {[0, 1, 2, 3, 4].map((item) => (
-                          <span key={item} className="block h-8 rounded-xl bg-white/10" />
-                        ))}
-                      </div>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between gap-4">
-                          <span className="block h-6 w-2/5 rounded-full bg-white/35" />
-                          <span className="block h-8 w-28 rounded-full bg-indigo-400/35" />
-                        </div>
-                        <div className="grid grid-cols-3 gap-3">
-                          {[0, 1, 2].map((item) => (
-                            <span key={item} className="block h-20 rounded-2xl bg-white/10" />
-                          ))}
-                        </div>
-                        <div className="grid grid-cols-[1fr_0.7fr] gap-3">
-                          <span className="block h-28 rounded-2xl bg-cyan-400/15" />
-                          <span className="block h-28 rounded-2xl bg-white/10" />
-                        </div>
-                      </div>
+                    <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 bg-slate-950/80">
+                      <video
+                        src={selectedProject.video}
+                        className="absolute inset-0 h-full w-full object-cover opacity-70"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                      />
+                      <Image
+                        src={selectedProject.image}
+                        alt={`${selectedProject.title} dummy interface preview`}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 768px"
+                        className="object-cover opacity-35 mix-blend-screen"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent" />
                     </div>
                   </div>
                   <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#070709] to-transparent" />
@@ -522,13 +509,14 @@ export default function Portfolio() {
                   )}
 
                   <div className="space-y-3">
-                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Application Screenshots Wireframe</h4>
-                    <div className="grid gap-4 md:grid-cols-3">
+                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Screenshot Aplikasi</h4>
+                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                       {selectedProject.screens.map((screen, index) => (
-                        <ProjectWireframe
+                        <ProjectScreenshot
                           key={screen.title}
                           title={screen.title}
                           caption={screen.caption}
+                          image={screen.image}
                           index={index}
                         />
                       ))}
