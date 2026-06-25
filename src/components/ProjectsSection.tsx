@@ -33,13 +33,6 @@ const projectsData = [
     techStack: ["Next.js", "Tailwind CSS", "Golang", "Gin", "Supabase", "Fonnte", "Vercel", "Railway", "Gemini API"],
     link: "https://lapor-kos.vercel.app/",
     previewTone: "from-emerald-500 via-teal-500 to-cyan-600",
-    videoTitle: "Tenant Ops Demo",
-    videoPanels: [
-      { label: "Rooms", value: "24 Active" },
-      { label: "Payments", value: "87% Paid" },
-      { label: "Tickets", value: "6 Open" }
-    ],
-    videoFeed: ["New tenant contract created", "Payment reminder queued", "Complaint moved to in-progress"],
     screens: buildScreens("lapor-kos", [
       { title: "Owner Dashboard", caption: "Room occupancy, payment status, and complaint ticket overview." },
       { title: "Tenant Contract", caption: "Digital tenant profile, room assignment, and billing timeline." },
@@ -66,13 +59,6 @@ const projectsData = [
     tags: ["Task Flow", "Project IT", "Kanban", "Dashboard"],
     techStack: ["React", "TypeScript", "Vite", "Tailwind CSS", "Zustand", "Go", "Gin", "PostgreSQL", "JWT", "bcrypt", "Gemini API"],
     previewTone: "from-indigo-500 via-sky-500 to-emerald-500",
-    videoTitle: "Sprint Flow Demo",
-    videoPanels: [
-      { label: "Backlog", value: "18 Tasks" },
-      { label: "In Progress", value: "7 Tasks" },
-      { label: "Blocked", value: "2 Alerts" }
-    ],
-    videoFeed: ["API task moved to review", "Mobile bug assigned", "Deploy checklist completed"],
     screens: buildScreens("flowak", [
       { title: "Project Flow Board", caption: "Kanban-style development flow from backlog to deployment." },
       { title: "Task Detail", caption: "Ownership, priority, checklist, blockers, and discussion context." },
@@ -99,13 +85,6 @@ const projectsData = [
     tags: ["Log Analyzer", "VM", "Root Cause", "Recommendation"],
     techStack: ["React", "TypeScript", "Vite", "Tailwind CSS", "Java", "Spring Boot", "JWT", "Gemini API", "RabbitMQ"],
     previewTone: "from-rose-500 via-red-500 to-amber-500",
-    videoTitle: "Error Trace Demo",
-    videoPanels: [
-      { label: "Errors", value: "14 Found" },
-      { label: "Severity", value: "High" },
-      { label: "Fixes", value: "5 Tips" }
-    ],
-    videoFeed: ["Null pointer pattern detected", "Database timeout grouped", "Recommendation generated"],
     screens: buildScreens("logia-log", [
       { title: "Log Stream", caption: "Live-style log reader with severity grouping and timestamps." },
       { title: "Root Cause", caption: "Readable diagnosis explaining the likely source of failure." },
@@ -168,52 +147,9 @@ function ProjectPreviewVideo({
       />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:28px_28px] opacity-25" />
 
-      <div className="absolute left-5 right-5 top-5 flex items-center justify-between rounded-xl border border-white/10 bg-black/35 px-4 py-3 backdrop-blur-md">
-        <div className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
-          <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-300" />
-        </div>
-        <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/75">
-          {project.videoTitle}
-        </span>
-      </div>
-
-      <div className="absolute left-7 right-7 top-24 grid grid-cols-3 gap-3">
-        {project.videoPanels.map((panel, index) => (
-          <div
-            key={panel.label}
-            className="rounded-2xl border border-white/10 bg-black/30 p-3 backdrop-blur-sm transition-all duration-700 group-hover:-translate-y-3 group-hover:bg-white/10"
-            style={{ transitionDelay: `${index * 80}ms` }}
-          >
-            <span className="block text-[8px] font-black uppercase tracking-[0.18em] text-white/55">{panel.label}</span>
-            <span className="mt-2 block text-sm font-black text-white">{panel.value}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="absolute bottom-20 left-7 right-7 rounded-2xl border border-white/10 bg-black/30 p-4 backdrop-blur-sm">
-        <div className="mb-3 flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(110,231,183,0.85)]" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/60">Live Activity</span>
-        </div>
-        <div className="space-y-2">
-          {project.videoFeed.map((item, index) => (
-            <div
-              key={item}
-              className="flex items-center justify-between rounded-xl bg-white/10 px-3 py-2 text-[10px] font-semibold text-white/80 transition-transform duration-700 group-hover:translate-x-2"
-              style={{ transitionDelay: `${index * 100}ms` }}
-            >
-              <span>{item}</span>
-              <span className="h-1.5 w-1.5 rounded-full bg-white/70" />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className={`absolute inset-0 grid place-items-center transition-opacity duration-500 ${isPreviewPlaying ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}>
-        <div className="flex items-center gap-3 rounded-full border border-white/20 bg-black/50 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-white shadow-2xl backdrop-blur-md">
-          <Play className="h-4 w-4 fill-white" />
+      <div className={`pointer-events-none absolute bottom-9 left-0 right-0 flex justify-center transition-opacity duration-500 ${isPreviewPlaying ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}>
+        <div className="flex items-center gap-2 rounded-full border border-white/20 bg-black/55 px-3.5 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-white shadow-2xl backdrop-blur-md">
+          <Play className="h-3.5 w-3.5 fill-white" />
           {isPreviewPlaying ? "Playing Demo" : "Hover to Play"}
         </div>
       </div>
