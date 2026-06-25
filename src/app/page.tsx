@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
-import { ExternalLink, Gamepad2, X } from "lucide-react";
+import { ExternalLink, Gamepad2, Menu, X } from "lucide-react";
 import Image from "next/image";
 import HeroSection from "@/components/HeroSection";
 import MusicPlayer from "@/components/MusicPlayer";
@@ -14,10 +14,12 @@ import SkillsSection from "@/components/SkillsSection";
 import JourneySection from "@/components/JourneySection";
 import CvSection from "@/components/CvSection";
 import ContactSection from "@/components/ContactSection";
+import RecruiterSnapshot from "@/components/RecruiterSnapshot";
 
 interface ProjectType {
   id: string;
   title: string;
+  category: string;
   location: string;
   role: string;
   headline: string;
@@ -29,10 +31,20 @@ interface ProjectType {
   image: string;
   tags: string[];
   techStack: string[];
-  link: string;
+  link?: string;
 }
 
 export default function Portfolio() {
+  const navItems = [
+    { id: "hero", label: "Home" },
+    { id: "projects", label: "Projects" },
+    { id: "profile", label: "Profile" },
+    { id: "skills", label: "Skills" },
+    { id: "journey", label: "Journey" },
+    { id: "cv", label: "CV" },
+    { id: "contact", label: "Contact" }
+  ];
+
   const [activeSection, setActiveSection] = useState("");
   const [selectedProject, setSelectedProject] = useState<ProjectType | null>(null);
   const [showWelcome, setShowWelcome] = useState(true);
@@ -40,26 +52,24 @@ export default function Portfolio() {
   const [showControlsGuide, setShowControlsGuide] = useState(false);
   const [playMode, setPlayMode] = useState(false);
   const [theme, setTheme] = useState("dark");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const toggleTheme = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
     if (typeof document !== "undefined") {
       if (newTheme === "light") {
         document.documentElement.classList.add("light");
-        document.body.style.filter = "invert(0.9) hue-rotate(180deg)";
-        document.body.style.background = "#fff";
       } else {
         document.documentElement.classList.remove("light");
-        document.body.style.filter = "";
-        document.body.style.background = "";
       }
     }
   };
 
 
-  // Disable body scroll when modal or welcome screen is active
+  // Disable body scroll when modal, menu, or welcome screen is active
   useEffect(() => {
-    if (selectedProject || showWelcome) {
+    if (selectedProject || showWelcome || isMobileMenuOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -67,7 +77,7 @@ export default function Portfolio() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [selectedProject, showWelcome]);
+  }, [selectedProject, showWelcome, isMobileMenuOpen]);
 
   const handleWelcomeComplete = (sound: boolean, destination: string) => {
     setPlayMusicOnStart(sound);
@@ -116,6 +126,7 @@ export default function Portfolio() {
       const target = e.target as HTMLElement;
       const anchor = target.closest("a");
       if (anchor && anchor.hash && anchor.hash.startsWith("#")) {
+        setIsMobileMenuOpen(false);
         const targetId = anchor.hash.substring(1);
         if (targetId === "hero") {
           e.preventDefault();
@@ -189,15 +200,7 @@ export default function Portfolio() {
           {/* Center: Floating Navigation */}
           <div className="absolute left-1/2 -translate-x-1/2 pointer-events-auto hidden md:block">
             <div className="flex items-center bg-white/[0.08] backdrop-blur-md backdrop-saturate-[140%] border border-white/10 rounded-full px-2 py-1.5 shadow-2xl">
-              {[
-                { id: 'hero', label: 'Home' },
-                { id: 'projects', label: 'Projects' },
-                { id: 'profile', label: 'Profile' },
-                { id: 'skills', label: 'Skills' },
-                { id: 'journey', label: 'Journey' },
-                { id: 'cv', label: 'CV' },
-                { id: 'contact', label: 'Contact' }
-              ].map((item) => (
+              {navItems.map((item) => (
                 <a
                   key={item.id}
                   href={`#${item.id}`}
@@ -215,6 +218,18 @@ export default function Portfolio() {
                 </a>
               ))}
             </div>
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <div className="pointer-events-auto flex md:hidden items-center">
+            <button
+              onClick={() => setIsMobileMenuOpen((value) => !value)}
+              className="flex items-center justify-center w-11 h-11 rounded-full border border-white/10 bg-white/[0.08] text-slate-300 hover:text-white hover:border-indigo-500/40 transition-colors backdrop-blur-md"
+              aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isMobileMenuOpen}
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
 
           {/* Right: Socials & Theme Toggle */}
@@ -271,10 +286,60 @@ export default function Portfolio() {
         </div>
       </nav>
 
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.2 }}
+            className="fixed top-24 left-4 right-4 z-[70] md:hidden rounded-2xl border border-white/10 bg-[#080a12]/95 p-4 shadow-2xl backdrop-blur-xl"
+          >
+            <div className="grid grid-cols-2 gap-2">
+              {navItems.map((item) => (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  className={`rounded-xl border px-4 py-3 text-sm font-semibold transition-colors ${
+                    activeSection === item.id
+                      ? "border-indigo-500/40 bg-indigo-500/15 text-indigo-300"
+                      : "border-white/5 bg-white/[0.03] text-slate-300 hover:border-white/15 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <a href="https://github.com/Yosua13" target="_blank" rel="noreferrer" className="rounded-full border border-white/10 px-3 py-2 text-xs font-bold uppercase tracking-wider text-slate-300 hover:text-white">
+                  GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/yosua-reynaldi-manurun/" target="_blank" rel="noreferrer" className="rounded-full border border-white/10 px-3 py-2 text-xs font-bold uppercase tracking-wider text-slate-300 hover:text-white">
+                  LinkedIn
+                </a>
+                <a href="mailto:reyyosua29@gmail.com" className="rounded-full border border-white/10 px-3 py-2 text-xs font-bold uppercase tracking-wider text-slate-300 hover:text-white">
+                  Email
+                </a>
+              </div>
+              <button
+                onClick={toggleTheme}
+                className="rounded-full border border-white/10 px-3 py-2 text-xs font-bold uppercase tracking-wider text-slate-300 hover:text-white"
+                aria-label="Toggle Theme"
+              >
+                {theme === "dark" ? "Light" : "Dark"}
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Hero Section */}
       <HeroSection playMode={playMode} setPlayMode={setPlayMode} />
 
       <main className="relative z-10 pb-24 px-8 md:px-16 max-w-[1300px] mx-auto space-y-40">
+        <RecruiterSnapshot />
         <ProjectsSection setSelectedProject={setSelectedProject} />
         <WhatIDoSection />
         <ProfileSection />
@@ -285,7 +350,7 @@ export default function Portfolio() {
       </main>
 
       <footer className="border-t border-white/5 py-12 text-center text-slate-600 text-sm font-light">
-        <p>© {new Date().getFullYear()} Yosua Reynaldi Manurun.</p>
+        <p>&copy; {new Date().getFullYear()} Yosua Reynaldi Manurun.</p>
       </footer>
 
       {/* Project Modal */}
@@ -311,6 +376,8 @@ export default function Portfolio() {
             >
               {/* Close Button */}
               <button
+                aria-label="Close project details"
+                type="button"
                 onClick={() => setSelectedProject(null)}
                 className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors z-20 bg-black/40 p-2 border border-white/5 rounded-none cursor-pointer"
               >
@@ -340,7 +407,7 @@ export default function Portfolio() {
                       {selectedProject.title}
                     </h3>
                     <p className="text-indigo-400 text-xs md:text-sm font-semibold tracking-wider uppercase mt-1">
-                      {selectedProject.tags.join(" • ")}
+                      {selectedProject.tags.join(" / ")}
                     </p>
                   </div>
 
@@ -390,15 +457,21 @@ export default function Portfolio() {
                   </div>
 
                   <div className="pt-4 flex justify-end">
-                    <a
-                      href={selectedProject.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-[#0a0a0a] font-bold hover:bg-slate-200 transition-colors uppercase tracking-wider text-xs rounded-none"
-                    >
-                      Visit Live Website
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
+                    {selectedProject.link ? (
+                      <a
+                        href={selectedProject.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-[#0a0a0a] font-bold hover:bg-slate-200 transition-colors uppercase tracking-wider text-xs rounded-none"
+                      >
+                        Visit Live Website
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    ) : (
+                      <span className="inline-flex items-center gap-2 px-5 py-2.5 border border-white/10 bg-white/5 text-slate-300 font-bold uppercase tracking-wider text-xs rounded-none">
+                        Internal project case study
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -407,6 +480,21 @@ export default function Portfolio() {
         )}
       </AnimatePresence>
       <MusicPlayer playOnStart={playMusicOnStart} playMode={playMode} setPlayMode={setPlayMode} />
+
+      <AnimatePresence>
+        {playMode && (
+          <motion.button
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            onClick={() => setShowControlsGuide(true)}
+            className="fixed bottom-24 right-6 z-[60] inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-950/70 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-cyan-300 shadow-xl backdrop-blur-md transition-colors hover:border-cyan-400/60 hover:text-cyan-100"
+          >
+            <Gamepad2 className="w-4 h-4" />
+            Controls
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Controls Guide Modal */}
       <AnimatePresence>
@@ -464,7 +552,7 @@ export default function Portfolio() {
                   <div className="space-y-0.5 pt-1">
                     <span className="block text-xs font-bold text-slate-300 uppercase font-sans tracking-wide">Kemudi Pesawat</span>
                     <p className="text-[11px] text-slate-400 leading-normal font-light">
-                      Tekan &amp; Tahan tombol **WASD** untuk menerbangkan pesawat menjelajah ke berbagai arah secara dinamis di halaman utama.
+                      Tekan dan tahan tombol WASD untuk menerbangkan pesawat menjelajah ke berbagai arah secara dinamis di halaman utama.
                     </p>
                   </div>
                 </div>
@@ -479,7 +567,7 @@ export default function Portfolio() {
                   <div className="space-y-0.5">
                     <span className="block text-xs font-bold text-slate-300 uppercase font-sans tracking-wide">Menembak Laser</span>
                     <p className="text-[11px] text-slate-400 leading-normal font-light">
-                      Tekan tombol **Spasi (Spacebar)** pada keyboard untuk menembak laser ke arah depan.
+                      Tekan tombol Spasi pada keyboard untuk menembak laser ke arah depan.
                     </p>
                   </div>
                 </div>
@@ -494,7 +582,7 @@ export default function Portfolio() {
                   <div className="space-y-0.5">
                     <span className="block text-xs font-bold text-slate-300 uppercase font-sans tracking-wide">Game Tantangan</span>
                     <p className="text-[11px] text-slate-400 leading-normal font-light">
-                      Hancurkan Asteroid (+50 poin) and Drone musuh (+100 poin). Jaga tameng pelindung Anda dari tabrakan!
+                      Hancurkan asteroid (+50 poin) dan drone musuh (+100 poin). Jaga tameng pelindung dari tabrakan.
                     </p>
                   </div>
                 </div>

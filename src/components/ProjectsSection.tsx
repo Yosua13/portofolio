@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
@@ -9,8 +10,9 @@ const projectsData = [
   {
     id: "hcm-campaign",
     title: "HCM Campaign Assignment System",
-    location: "2025 | BANDUNG, INDONESIA",
-    role: "BACKEND ENGINEER",
+    category: "Backend",
+    location: "2025 | INTERNAL BUSINESS SYSTEM",
+    role: "FULLSTACK / BACKEND ENGINEER",
     headline: "AUTOMATED CAMPAIGN AND REPAIR ORDER ASSIGNMENT ENGINE",
     description: "An internal enterprise web application for managing customer campaigns and repair order assignments based on sales performance scoring, reducing manual work.",
     fullDescription: "HCM Campaign Assignment System automates customer lead distribution to sales representatives. It utilizes a custom scoring algorithm based on historical performance, workload, and campaign constraints to optimize conversion rates and maximize customer engagement.",
@@ -19,12 +21,12 @@ const projectsData = [
     impact: "Successfully automated 100% of customer distribution, reduced the assignment process time from hours to seconds, and improved campaign tracking with real-time audit logs.",
     image: "/project1.png",
     tags: ["Go", "MSSQL", "REST API", "Next.js"],
-    techStack: ["Go", "MSSQL", "REST API", "Next.js", "TypeScript", "Tailwind CSS"],
-    link: "#"
+    techStack: ["Go", "MSSQL", "REST API", "Next.js", "TypeScript", "Tailwind CSS"]
   },
   {
     id: "lapor-kos",
     title: "Lapor Kos",
+    category: "Fullstack",
     location: "2026 | BANDUNG, INDONESIA",
     role: "FULLSTACK DEV",
     headline: "AN INTEGRATED BOARDING HOUSE MANAGEMENT AND COMPLAINT SYSTEM",
@@ -60,6 +62,10 @@ const staggerContainer = {
 };
 
 export default function ProjectsSection({ setSelectedProject }: ProjectsSectionProps) {
+  const [activeFilter, setActiveFilter] = useState("All");
+  const filters = ["All", "Backend", "Fullstack"];
+  const visibleProjects = projectsData.filter((project) => activeFilter === "All" || project.category === activeFilter);
+
   return (
     <motion.section
       initial="hidden"
@@ -79,8 +85,24 @@ export default function ProjectsSection({ setSelectedProject }: ProjectsSectionP
         />
       </motion.div>
 
+      <motion.div variants={fadeInUp} className="flex flex-wrap items-center justify-center gap-3">
+        {filters.map((filter) => (
+          <button
+            key={filter}
+            onClick={() => setActiveFilter(filter)}
+            className={`rounded-full border px-5 py-2 text-xs font-bold uppercase tracking-wider transition-colors ${
+              activeFilter === filter
+                ? "border-indigo-500/40 bg-indigo-500/15 text-indigo-300"
+                : "border-white/10 bg-white/[0.03] text-slate-400 hover:border-white/20 hover:text-white"
+            }`}
+          >
+            {filter}
+          </button>
+        ))}
+      </motion.div>
+
       <div className="flex flex-col gap-16">
-        {projectsData.map((project) => (
+        {visibleProjects.map((project) => (
           <motion.div
             key={project.id}
             variants={fadeInUp}
@@ -107,10 +129,12 @@ export default function ProjectsSection({ setSelectedProject }: ProjectsSectionP
                     <h3 className="text-2xl font-black text-white tracking-widest uppercase font-sans">
                       {project.title}
                     </h3>
-                    <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
+                    {project.link && (
+                      <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
+                    )}
                   </div>
                   <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
-                    {project.location}
+                    {project.location} / {project.category}
                   </span>
                 </div>
 

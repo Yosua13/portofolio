@@ -13,27 +13,29 @@ const fadeInUp = {
 export default function ContactSection() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "opened" | "error">("idle");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
     setIsSubmitting(true);
-    
-    // Simulate API request
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setSubmitStatus("success");
-      setFormData({ name: "", email: "", message: "" });
+      const subject = encodeURIComponent(`Portfolio inquiry from ${formData.name}`);
+      const body = encodeURIComponent(
+        `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
+      );
+      window.location.href = `mailto:reyyosua29@gmail.com?subject=${subject}&body=${body}`;
+      setSubmitStatus("opened");
     } catch {
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
-      setTimeout(() => setSubmitStatus("idle"), 4000);
+      setTimeout(() => setSubmitStatus("idle"), 6000);
     }
   };
 
@@ -174,18 +176,18 @@ export default function ContactSection() {
                   : "bg-white text-[#0a0a0a] hover:bg-slate-200 shadow-lg shadow-white/5"
               }`}
             >
-              {isSubmitting ? "Sending..." : "Send Message"}
+              {isSubmitting ? "Preparing..." : "Open Email Draft"}
               <Send className="w-3.5 h-3.5" />
             </button>
 
             {/* Submit Toast Status */}
-            {submitStatus === "success" && (
+            {submitStatus === "opened" && (
               <motion.div 
                 initial={{ opacity: 0, y: 10 }} 
                 animate={{ opacity: 1, y: 0 }} 
                 className="text-emerald-400 text-xs font-bold text-center uppercase tracking-wider mt-2"
               >
-                Thank you! Your message has been sent successfully.
+                Email draft opened. Please press send in your mail app.
               </motion.div>
             )}
             {submitStatus === "error" && (
