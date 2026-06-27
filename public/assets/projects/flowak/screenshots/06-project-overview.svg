@@ -1,0 +1,19 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1280" height="720" rx="32" fill="#0a0f1c"/>
+<rect x="42" y="38" width="1196" height="644" rx="34" fill="#ffffff" opacity=".06" stroke="#ffffff" stroke-opacity=".16" stroke-width="2"/>
+<rect x="78" y="78" width="216" height="564" rx="26" fill="#ffffff" opacity=".08"/>
+<text x="118" y="130" fill="#fff" font-family="Arial" font-size="40" font-weight="900">Flowak</text>
+<text x="118" y="166" fill="#38bdf8" font-family="Arial" font-size="18" font-weight="700">Product workspace</text>
+<rect x="118" y="240" width="146" height="42" rx="13" fill="#4f46e5" opacity="0.28"/><rect x="118" y="308" width="146" height="42" rx="13" fill="#4f46e5" opacity="0.12"/><rect x="118" y="376" width="146" height="42" rx="13" fill="#4f46e5" opacity="0.12"/><rect x="118" y="444" width="146" height="42" rx="13" fill="#4f46e5" opacity="0.12"/><rect x="118" y="512" width="146" height="42" rx="13" fill="#4f46e5" opacity="0.12"/>
+<rect x="332" y="78" width="870" height="96" rx="26" fill="#ffffff" opacity=".08"/>
+<text x="370" y="128" fill="#fff" font-family="Arial" font-size="44" font-weight="900">Sprint Analytics</text>
+<text x="372" y="156" fill="#38bdf8" font-family="Arial" font-size="18">Velocity, blocked work, overdue task, and completion trend</text>
+<rect x="370" y="226" width="242" height="112" rx="24" fill="#4f46e5" opacity="0.2"/><text x="398" y="270" fill="#fff" font-family="Arial" font-size="20" font-weight="700">Backlog</text><text x="398" y="306" fill="#fff" font-family="Arial" font-size="34" font-weight="900">18</text><rect x="652" y="226" width="242" height="112" rx="24" fill="#4f46e5" opacity="0.27"/><text x="680" y="270" fill="#fff" font-family="Arial" font-size="20" font-weight="700">Progress</text><text x="680" y="306" fill="#fff" font-family="Arial" font-size="34" font-weight="900">7</text><rect x="934" y="226" width="242" height="112" rx="24" fill="#4f46e5" opacity="0.34"/><text x="962" y="270" fill="#fff" font-family="Arial" font-size="20" font-weight="700">Blocked</text><text x="962" y="306" fill="#fff" font-family="Arial" font-size="34" font-weight="900">2</text>
+<rect x="332" y="376" width="460" height="242" rx="28" fill="#ffffff" opacity=".08" stroke="#ffffff" stroke-opacity=".14"/>
+<path d="M384 548 C438 452 504 574 562 482 C614 400 674 496 752 416" stroke="#38bdf8" stroke-width="10" stroke-linecap="round"/>
+<rect x="832" y="376" width="370" height="242" rx="28" fill="#ffffff" opacity=".08" stroke="#ffffff" stroke-opacity=".14"/>
+<text x="862" y="408" fill="#fff" font-family="Arial" font-size="22" font-weight="800">Activity &amp; Insight</text>
+<rect x="862" y="424" width="210" height="16" rx="8" fill="#38bdf8" opacity="0.32"/><rect x="862" y="464" width="222" height="16" rx="8" fill="#38bdf8" opacity="0.4"/><rect x="862" y="504" width="234" height="16" rx="8" fill="#38bdf8" opacity="0.48"/><rect x="862" y="544" width="246" height="16" rx="8" fill="#38bdf8" opacity="0.56"/><rect x="862" y="584" width="258" height="16" rx="8" fill="#38bdf8" opacity="0.64"/>
+<rect x="332" y="638" width="870" height="34" rx="17" fill="#4f46e5" opacity=".28"/>
+<text x="360" y="661" fill="#fff" font-family="Arial" font-size="16" font-weight="700">Mock payload refreshed</text>
+</svg>
