@@ -80,7 +80,7 @@ export default function WhatIDoSection() {
           <motion.div
             key={index}
             variants={fadeInUp}
-            className="group relative bg-[#0d0f18]/40 border border-white/5 hover:border-indigo-500/30 rounded-3xl p-6 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-indigo-500/5 overflow-hidden flex flex-col items-start gap-4 text-left"
+            className="service-card group relative bg-[#0d0f18]/40 border border-white/5 hover:border-indigo-500/30 rounded-3xl p-6 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-indigo-500/5 overflow-hidden flex flex-col items-start gap-4 text-left"
           >
             {/* Background Hover Glow */}
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
@@ -95,10 +95,10 @@ export default function WhatIDoSection() {
 
             {/* Content */}
             <div className="space-y-2">
-              <h3 className="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors tracking-wide">
+              <h3 className="service-card-title text-lg font-bold text-white group-hover:text-indigo-400 transition-colors tracking-wide">
                 {service.title}
               </h3>
-              <p className="text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
+              <p className="service-card-body text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
                 {service.description}
               </p>
             </div>
