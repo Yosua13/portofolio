@@ -14,6 +14,105 @@ const buildScreens = (
   image: `/project-media/screens/${projectKey}-${index + 1}.svg`
 }));
 
+const laporKosScreens = [
+  {
+    title: "Login",
+    caption: "Akses masuk untuk pemilik dan penghuni kos.",
+    image: "/project-media/screens/lapor_kos/0_login.png",
+    aspectRatio: "1920 / 901"
+  },
+  {
+    title: "Dashboard",
+    caption: "Ringkasan kamar, tagihan, komplain, dan aktivitas kos.",
+    image: "/project-media/screens/lapor_kos/1_dashboard.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Manajemen Kamar",
+    caption: "Kelola kamar, status hunian, harga, dan fasilitas.",
+    image: "/project-media/screens/lapor_kos/2_manajemen_kamar.png",
+    aspectRatio: "1920 / 901"
+  },
+  {
+    title: "Penghuni & Kontrak",
+    caption: "Pantau data penghuni, kontrak, dan relasi kamar.",
+    image: "/project-media/screens/lapor_kos/3_penghuni_kontrak.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Manajemen Pembayaran",
+    caption: "Kelola tagihan, status pembayaran, dan transaksi.",
+    image: "/project-media/screens/lapor_kos/4_manajemen_pembayaran.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Laporan",
+    caption: "Rekap operasional kos dalam tabel dan grafik.",
+    image: "/project-media/screens/lapor_kos/5_laporan.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Peraturan Kos",
+    caption: "Kelola aturan kos yang dapat dibaca penghuni.",
+    image: "/project-media/screens/lapor_kos/6_peraturan_kos.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Kalender",
+    caption: "Jadwal pembayaran, kontrak, dan aktivitas kos.",
+    image: "/project-media/screens/lapor_kos/7_kalender.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Komplain",
+    caption: "Daftar laporan penghuni dengan status penanganan.",
+    image: "/project-media/screens/lapor_kos/8_komplain.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Pengaturan",
+    caption: "Konfigurasi akun, preferensi, dan data aplikasi.",
+    image: "/project-media/screens/lapor_kos/9_pengaturan.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Form Data",
+    caption: "Form input untuk menambah atau mengubah data kos.",
+    image: "/project-media/screens/lapor_kos/10_form.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Laporan Keuangan",
+    caption: "Ringkasan pemasukan, pengeluaran, dan performa keuangan.",
+    image: "/project-media/screens/lapor_kos/11_laporan_keuangan.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Detail Penghuni",
+    caption: "Profil penghuni dengan kamar, kontrak, dan tagihan.",
+    image: "/project-media/screens/lapor_kos/12_detail_penghuni.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Dashboard Penghuni",
+    caption: "Beranda penghuni untuk tagihan dan informasi kos.",
+    image: "/project-media/screens/lapor_kos/13_dashboard_penghuni.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Komplain Penghuni",
+    caption: "Form dan riwayat komplain dari sisi penghuni.",
+    image: "/project-media/screens/lapor_kos/14_komplain_penghuni.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Tagihan Penghuni",
+    caption: "Daftar tagihan penghuni beserta status pembayarannya.",
+    image: "/project-media/screens/lapor_kos/15_tagihan_penghuni.png",
+    aspectRatio: "1920 / 902"
+  }
+];
+
 const projectsData = [
   {
     id: "lapor-kos",
@@ -33,14 +132,7 @@ const projectsData = [
     techStack: ["Next.js", "Tailwind CSS", "Golang", "Gin", "Supabase", "Fonnte", "Vercel", "Railway", "Gemini API"],
     link: "https://lapor-kos.vercel.app/",
     previewTone: "from-emerald-500 via-teal-500 to-cyan-600",
-    screens: buildScreens("lapor-kos", [
-      { title: "Owner Dashboard", caption: "Room occupancy, payment status, and complaint ticket overview." },
-      { title: "Tenant Contract", caption: "Digital tenant profile, room assignment, and billing timeline." },
-      { title: "Complaint Ticket", caption: "Maintenance report detail with priority, status, and conversation log." },
-      { title: "Room Inventory", caption: "Room availability, occupancy, price, and facility status table." },
-      { title: "Payment Tracking", caption: "Paid, unpaid, overdue invoices, and reminder queue." },
-      { title: "Maintenance Board", caption: "Issue priority, technician assignment, and resolution state." }
-    ])
+    screens: laporKosScreens
   },
   {
     id: "flowak",
