@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
-import { ExternalLink, Gamepad2, Menu, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, Gamepad2, Maximize2, Menu, X } from "lucide-react";
 import Image from "next/image";
 import HeroSection from "@/components/HeroSection";
 import WelcomeScreen from "@/components/WelcomeScreen";
@@ -14,6 +14,13 @@ import JourneySection from "@/components/JourneySection";
 import CvSection from "@/components/CvSection";
 import ContactSection from "@/components/ContactSection";
 import RecruiterSnapshot from "@/components/RecruiterSnapshot";
+
+interface ProjectScreen {
+  title: string;
+  caption: string;
+  image: string;
+  aspectRatio?: string;
+}
 
 interface ProjectType {
   id: string;
@@ -33,42 +40,206 @@ interface ProjectType {
   techStack: string[];
   link?: string;
   previewTone: string;
-  screens: {
-    title: string;
-    caption: string;
-    image: string;
-  }[];
+  screens: ProjectScreen[];
 }
 
-function ProjectScreenshot({ title, caption, image, index }: { title: string; caption: string; image: string; index: number }) {
+function ProjectScreenshotCarousel({ projectTitle, screens }: { projectTitle: string; screens: ProjectScreen[] }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [previewScreen, setPreviewScreen] = useState<ProjectScreen | null>(null);
+  const activeScreen = screens[activeIndex];
+  const thumbnailContainerRef = useRef<HTMLDivElement>(null);
+
+  const goToPrevious = () => {
+    setActiveIndex((currentIndex) => currentIndex === 0 ? screens.length - 1 : currentIndex - 1);
+  };
+
+  const goToNext = () => {
+    setActiveIndex((currentIndex) => currentIndex === screens.length - 1 ? 0 : currentIndex + 1);
+  };
+
+  const scrollThumbnails = (direction: "left" | "right") => {
+    if (thumbnailContainerRef.current) {
+      const scrollAmount = 240;
+      thumbnailContainerRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (thumbnailContainerRef.current) {
+      const container = thumbnailContainerRef.current;
+      const activeChild = container.children[activeIndex] as HTMLElement;
+      if (activeChild) {
+        const containerWidth = container.clientWidth;
+        const childOffset = activeChild.offsetLeft;
+        const childWidth = activeChild.clientWidth;
+        container.scrollTo({
+          left: childOffset - containerWidth / 2 + childWidth / 2,
+          behavior: "smooth",
+        });
+      }
+    }
+  }, [activeIndex]);
+
+  if (!activeScreen) return null;
+
   return (
-    <div className="group/screen relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-3 transition-colors hover:border-indigo-500/35">
-      <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-red-400" />
-          <span className="h-2 w-2 rounded-full bg-amber-300" />
-          <span className="h-2 w-2 rounded-full bg-emerald-300" />
+    <>
+      <div className="screenshot-carousel-shell overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.03] p-3 sm:p-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-300">
+              {String(activeIndex + 1).padStart(2, "0")} / {String(screens.length).padStart(2, "0")}
+            </span>
+            <h5 className="carousel-title mt-2 text-lg font-black text-white">{activeScreen.title}</h5>
+            <p className="carousel-caption mt-1 text-sm leading-relaxed text-slate-400">{activeScreen.caption}</p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={goToPrevious}
+              className="carousel-control inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-slate-300 transition-colors hover:border-indigo-400/50 hover:text-white"
+              aria-label={`Previous ${projectTitle} screenshot`}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={goToNext}
+              className="carousel-control inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-slate-300 transition-colors hover:border-indigo-400/50 hover:text-white"
+              aria-label={`Next ${projectTitle} screenshot`}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
         </div>
-        <span className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-500">
-          Screen {index + 1}
-        </span>
+
+        <button
+          type="button"
+          onClick={() => setPreviewScreen(activeScreen)}
+          className="group/screen relative mt-5 block w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-950/90 text-left transition-colors hover:border-indigo-400/50"
+          aria-label={`Open ${activeScreen.title} screenshot preview`}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeScreen.image}
+              initial={{ opacity: 0, x: 36, scale: 0.985 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: -36, scale: 0.985 }}
+              transition={{ duration: 0.28, ease: "easeOut" }}
+              className="relative w-full bg-slate-950"
+              style={{ aspectRatio: activeScreen.aspectRatio ?? "16 / 9" }}
+            >
+              <Image
+                src={activeScreen.image}
+                alt={`${activeScreen.title} screenshot`}
+                fill
+                sizes="(max-width: 768px) 100vw, 1100px"
+                className="object-contain"
+              />
+            </motion.div>
+          </AnimatePresence>
+
+          <div className="modal-icon-button pointer-events-none absolute bottom-3 right-3 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-black/55 text-white opacity-0 shadow-2xl backdrop-blur-md transition-opacity group-hover/screen:opacity-100">
+            <Maximize2 className="h-4 w-4" />
+          </div>
+        </button>
+
+        <div className="relative group/thumbs mt-4">
+          {/* Scroll Left Button */}
+          <button
+            type="button"
+            onClick={() => scrollThumbnails("left")}
+            className="carousel-control absolute left-2 top-8 sm:top-10 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/70 text-slate-300 opacity-0 group-hover/thumbs:opacity-100 focus:opacity-100 transition-all duration-300 hover:border-indigo-400 hover:text-white backdrop-blur-md cursor-pointer shadow-lg active:scale-95"
+            aria-label="Scroll thumbnails left"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+
+          {/* Scroll Right Button */}
+          <button
+            type="button"
+            onClick={() => scrollThumbnails("right")}
+            className="carousel-control absolute right-2 top-8 sm:top-10 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/70 text-slate-300 opacity-0 group-hover/thumbs:opacity-100 focus:opacity-100 transition-all duration-300 hover:border-indigo-400 hover:text-white backdrop-blur-md cursor-pointer shadow-lg active:scale-95"
+            aria-label="Scroll thumbnails right"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+
+          <div
+            ref={thumbnailContainerRef}
+            className="flex gap-2 overflow-x-auto pb-2 scroll-smooth"
+          >
+            {screens.map((screen, index) => (
+              <button
+                key={screen.image}
+                type="button"
+                onClick={() => setActiveIndex(index)}
+                className={`relative h-16 w-28 shrink-0 overflow-hidden rounded-xl border bg-slate-950 transition-all duration-300 sm:h-20 sm:w-36 ${
+                  activeIndex === index
+                    ? "border-indigo-400 opacity-100 shadow-lg shadow-indigo-500/20"
+                    : "border-white/10 opacity-55 hover:border-white/30 hover:opacity-100"
+                }`}
+                aria-label={`Show ${screen.title} screenshot`}
+              >
+                <Image
+                  src={screen.image}
+                  alt=""
+                  fill
+                  sizes="144px"
+                  className="object-cover"
+                />
+                <span className="absolute left-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[8px] font-black text-white backdrop-blur-sm">
+                  {index + 1}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      <div className="relative aspect-[16/9] overflow-hidden rounded-xl border border-white/10 bg-slate-950/70">
-        <Image
-          src={image}
-          alt={`${title} screenshot`}
-          fill
-          sizes="(max-width: 768px) 100vw, 33vw"
-          className="object-cover transition-transform duration-500 group-hover/screen:scale-[1.03]"
-        />
-      </div>
+      <AnimatePresence>
+        {previewScreen && (
+          <div className="fixed inset-0 z-[180] flex items-center justify-center p-4 sm:p-8">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setPreviewScreen(null)}
+              className="absolute inset-0 bg-black/90 backdrop-blur-lg"
+            />
 
-      <div className="mt-3">
-        <h5 className="text-sm font-black text-white">{title}</h5>
-        <p className="mt-1 text-xs leading-relaxed text-slate-400">{caption}</p>
-      </div>
-    </div>
+            <motion.button
+              type="button"
+              initial={{ opacity: 0, scale: 0.96, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 16 }}
+              transition={{ duration: 0.24, ease: "easeOut" }}
+              onClick={() => setPreviewScreen(null)}
+              className="relative z-10 w-full max-w-[1500px] overflow-hidden rounded-2xl border border-white/10 bg-slate-950 p-2 shadow-2xl shadow-black/70"
+              aria-label={`Close ${previewScreen.title} screenshot preview`}
+            >
+              <div
+                className="relative w-full"
+                style={{ aspectRatio: previewScreen.aspectRatio ?? "16 / 9" }}
+              >
+                <Image
+                  src={previewScreen.image}
+                  alt={`${previewScreen.title} screenshot`}
+                  fill
+                  sizes="96vw"
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </motion.button>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
@@ -226,18 +397,18 @@ export default function Portfolio() {
         <div className="w-full flex items-center justify-between">
           {/* Left: Logo */}
           <div className="pointer-events-auto flex items-center">
-            <a href="#hero" className="flex items-center gap-3 group">
-              <span className="font-serif italic font-bold text-3xl text-white group-hover:text-indigo-400 transition-colors">YRM</span>
+            <a href="#hero" className="app-brand-lockup flex items-center gap-3 rounded-full px-3.5 py-2 backdrop-blur-md transition-transform duration-300 group hover:-translate-y-0.5">
+              <span className="app-brand-mark font-serif italic font-bold text-3xl text-white group-hover:text-indigo-400 transition-colors">YRM</span>
               <div className="flex flex-col justify-center">
-                <span className="text-indigo-400 font-medium tracking-tight text-lg leading-tight">Yos&apos;z</span>
-                <span className="text-slate-400 text-[11px] font-light tracking-wide uppercase">Software Engineer</span>
+                <span className="app-brand-name text-indigo-400 font-medium tracking-tight text-lg leading-tight">Yos&apos;z</span>
+                <span className="app-brand-role text-slate-400 text-[11px] font-light tracking-wide uppercase">Software Engineer</span>
               </div>
             </a>
           </div>
 
           {/* Center: Floating Navigation */}
           <div className="absolute left-1/2 -translate-x-1/2 pointer-events-auto hidden md:block">
-            <div className="flex items-center bg-white/[0.08] backdrop-blur-md backdrop-saturate-[140%] border border-white/10 rounded-full px-2 py-1.5 shadow-2xl">
+            <div className="floating-nav-shell flex items-center bg-white/[0.08] backdrop-blur-md backdrop-saturate-[140%] border border-white/10 rounded-full px-2 py-1.5 shadow-2xl">
               {navItems.map((item) => (
                 <a
                   key={item.id}
@@ -262,7 +433,7 @@ export default function Portfolio() {
           <div className="pointer-events-auto flex md:hidden items-center">
             <button
               onClick={() => setIsMobileMenuOpen((value) => !value)}
-              className="flex items-center justify-center w-11 h-11 rounded-full border border-white/10 bg-white/[0.08] text-slate-300 hover:text-white hover:border-indigo-500/40 transition-colors backdrop-blur-md"
+              className="theme-icon-button flex items-center justify-center w-11 h-11 rounded-full border border-white/10 bg-white/[0.08] text-slate-300 hover:text-white hover:border-indigo-500/40 transition-colors backdrop-blur-md"
               aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={isMobileMenuOpen}
             >
@@ -271,10 +442,10 @@ export default function Portfolio() {
           </div>
 
           {/* Right: Socials & Theme Toggle */}
-          <div className="pointer-events-auto hidden sm:flex items-center gap-2">
+          <div className="social-actions-shell pointer-events-auto hidden sm:flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-2 py-1 backdrop-blur-md">
             {/* GitHub */}
             <div className="relative group">
-              <a href="https://github.com/Yosua13" target="_blank" rel="noreferrer" className="flex items-center justify-center w-11 h-11 text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="GitHub">
+              <a href="https://github.com/Yosua13" target="_blank" rel="noreferrer" className="theme-icon-button flex items-center justify-center w-11 h-11 text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="GitHub">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
               </a>
               <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2.5 py-1 custom-tooltip text-[10px] text-white uppercase font-bold tracking-wider rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl whitespace-nowrap z-50">
@@ -283,7 +454,7 @@ export default function Portfolio() {
             </div>
             {/* LinkedIn */}
             <div className="relative group">
-              <a href="https://www.linkedin.com/in/yosua-reynaldi-manurun/" target="_blank" rel="noreferrer" className="flex items-center justify-center w-11 h-11 text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="LinkedIn">
+              <a href="https://www.linkedin.com/in/yosua-reynaldi-manurun/" target="_blank" rel="noreferrer" className="theme-icon-button flex items-center justify-center w-11 h-11 text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="LinkedIn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>
               </a>
               <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2.5 py-1 custom-tooltip text-[10px] text-white uppercase font-bold tracking-wider rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl whitespace-nowrap z-50">
@@ -292,7 +463,7 @@ export default function Portfolio() {
             </div>
             {/* Email */}
             <div className="relative group">
-              <a href="mailto:reyyosua29@gmail.com" className="flex items-center justify-center w-11 h-11 text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="Email">
+              <a href="mailto:reyyosua29@gmail.com" className="theme-icon-button flex items-center justify-center w-11 h-11 text-slate-400 hover:text-white transition-colors hover:scale-110" aria-label="Email">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
               </a>
               <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2.5 py-1 custom-tooltip text-[10px] text-white uppercase font-bold tracking-wider rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 shadow-xl whitespace-nowrap z-50">
@@ -305,7 +476,7 @@ export default function Portfolio() {
             <div className="relative group">
               <button
                 onClick={toggleTheme}
-                className="flex items-center justify-center w-11 h-11 text-slate-400 hover:text-white transition-colors hover:scale-110 cursor-pointer"
+                className="theme-icon-button flex items-center justify-center w-11 h-11 text-slate-400 hover:text-white transition-colors hover:scale-110 cursor-pointer"
                 aria-label="Toggle Theme"
               >
                 {theme === "dark" ? (
@@ -331,7 +502,7 @@ export default function Portfolio() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-24 left-4 right-4 z-[70] md:hidden rounded-2xl border border-white/10 bg-[#080a12]/95 p-4 shadow-2xl backdrop-blur-xl"
+            className="mobile-nav-shell fixed top-24 left-4 right-4 z-[70] md:hidden rounded-2xl border border-white/10 bg-[#080a12]/95 p-4 shadow-2xl backdrop-blur-xl"
           >
             <div className="grid grid-cols-2 gap-2">
               {navItems.map((item) => (
@@ -410,14 +581,14 @@ export default function Portfolio() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
               transition={{ type: "spring", duration: 0.4 }}
-              className="bg-[#070709] border border-white/10 rounded-none w-full max-w-6xl xl:max-w-7xl relative z-10 overflow-hidden flex flex-col max-h-[92vh]"
+              className="project-modal-surface bg-[#070709] border border-white/10 rounded-none w-full max-w-6xl xl:max-w-7xl relative z-10 overflow-hidden flex flex-col max-h-[92vh]"
             >
               {/* Close Button */}
               <button
                 aria-label="Close project details"
                 type="button"
                 onClick={() => setSelectedProject(null)}
-                className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors z-20 bg-black/40 p-2 border border-white/5 rounded-none cursor-pointer"
+                className="modal-icon-button absolute top-4 right-4 text-slate-400 hover:text-white transition-colors z-20 bg-black/40 p-2 border border-white/5 rounded-none cursor-pointer"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -429,7 +600,7 @@ export default function Portfolio() {
                 {/* Modal Wireframe Preview */}
                 <div className="relative w-full shrink-0 overflow-hidden bg-slate-950 p-5 sm:p-8">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(99,102,241,0.35),transparent_32%),radial-gradient(circle_at_80%_10%,rgba(6,182,212,0.22),transparent_28%),linear-gradient(135deg,rgba(15,23,42,0.96),rgba(3,7,18,0.98))]" />
-                  <div className="relative mx-auto max-w-3xl rounded-[24px] border border-white/10 bg-black/35 p-4 shadow-2xl shadow-black/60 backdrop-blur-md">
+                  <div className="modal-soft-panel relative mx-auto max-w-3xl rounded-[24px] border border-white/10 bg-black/35 p-4 shadow-2xl shadow-black/60 backdrop-blur-md">
                     <div className="mb-4 flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
@@ -466,7 +637,7 @@ export default function Portfolio() {
                 {/* Modal Content */}
                 <div className="p-6 md:p-8 space-y-6">
                   <div>
-                    <h3 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight font-sans">
+                    <h3 className="modal-strong-text text-2xl md:text-3xl font-extrabold text-white tracking-tight font-sans">
                       {selectedProject.title}
                     </h3>
                     <p className="text-indigo-400 text-xs md:text-sm font-semibold tracking-wider uppercase mt-1">
@@ -476,7 +647,7 @@ export default function Portfolio() {
 
                   <div className="space-y-2">
                     <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">About the Project</h4>
-                    <p className="text-slate-300 font-light leading-relaxed text-sm md:text-base">
+                    <p className="modal-body-text text-slate-300 font-light leading-relaxed text-sm md:text-base">
                       {selectedProject.fullDescription}
                     </p>
                   </div>
@@ -484,7 +655,7 @@ export default function Portfolio() {
                   {selectedProject.problem && (
                     <div className="space-y-2">
                       <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">The Challenge</h4>
-                      <p className="text-slate-350 font-light leading-relaxed text-sm md:text-base">
+                      <p className="modal-body-text text-slate-350 font-light leading-relaxed text-sm md:text-base">
                         {selectedProject.problem}
                       </p>
                     </div>
@@ -493,7 +664,7 @@ export default function Portfolio() {
                   {selectedProject.contribution && (
                     <div className="space-y-2">
                       <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">My Contribution</h4>
-                      <p className="text-slate-350 font-light leading-relaxed text-sm md:text-base">
+                      <p className="modal-body-text text-slate-350 font-light leading-relaxed text-sm md:text-base">
                         {selectedProject.contribution}
                       </p>
                     </div>
@@ -502,7 +673,7 @@ export default function Portfolio() {
                   {selectedProject.impact && (
                     <div className="space-y-2">
                       <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-widest">Impact &amp; Results</h4>
-                      <p className="text-slate-200 font-medium leading-relaxed text-sm md:text-base bg-emerald-500/5 border border-emerald-500/20 p-4 rounded-xl">
+                      <p className="modal-soft-panel modal-body-text text-slate-200 font-medium leading-relaxed text-sm md:text-base bg-emerald-500/5 border border-emerald-500/20 p-4 rounded-xl">
                         {selectedProject.impact}
                       </p>
                     </div>
@@ -510,24 +681,17 @@ export default function Portfolio() {
 
                   <div className="space-y-3">
                     <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Screenshot Aplikasi</h4>
-                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                      {selectedProject.screens.map((screen, index) => (
-                        <ProjectScreenshot
-                          key={screen.title}
-                          title={screen.title}
-                          caption={screen.caption}
-                          image={screen.image}
-                          index={index}
-                        />
-                      ))}
-                    </div>
+                    <ProjectScreenshotCarousel
+                      projectTitle={selectedProject.title}
+                      screens={selectedProject.screens}
+                    />
                   </div>
 
                   <div className="space-y-3">
                     <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Technologies Used</h4>
                     <div className="flex flex-wrap gap-2">
                       {selectedProject.techStack.map((tech: string) => (
-                        <span key={tech} className="px-3 py-1 bg-white/5 border border-white/5 text-slate-300 text-xs font-semibold uppercase tracking-wider rounded-none">
+                        <span key={tech} className="modal-chip px-3 py-1 bg-white/5 border border-white/5 text-slate-300 text-xs font-semibold uppercase tracking-wider rounded-none">
                           {tech}
                         </span>
                       ))}
@@ -540,13 +704,13 @@ export default function Portfolio() {
                         href={selectedProject.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-[#0a0a0a] font-bold hover:bg-slate-200 transition-colors uppercase tracking-wider text-xs rounded-none"
+                        className="modal-primary-action inline-flex items-center gap-2 px-5 py-2.5 bg-white text-[#0a0a0a] font-bold hover:bg-slate-200 transition-colors uppercase tracking-wider text-xs rounded-none"
                       >
                         Visit Live Website
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     ) : (
-                      <span className="inline-flex items-center gap-2 px-5 py-2.5 border border-white/10 bg-white/5 text-slate-300 font-bold uppercase tracking-wider text-xs rounded-none">
+                      <span className="modal-secondary-action inline-flex items-center gap-2 px-5 py-2.5 border border-white/10 bg-white/5 text-slate-300 font-bold uppercase tracking-wider text-xs rounded-none">
                         Internal project case study
                       </span>
                     )}

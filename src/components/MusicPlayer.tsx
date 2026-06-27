@@ -33,19 +33,19 @@ const TRACKS: Track[] = [
   {
     title: "Bliss",
     artist: "Lofi Focus",
-    url: "/music/Bliss.mp3",
+    url: "/assets/audio/bliss.mp3",
     cover: "https://images.unsplash.com/photo-1494232410401-ad00d5433cfa?w=300&auto=format&fit=crop&q=60"
   },
   {
     title: "Chill Lofi Hip Hop",
     artist: "Study Session",
-    url: "/music/Chill Lofi Hip Hop.mp3",
+    url: "/assets/audio/chill-lofi-hip-hop.mp3",
     cover: "https://images.unsplash.com/photo-1487180142328-0c4e37023af5?w=300&auto=format&fit=crop&q=60"
   },
   {
     title: "Lofi Chill",
     artist: "Coffee Shop",
-    url: "/music/Lofi.mp3",
+    url: "/assets/audio/lofi.mp3",
     cover: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=300&auto=format&fit=crop&q=60"
   }
 ];

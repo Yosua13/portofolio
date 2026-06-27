@@ -8,11 +8,111 @@ import SectionHeader from "./SectionHeader";
 
 const buildScreens = (
   projectKey: string,
+  fileNames: string[],
   screens: { title: string; caption: string }[]
 ) => screens.map((screen, index) => ({
   ...screen,
-  image: `/project-media/screens/${projectKey}-${index + 1}.svg`
+  image: `/assets/projects/${projectKey}/screenshots/${fileNames[index]}`
 }));
+
+const laporKosScreens = [
+  {
+    title: "Login",
+    caption: "Akses masuk untuk pemilik dan penghuni kos.",
+    image: "/assets/projects/lapor-kos/screenshots/00-login.png",
+    aspectRatio: "1920 / 901"
+  },
+  {
+    title: "Dashboard",
+    caption: "Ringkasan kamar, tagihan, komplain, dan aktivitas kos.",
+    image: "/assets/projects/lapor-kos/screenshots/01-dashboard.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Manajemen Kamar",
+    caption: "Kelola kamar, status hunian, harga, dan fasilitas.",
+    image: "/assets/projects/lapor-kos/screenshots/02-manajemen-kamar.png",
+    aspectRatio: "1920 / 901"
+  },
+  {
+    title: "Penghuni & Kontrak",
+    caption: "Pantau data penghuni, kontrak, dan relasi kamar.",
+    image: "/assets/projects/lapor-kos/screenshots/03-penghuni-kontrak.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Manajemen Pembayaran",
+    caption: "Kelola tagihan, status pembayaran, dan transaksi.",
+    image: "/assets/projects/lapor-kos/screenshots/04-manajemen-pembayaran.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Laporan",
+    caption: "Rekap operasional kos dalam tabel dan grafik.",
+    image: "/assets/projects/lapor-kos/screenshots/05-laporan.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Peraturan Kos",
+    caption: "Kelola aturan kos yang dapat dibaca penghuni.",
+    image: "/assets/projects/lapor-kos/screenshots/06-peraturan-kos.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Kalender",
+    caption: "Jadwal pembayaran, kontrak, dan aktivitas kos.",
+    image: "/assets/projects/lapor-kos/screenshots/07-kalender.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Komplain",
+    caption: "Daftar laporan penghuni dengan status penanganan.",
+    image: "/assets/projects/lapor-kos/screenshots/08-komplain.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Pengaturan",
+    caption: "Konfigurasi akun, preferensi, dan data aplikasi.",
+    image: "/assets/projects/lapor-kos/screenshots/09-pengaturan.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Form Data",
+    caption: "Form input untuk menambah atau mengubah data kos.",
+    image: "/assets/projects/lapor-kos/screenshots/10-form.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Laporan Keuangan",
+    caption: "Ringkasan pemasukan, pengeluaran, dan performa keuangan.",
+    image: "/assets/projects/lapor-kos/screenshots/11-laporan-keuangan.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Detail Penghuni",
+    caption: "Profil penghuni dengan kamar, kontrak, dan tagihan.",
+    image: "/assets/projects/lapor-kos/screenshots/12-detail-penghuni.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Dashboard Penghuni",
+    caption: "Beranda penghuni untuk tagihan dan informasi kos.",
+    image: "/assets/projects/lapor-kos/screenshots/13-dashboard-penghuni.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Komplain Penghuni",
+    caption: "Form dan riwayat komplain dari sisi penghuni.",
+    image: "/assets/projects/lapor-kos/screenshots/14-komplain-penghuni.png",
+    aspectRatio: "1920 / 902"
+  },
+  {
+    title: "Tagihan Penghuni",
+    caption: "Daftar tagihan penghuni beserta status pembayarannya.",
+    image: "/assets/projects/lapor-kos/screenshots/15-tagihan-penghuni.png",
+    aspectRatio: "1920 / 902"
+  }
+];
 
 const projectsData = [
   {
@@ -27,20 +127,13 @@ const projectsData = [
     problem: "Kos owners often manage room occupancy, rent payments, and tenant complaints manually, making it difficult to track late payments, room status, and unresolved facility reports.",
     contribution: "Built the full application flow from dashboard UI, room and tenant modules, complaint ticketing, backend API, database schema, and notification-ready workflows.",
     impact: "Creates a centralized operating system for kos management, making tenant data, billing status, and facility issues easier to monitor and resolve.",
-    image: "/project-lapor-kos.svg",
-    video: "/project-media/videos/lapor-kos-demo.mp4",
+    image: "/assets/projects/lapor-kos/cover.svg",
+    video: "/assets/projects/lapor-kos/videos/demo.mp4",
     tags: ["Next.js", "Golang", "Supabase", "Billing"],
     techStack: ["Next.js", "Tailwind CSS", "Golang", "Gin", "Supabase", "Fonnte", "Vercel", "Railway", "Gemini API"],
     link: "https://lapor-kos.vercel.app/",
     previewTone: "from-emerald-500 via-teal-500 to-cyan-600",
-    screens: buildScreens("lapor-kos", [
-      { title: "Owner Dashboard", caption: "Room occupancy, payment status, and complaint ticket overview." },
-      { title: "Tenant Contract", caption: "Digital tenant profile, room assignment, and billing timeline." },
-      { title: "Complaint Ticket", caption: "Maintenance report detail with priority, status, and conversation log." },
-      { title: "Room Inventory", caption: "Room availability, occupancy, price, and facility status table." },
-      { title: "Payment Tracking", caption: "Paid, unpaid, overdue invoices, and reminder queue." },
-      { title: "Maintenance Board", caption: "Issue priority, technician assignment, and resolution state." }
-    ])
+    screens: laporKosScreens
   },
   {
     id: "flowak",
@@ -54,12 +147,19 @@ const projectsData = [
     problem: "Development teams often lose context when project tasks, blockers, discussions, and delivery flow are scattered across chat, documents, and manual status updates.",
     contribution: "Designed the product flow, dashboard hierarchy, task board, status tracking, project activity timeline, and dummy analytics views for delivery monitoring.",
     impact: "Improves visibility across project execution, helping teams understand what is being worked on, what is blocked, and what needs attention next.",
-    image: "/project-flowak.svg",
-    video: "/project-media/videos/flowak-demo.mp4",
+    image: "/assets/projects/flowak/cover.svg",
+    video: "/assets/projects/flowak/videos/demo.mp4",
     tags: ["Task Flow", "Project IT", "Kanban", "Dashboard"],
     techStack: ["React", "TypeScript", "Vite", "Tailwind CSS", "Zustand", "Go", "Gin", "PostgreSQL", "JWT", "bcrypt", "Gemini API"],
     previewTone: "from-indigo-500 via-sky-500 to-emerald-500",
     screens: buildScreens("flowak", [
+      "01-project-flow-board.svg",
+      "02-task-detail.svg",
+      "03-delivery-analytics.svg",
+      "04-ai-flow-audit.svg",
+      "05-mock-payload.svg",
+      "06-project-overview.svg"
+    ], [
       { title: "Project Flow Board", caption: "Kanban-style development flow from backlog to deployment." },
       { title: "Task Detail", caption: "Ownership, priority, checklist, blockers, and discussion context." },
       { title: "Delivery Analytics", caption: "Sprint velocity, blocked work, and progress summary." },
@@ -80,12 +180,19 @@ const projectsData = [
     problem: "When production applications fail, engineers often spend too much time scanning long log files manually before understanding the actual root cause and next action.",
     contribution: "Created the concept for log ingestion, error grouping, severity tagging, root-cause summary, and recommendation panels for operational debugging workflows.",
     impact: "Shortens troubleshooting time by turning raw logs into prioritized insights, readable summaries, and suggested remediation steps.",
-    image: "/project-logia-log.svg",
-    video: "/project-media/videos/logia-log-demo.mp4",
+    image: "/assets/projects/logia-log/cover.svg",
+    video: "/assets/projects/logia-log/videos/demo.mp4",
     tags: ["Log Analyzer", "VM", "Root Cause", "Recommendation"],
     techStack: ["React", "TypeScript", "Vite", "Tailwind CSS", "Java", "Spring Boot", "JWT", "Gemini API", "RabbitMQ"],
     previewTone: "from-rose-500 via-red-500 to-amber-500",
     screens: buildScreens("logia-log", [
+      "01-log-stream.svg",
+      "02-root-cause.svg",
+      "03-recommendation.svg",
+      "04-error-cluster.svg",
+      "05-rabbitmq-queue.svg",
+      "06-incident-report.svg"
+    ], [
       { title: "Log Stream", caption: "Live-style log reader with severity grouping and timestamps." },
       { title: "Root Cause", caption: "Readable diagnosis explaining the likely source of failure." },
       { title: "Recommendation", caption: "Suggested remediation steps for engineers and operators." },
@@ -148,7 +255,7 @@ function ProjectPreviewVideo({
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:28px_28px] opacity-25" />
 
       <div className={`pointer-events-none absolute bottom-9 left-0 right-0 flex justify-center transition-opacity duration-500 ${isPreviewPlaying ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}>
-        <div className="flex items-center gap-2 rounded-full border border-white/20 bg-black/55 px-3.5 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-white shadow-2xl backdrop-blur-md">
+        <div className="project-preview-badge flex items-center gap-2 rounded-full border border-white/20 bg-black/55 px-3.5 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-white shadow-2xl backdrop-blur-md">
           <Play className="h-3.5 w-3.5 fill-white" />
           {isPreviewPlaying ? "Playing Demo" : "Hover to Play"}
         </div>
@@ -265,7 +372,7 @@ function ProjectCard({
             <button
               type="button"
               onClick={() => setSelectedProject(project)}
-              className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-white transition-all duration-300 hover:border-white hover:bg-white hover:text-black"
+              className="project-details-button inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-white transition-all duration-300 hover:border-white hover:bg-white hover:text-black"
             >
               View Details
             </button>

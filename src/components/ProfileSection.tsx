@@ -36,7 +36,7 @@ export default function ProfileSection() {
             className="relative w-64 h-64 md:w-80 md:h-80 shrink-0 rounded-3xl overflow-hidden border border-white/15 shadow-2xl shadow-cyan-500/20 bg-slate-800 md:order-last group"
           >
             <Image
-              src="/profile.jpg"
+              src="/assets/images/profile/profile.jpg"
               alt="Yosua Reynaldi Manurun"
               fill
               priority

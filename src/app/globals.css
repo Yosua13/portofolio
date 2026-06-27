@@ -179,3 +179,198 @@ html.light .custom-tooltip {
   color: #0f172a !important;
   border: 1px solid rgba(15, 23, 42, 0.15) !important;
 }
+
+/* Theme-aware surfaces for high contrast in both modes */
+.app-brand-lockup {
+  background: rgba(3, 7, 18, 0.48);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.24);
+}
+
+.app-brand-mark {
+  color: #ffffff !important;
+  text-shadow: 0 2px 18px rgba(15, 23, 42, 0.55);
+}
+
+.app-brand-name {
+  color: #a5b4fc !important;
+}
+
+.app-brand-role {
+  color: #cbd5e1 !important;
+}
+
+.floating-nav-shell,
+.social-actions-shell,
+.mobile-nav-shell {
+  background: rgba(8, 10, 18, 0.76) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #e2e8f0 !important;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+}
+
+.theme-icon-button {
+  color: #cbd5e1 !important;
+}
+
+.theme-icon-button:hover {
+  color: #ffffff !important;
+}
+
+.service-card,
+.journey-card,
+.project-modal-surface,
+.screenshot-carousel-shell {
+  background: rgba(13, 15, 24, 0.72) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #e2e8f0 !important;
+}
+
+.service-card-title,
+.journey-card-title,
+.modal-strong-text,
+.carousel-title {
+  color: #f8fafc !important;
+}
+
+.service-card-body,
+.journey-description,
+.journey-achievement,
+.modal-body-text,
+.carousel-caption {
+  color: #cbd5e1 !important;
+}
+
+.journey-description,
+.modal-soft-panel {
+  background: rgba(15, 23, 42, 0.78) !important;
+  border-color: rgba(148, 163, 184, 0.18) !important;
+}
+
+.journey-logo-frame {
+  background: #05080f !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+.project-preview-badge,
+.modal-icon-button,
+.carousel-control,
+.modal-secondary-action {
+  background: rgba(2, 6, 23, 0.82) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+.project-preview-badge svg,
+.carousel-control svg,
+.modal-icon-button svg {
+  color: currentColor;
+}
+
+.project-details-button,
+.modal-primary-action {
+  background: #ffffff !important;
+  color: #020617 !important;
+  border-color: rgba(255, 255, 255, 0.76) !important;
+}
+
+.modal-chip {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #cbd5e1 !important;
+}
+
+html.light .app-brand-lockup {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.1);
+}
+
+html.light .app-brand-mark {
+  color: #020617 !important;
+  text-shadow: none;
+}
+
+html.light .app-brand-name {
+  color: #3730a3 !important;
+}
+
+html.light .app-brand-role {
+  color: #475569 !important;
+}
+
+html.light .floating-nav-shell,
+html.light .social-actions-shell,
+html.light .mobile-nav-shell {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.1);
+}
+
+html.light .theme-icon-button {
+  color: #334155 !important;
+}
+
+html.light .theme-icon-button:hover {
+  color: #111827 !important;
+}
+
+html.light .service-card,
+html.light .journey-card,
+html.light .project-modal-surface,
+html.light .screenshot-carousel-shell {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #0f172a !important;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+}
+
+html.light .service-card-title,
+html.light .journey-card-title,
+html.light .modal-strong-text,
+html.light .carousel-title {
+  color: #0f172a !important;
+}
+
+html.light .service-card-body,
+html.light .journey-description,
+html.light .journey-achievement,
+html.light .modal-body-text,
+html.light .carousel-caption {
+  color: #334155 !important;
+}
+
+html.light .journey-description,
+html.light .modal-soft-panel {
+  background: rgba(248, 250, 252, 0.96) !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+}
+
+html.light .journey-logo-frame {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+html.light .project-preview-badge,
+html.light .modal-icon-button,
+html.light .carousel-control,
+html.light .modal-secondary-action {
+  background: rgba(255, 255, 255, 0.94) !important;
+  color: #0f172a !important;
+  border-color: rgba(15, 23, 42, 0.16) !important;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14);
+}
+
+html.light .project-details-button,
+html.light .modal-primary-action {
+  background: #111827 !important;
+  color: #ffffff !important;
+  border-color: #111827 !important;
+}
+
+html.light .modal-chip {
+  background: rgba(15, 23, 42, 0.06) !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  color: #334155 !important;
+}

@@ -148,10 +148,10 @@ export default function SkillsSection() {
         <div className="flex flex-col md:flex-row items-center gap-12 bg-gradient-to-r from-cyan-500/10 to-transparent p-8 md:p-10 rounded-3xl border border-cyan-500/20">
           <div className="flex gap-6 md:gap-8 items-center shrink-0">
             <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden border border-white/10 bg-[#0a0a0a] p-4 flex items-center justify-center group shadow-xl">
-              <Image src="/java.png" alt="Java" fill className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" />
+              <Image src="/assets/images/skills/java.png" alt="Java" fill className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" />
             </div>
             <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden border border-white/10 bg-[#0a0a0a] p-4 flex items-center justify-center group shadow-xl">
-              <Image src="/ts.png" alt="TypeScript" fill className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" />
+              <Image src="/assets/images/skills/typescript.png" alt="TypeScript" fill className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" />
             </div>
           </div>
 
