@@ -15,7 +15,7 @@ const journeyData = [
     status: "Current Role",
     isActive: true,
     date: "Oct 2025 - Present",
-    image: "/company1.png",
+    image: "/logo_tabel_data.png",
     description:
       "Resolved production issues and delivered end-to-end business application features using Angular, React JS, Java Spring Boot, Golang, and supporting operational tooling.",
     achievements: [
@@ -32,7 +32,7 @@ const journeyData = [
     status: "Professional Role",
     isActive: false,
     date: "Aug 2024 - Jun 2025",
-    image: "/company2.png",
+    image: "/logo_tabel_data.png",
     description:
       "Developed and maintained Flutter applications for Android and iOS, working across delivery, state management, deployment preparation, and cross-platform compatibility.",
     achievements: [
@@ -49,7 +49,7 @@ const journeyData = [
     status: "GPA 3.87/4.00",
     isActive: false,
     date: "Sep 2022 - Jul 2025",
-    image: "/university.png",
+    image: "/logo_telkom_university.png",
     description:
       "Studied application software engineering with practical focus on web development, project delivery, databases, and student community contribution.",
     achievements: [
@@ -167,11 +167,11 @@ export default function JourneySection() {
                       viewport={{ once: true, margin: "-100px" }}
                       transition={{ duration: 0.5, delay: 0.1 }}
                     >
-                      <div className="bg-[#0a0a0a]/80 backdrop-blur-md border border-white/10 rounded-3xl p-5 sm:p-8 w-full hover:border-cyan-500/30 transition-all duration-300 relative overflow-hidden group shadow-xl">
+                      <div className="journey-card bg-[#0a0a0a]/80 backdrop-blur-md border border-white/10 rounded-3xl p-5 sm:p-8 w-full hover:border-cyan-500/30 transition-all duration-300 relative overflow-hidden group shadow-xl">
                         <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                         <div className="flex flex-col sm:flex-row gap-6 lg:gap-8 items-start relative z-10">
-                          <div className="w-[80px] h-[80px] sm:w-[120px] sm:h-[120px] shrink-0 rounded-2xl overflow-hidden border border-white/5 bg-[#0f0f0f] flex items-center justify-center p-2 sm:p-3">
+                          <div className="journey-logo-frame w-[80px] h-[80px] sm:w-[120px] sm:h-[120px] shrink-0 rounded-2xl overflow-hidden border border-white/5 bg-[#0f0f0f] flex items-center justify-center p-2 sm:p-3">
                             <Image src={item.image} alt={item.company} width={100} height={100} className="object-contain w-full h-full" />
                           </div>
 
@@ -181,7 +181,7 @@ export default function JourneySection() {
                               {item.location}
                             </div>
 
-                            <h3 className="text-xl sm:text-2xl xl:text-3xl font-bold text-white mb-1 tracking-tight">
+                            <h3 className="journey-card-title text-xl sm:text-2xl xl:text-3xl font-bold text-white mb-1 tracking-tight">
                               {item.title}
                             </h3>
                             <span className="text-sm font-semibold text-cyan-300 mb-3">
@@ -219,7 +219,7 @@ export default function JourneySection() {
                           </div>
                         </div>
 
-                        <div className="mt-6 bg-[#0d0f18] border border-[#1a1f35] rounded-xl p-5 text-slate-300 text-[15px] leading-relaxed relative z-10 shadow-inner">
+                        <div className="journey-description mt-6 bg-[#0d0f18] border border-[#1a1f35] rounded-xl p-5 text-slate-300 text-[15px] leading-relaxed relative z-10 shadow-inner">
                           {item.description}
                         </div>
 
@@ -230,7 +230,7 @@ export default function JourneySection() {
                           </h4>
                           <ul className="space-y-3.5">
                             {item.achievements.map((achievement) => (
-                              <li key={achievement} className="flex items-start gap-3.5 text-slate-200 text-[15px] leading-relaxed">
+                              <li key={achievement} className="journey-achievement flex items-start gap-3.5 text-slate-200 text-[15px] leading-relaxed">
                                 <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0 mt-2 shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
                                 <span className="flex-1">{achievement}</span>
                               </li>
