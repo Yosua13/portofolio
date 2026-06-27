@@ -1711,7 +1711,7 @@ export default function HeroSection({
                         <foreignObject x="0" y="0" width="100%" height="100%">
                           <video
                             className="w-full h-full object-cover"
-                            src="/videos/landscape.mp4"
+                            src="/assets/videos/landscape.mp4"
                             autoPlay
                             loop
                             muted
@@ -1742,7 +1742,7 @@ export default function HeroSection({
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                     </a>
                     <a 
-                      href="/cv/Yosua Reynaldi Manurun-resume.pdf" 
+                      href="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf" 
                       download 
                       className="inline-flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg active:scale-95 duration-300"
                     >
@@ -1904,7 +1904,7 @@ export default function HeroSection({
                   <div className="flex gap-5 items-center">
                     <div className="w-20 h-20 rounded-xl border-2 border-cyan-500/40 relative overflow-hidden bg-cyan-950/20 shrink-0 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
                       <Image
-                        src="/yosua_profile.png"
+                        src="/assets/images/profile/yosua-profile.png"
                         alt="Yosua Reynaldi" 
                         fill
                         sizes="80px"
@@ -1948,7 +1948,7 @@ export default function HeroSection({
                   {/* Large Vertical Image Frame */}
                   <div className="relative aspect-[1/1] w-full overflow-hidden rounded-2xl border border-white/5 bg-slate-950/20 shadow-inner">
                     <Image
-                      src="/yosua_profile.png"
+                      src="/assets/images/profile/yosua-profile.png"
                       alt="Yosua Reynaldi Manurun" 
                       fill
                       sizes="(max-width: 900px) 90vw, 300px"

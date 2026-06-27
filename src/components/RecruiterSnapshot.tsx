@@ -41,7 +41,7 @@ export default function RecruiterSnapshot() {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <a href="/cv/Yosua Reynaldi Manurun-resume.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[#0a0a0a] transition-colors hover:bg-slate-200">
+            <a href="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[#0a0a0a] transition-colors hover:bg-slate-200">
               <FileText className="w-4 h-4" />
               View CV
             </a>

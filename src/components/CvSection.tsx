@@ -49,7 +49,7 @@ export default function CvSection() {
           <div className="flex flex-wrap gap-4 pt-4">
             {/* Download PDF Button */}
             <a
-              href="/cv/Yosua Reynaldi Manurun-resume.pdf"
+              href="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf"
               download="Yosua Reynaldi Manurun-resume.pdf"
               className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-indigo-600/20 hover:shadow-indigo-600/35 hover:-translate-y-0.5 cursor-pointer"
             >
@@ -59,7 +59,7 @@ export default function CvSection() {
 
             {/* Open In New Tab Button */}
             <a
-              href="/cv/Yosua Reynaldi Manurun-resume.pdf"
+              href="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-transparent hover:bg-white/5 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer"
@@ -92,7 +92,7 @@ export default function CvSection() {
 
               {/* Action Link */}
               <a
-                href="/cv/Yosua Reynaldi Manurun-resume.pdf"
+                href="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-mono text-[9px] sm:text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider flex items-center gap-1 cursor-pointer"
@@ -104,7 +104,7 @@ export default function CvSection() {
             {/* Embedded PDF iframe */}
             <div className="flex-1 w-full bg-white relative overflow-hidden">
               <iframe
-                src="/cv/Yosua Reynaldi Manurun-resume.pdf#toolbar=0&navpanes=0&scrollbar=1"
+                src="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf#toolbar=0&navpanes=0&scrollbar=1"
                 className="w-full h-full border-none"
                 title="Yosua Reynaldi Manurun Resume"
               />

@@ -15,7 +15,7 @@ const journeyData = [
     status: "Current Role",
     isActive: true,
     date: "Oct 2025 - Present",
-    image: "/logo_tabel_data.png",
+    image: "/assets/images/companies/tabel-data.png",
     description:
       "Resolved production issues and delivered end-to-end business application features using Angular, React JS, Java Spring Boot, Golang, and supporting operational tooling.",
     achievements: [
@@ -32,7 +32,7 @@ const journeyData = [
     status: "Professional Role",
     isActive: false,
     date: "Aug 2024 - Jun 2025",
-    image: "/logo_tabel_data.png",
+    image: "/assets/images/companies/tabel-data.png",
     description:
       "Developed and maintained Flutter applications for Android and iOS, working across delivery, state management, deployment preparation, and cross-platform compatibility.",
     achievements: [
@@ -49,7 +49,7 @@ const journeyData = [
     status: "GPA 3.87/4.00",
     isActive: false,
     date: "Sep 2022 - Jul 2025",
-    image: "/logo_telkom_university.png",
+    image: "/assets/images/companies/telkom-university.png",
     description:
       "Studied application software engineering with practical focus on web development, project delivery, databases, and student community contribution.",
     achievements: [
