@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
-import { ExternalLink, Gamepad2, Menu, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, Gamepad2, Maximize2, Menu, X } from "lucide-react";
 import Image from "next/image";
 import HeroSection from "@/components/HeroSection";
 import WelcomeScreen from "@/components/WelcomeScreen";
@@ -14,6 +14,13 @@ import JourneySection from "@/components/JourneySection";
 import CvSection from "@/components/CvSection";
 import ContactSection from "@/components/ContactSection";
 import RecruiterSnapshot from "@/components/RecruiterSnapshot";
+
+interface ProjectScreen {
+  title: string;
+  caption: string;
+  image: string;
+  aspectRatio?: string;
+}
 
 interface ProjectType {
   id: string;
@@ -33,42 +40,206 @@ interface ProjectType {
   techStack: string[];
   link?: string;
   previewTone: string;
-  screens: {
-    title: string;
-    caption: string;
-    image: string;
-  }[];
+  screens: ProjectScreen[];
 }
 
-function ProjectScreenshot({ title, caption, image, index }: { title: string; caption: string; image: string; index: number }) {
+function ProjectScreenshotCarousel({ projectTitle, screens }: { projectTitle: string; screens: ProjectScreen[] }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [previewScreen, setPreviewScreen] = useState<ProjectScreen | null>(null);
+  const activeScreen = screens[activeIndex];
+  const thumbnailContainerRef = useRef<HTMLDivElement>(null);
+
+  const goToPrevious = () => {
+    setActiveIndex((currentIndex) => currentIndex === 0 ? screens.length - 1 : currentIndex - 1);
+  };
+
+  const goToNext = () => {
+    setActiveIndex((currentIndex) => currentIndex === screens.length - 1 ? 0 : currentIndex + 1);
+  };
+
+  const scrollThumbnails = (direction: "left" | "right") => {
+    if (thumbnailContainerRef.current) {
+      const scrollAmount = 240;
+      thumbnailContainerRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (thumbnailContainerRef.current) {
+      const container = thumbnailContainerRef.current;
+      const activeChild = container.children[activeIndex] as HTMLElement;
+      if (activeChild) {
+        const containerWidth = container.clientWidth;
+        const childOffset = activeChild.offsetLeft;
+        const childWidth = activeChild.clientWidth;
+        container.scrollTo({
+          left: childOffset - containerWidth / 2 + childWidth / 2,
+          behavior: "smooth",
+        });
+      }
+    }
+  }, [activeIndex]);
+
+  if (!activeScreen) return null;
+
   return (
-    <div className="group/screen relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-3 transition-colors hover:border-indigo-500/35">
-      <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-red-400" />
-          <span className="h-2 w-2 rounded-full bg-amber-300" />
-          <span className="h-2 w-2 rounded-full bg-emerald-300" />
+    <>
+      <div className="overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.03] p-3 sm:p-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-300">
+              {String(activeIndex + 1).padStart(2, "0")} / {String(screens.length).padStart(2, "0")}
+            </span>
+            <h5 className="mt-2 text-lg font-black text-white">{activeScreen.title}</h5>
+            <p className="mt-1 text-sm leading-relaxed text-slate-400">{activeScreen.caption}</p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={goToPrevious}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-slate-300 transition-colors hover:border-indigo-400/50 hover:text-white"
+              aria-label={`Previous ${projectTitle} screenshot`}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={goToNext}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-slate-300 transition-colors hover:border-indigo-400/50 hover:text-white"
+              aria-label={`Next ${projectTitle} screenshot`}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
         </div>
-        <span className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-500">
-          Screen {index + 1}
-        </span>
+
+        <button
+          type="button"
+          onClick={() => setPreviewScreen(activeScreen)}
+          className="group/screen relative mt-5 block w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-950/90 text-left transition-colors hover:border-indigo-400/50"
+          aria-label={`Open ${activeScreen.title} screenshot preview`}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeScreen.image}
+              initial={{ opacity: 0, x: 36, scale: 0.985 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: -36, scale: 0.985 }}
+              transition={{ duration: 0.28, ease: "easeOut" }}
+              className="relative w-full bg-slate-950"
+              style={{ aspectRatio: activeScreen.aspectRatio ?? "16 / 9" }}
+            >
+              <Image
+                src={activeScreen.image}
+                alt={`${activeScreen.title} screenshot`}
+                fill
+                sizes="(max-width: 768px) 100vw, 1100px"
+                className="object-contain"
+              />
+            </motion.div>
+          </AnimatePresence>
+
+          <div className="pointer-events-none absolute bottom-3 right-3 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-black/55 text-white opacity-0 shadow-2xl backdrop-blur-md transition-opacity group-hover/screen:opacity-100">
+            <Maximize2 className="h-4 w-4" />
+          </div>
+        </button>
+
+        <div className="relative group/thumbs mt-4">
+          {/* Scroll Left Button */}
+          <button
+            type="button"
+            onClick={() => scrollThumbnails("left")}
+            className="absolute left-2 top-8 sm:top-10 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/70 text-slate-300 opacity-0 group-hover/thumbs:opacity-100 focus:opacity-100 transition-all duration-300 hover:border-indigo-400 hover:text-white backdrop-blur-md cursor-pointer shadow-lg active:scale-95"
+            aria-label="Scroll thumbnails left"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+
+          {/* Scroll Right Button */}
+          <button
+            type="button"
+            onClick={() => scrollThumbnails("right")}
+            className="absolute right-2 top-8 sm:top-10 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/70 text-slate-300 opacity-0 group-hover/thumbs:opacity-100 focus:opacity-100 transition-all duration-300 hover:border-indigo-400 hover:text-white backdrop-blur-md cursor-pointer shadow-lg active:scale-95"
+            aria-label="Scroll thumbnails right"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+
+          <div
+            ref={thumbnailContainerRef}
+            className="flex gap-2 overflow-x-auto pb-2 scroll-smooth"
+          >
+            {screens.map((screen, index) => (
+              <button
+                key={screen.image}
+                type="button"
+                onClick={() => setActiveIndex(index)}
+                className={`relative h-16 w-28 shrink-0 overflow-hidden rounded-xl border bg-slate-950 transition-all duration-300 sm:h-20 sm:w-36 ${
+                  activeIndex === index
+                    ? "border-indigo-400 opacity-100 shadow-lg shadow-indigo-500/20"
+                    : "border-white/10 opacity-55 hover:border-white/30 hover:opacity-100"
+                }`}
+                aria-label={`Show ${screen.title} screenshot`}
+              >
+                <Image
+                  src={screen.image}
+                  alt=""
+                  fill
+                  sizes="144px"
+                  className="object-cover"
+                />
+                <span className="absolute left-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[8px] font-black text-white backdrop-blur-sm">
+                  {index + 1}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      <div className="relative aspect-[16/9] overflow-hidden rounded-xl border border-white/10 bg-slate-950/70">
-        <Image
-          src={image}
-          alt={`${title} screenshot`}
-          fill
-          sizes="(max-width: 768px) 100vw, 33vw"
-          className="object-cover transition-transform duration-500 group-hover/screen:scale-[1.03]"
-        />
-      </div>
+      <AnimatePresence>
+        {previewScreen && (
+          <div className="fixed inset-0 z-[180] flex items-center justify-center p-4 sm:p-8">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setPreviewScreen(null)}
+              className="absolute inset-0 bg-black/90 backdrop-blur-lg"
+            />
 
-      <div className="mt-3">
-        <h5 className="text-sm font-black text-white">{title}</h5>
-        <p className="mt-1 text-xs leading-relaxed text-slate-400">{caption}</p>
-      </div>
-    </div>
+            <motion.button
+              type="button"
+              initial={{ opacity: 0, scale: 0.96, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 16 }}
+              transition={{ duration: 0.24, ease: "easeOut" }}
+              onClick={() => setPreviewScreen(null)}
+              className="relative z-10 w-full max-w-[1500px] overflow-hidden rounded-2xl border border-white/10 bg-slate-950 p-2 shadow-2xl shadow-black/70"
+              aria-label={`Close ${previewScreen.title} screenshot preview`}
+            >
+              <div
+                className="relative w-full"
+                style={{ aspectRatio: previewScreen.aspectRatio ?? "16 / 9" }}
+              >
+                <Image
+                  src={previewScreen.image}
+                  alt={`${previewScreen.title} screenshot`}
+                  fill
+                  sizes="96vw"
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </motion.button>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
@@ -510,17 +681,10 @@ export default function Portfolio() {
 
                   <div className="space-y-3">
                     <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Screenshot Aplikasi</h4>
-                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                      {selectedProject.screens.map((screen, index) => (
-                        <ProjectScreenshot
-                          key={screen.title}
-                          title={screen.title}
-                          caption={screen.caption}
-                          image={screen.image}
-                          index={index}
-                        />
-                      ))}
-                    </div>
+                    <ProjectScreenshotCarousel
+                      projectTitle={selectedProject.title}
+                      screens={selectedProject.screens}
+                    />
                   </div>
 
                   <div className="space-y-3">
