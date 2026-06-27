@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "public" / "project-media"
+OUT = ROOT / "public" / "assets" / "projects"
 TMP = ROOT / ".media-frames"
 FFMPEG = Path("C:/tmp/portfolio-media-tools/node_modules/ffmpeg-static/ffmpeg.exe")
 
@@ -172,8 +172,9 @@ def save_svg(project_key: str, screen_index: int) -> None:
     project = PROJECTS[project_key]
     title, caption = project["screens"][screen_index]
     base, primary, accent = project["colors"]
-    slug = f"{project_key}-{screen_index + 1}.svg"
-    out = OUT / "screens" / slug
+    slug = f"{screen_index + 1:02d}-dummy-{project_key}.svg"
+    out = OUT / project_key / "screenshots" / slug
+    out.parent.mkdir(parents=True, exist_ok=True)
     sidebar_items = "".join(
         f'<rect x="118" y="{240 + i * 68}" width="146" height="42" rx="13" fill="{primary}" opacity="{0.28 if i == screen_index % 5 else 0.12}"/>'
         for i in range(5)
@@ -219,7 +220,8 @@ def render_video(project_key: str) -> None:
         img = draw_dashboard(project_key, screen, progress)
         img.save(frames_dir / f"frame_{frame:04d}.png")
 
-    output = OUT / "videos" / f"{project_key}-demo.mp4"
+    output = OUT / project_key / "videos" / "demo.mp4"
+    output.parent.mkdir(parents=True, exist_ok=True)
     subprocess.run(
         [
             str(FFMPEG),
@@ -246,8 +248,7 @@ def main() -> None:
     if not FFMPEG.exists():
         raise SystemExit(f"Missing ffmpeg at {FFMPEG}")
 
-    (OUT / "screens").mkdir(parents=True, exist_ok=True)
-    (OUT / "videos").mkdir(parents=True, exist_ok=True)
+    OUT.mkdir(parents=True, exist_ok=True)
     if TMP.exists():
         shutil.rmtree(TMP)
     TMP.mkdir(parents=True)

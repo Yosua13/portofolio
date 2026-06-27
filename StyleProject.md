@@ -26,9 +26,9 @@ Semua cover project saat ini berukuran 1280 x 800 px, rasio 16:10.
 
 | Project | File | Ukuran |
 | --- | --- | --- |
-| Lapor Kos | `public/project-lapor-kos.svg` | 1280 x 800 px |
-| Flowak | `public/project-flowak.svg` | 1280 x 800 px |
-| Logia Log | `public/project-logia-log.svg` | 1280 x 800 px |
+| Lapor Kos | `public/assets/projects/lapor-kos/cover.svg` | 1280 x 800 px |
+| Flowak | `public/assets/projects/flowak/cover.svg` | 1280 x 800 px |
+| Logia Log | `public/assets/projects/logia-log/cover.svg` | 1280 x 800 px |
 
 ### Screenshot Aplikasi
 
@@ -36,9 +36,9 @@ Screenshot dummy Flowak dan Logia Log masih berukuran 1280 x 720 px, rasio 16:9.
 
 | Project | Pattern file | Jumlah | Ukuran |
 | --- | --- | --- | --- |
-| Lapor Kos | `public/project-media/screens/lapor_kos/0_login.png` sampai `15_tagihan_penghuni.png` | 16 gambar | 1920 x 901/902 px |
-| Flowak | `public/project-media/screens/flowak-1.svg` sampai `flowak-6.svg` | 6 gambar | 1280 x 720 px |
-| Logia Log | `public/project-media/screens/logia-log-1.svg` sampai `logia-log-6.svg` | 6 gambar | 1280 x 720 px |
+| Lapor Kos | `public/assets/projects/lapor-kos/screenshots/00-login.png` sampai `15-tagihan-penghuni.png` | 16 gambar | 1920 x 901/902 px |
+| Flowak | `public/assets/projects/flowak/screenshots/01-project-flow-board.svg` sampai `06-project-overview.svg` | 6 gambar | 1280 x 720 px |
+| Logia Log | `public/assets/projects/logia-log/screenshots/01-log-stream.svg` sampai `06-incident-report.svg` | 6 gambar | 1280 x 720 px |
 
 ### Video Demo
 
@@ -46,9 +46,9 @@ Semua video demo saat ini berukuran 1280 x 720 px, rasio 16:9, durasi 15 detik, 
 
 | Project | File | Ukuran | Durasi |
 | --- | --- | --- | --- |
-| Lapor Kos | `public/project-media/videos/lapor-kos-demo.mp4` | 1280 x 720 px | 15 detik |
-| Flowak | `public/project-media/videos/flowak-demo.mp4` | 1280 x 720 px | 15 detik |
-| Logia Log | `public/project-media/videos/logia-log-demo.mp4` | 1280 x 720 px | 15 detik |
+| Lapor Kos | `public/assets/projects/lapor-kos/videos/demo.mp4` | 1280 x 720 px | 15 detik |
+| Flowak | `public/assets/projects/flowak/videos/demo.mp4` | 1280 x 720 px | 15 detik |
+| Logia Log | `public/assets/projects/logia-log/videos/demo.mp4` | 1280 x 720 px | 15 detik |
 
 ## Rekomendasi Pembuatan Screenshot
 
@@ -64,26 +64,26 @@ Ukuran aman:
 Nama file yang disarankan:
 
 ```text
-public/project-media/screens/lapor-kos-1.png
-public/project-media/screens/lapor-kos-2.png
-public/project-media/screens/lapor-kos-3.png
-public/project-media/screens/lapor-kos-4.png
-public/project-media/screens/lapor-kos-5.png
-public/project-media/screens/lapor-kos-6.png
+public/assets/projects/lapor-kos/screenshots/00-login.png
+public/assets/projects/lapor-kos/screenshots/01-dashboard.png
+public/assets/projects/lapor-kos/screenshots/02-manajemen-kamar.png
+public/assets/projects/lapor-kos/screenshots/03-penghuni-kontrak.png
+public/assets/projects/lapor-kos/screenshots/04-manajemen-pembayaran.png
+public/assets/projects/lapor-kos/screenshots/05-laporan.png
 
-public/project-media/screens/flowak-1.png
-public/project-media/screens/flowak-2.png
-public/project-media/screens/flowak-3.png
-public/project-media/screens/flowak-4.png
-public/project-media/screens/flowak-5.png
-public/project-media/screens/flowak-6.png
+public/assets/projects/flowak/screenshots/01-project-flow-board.png
+public/assets/projects/flowak/screenshots/02-task-detail.png
+public/assets/projects/flowak/screenshots/03-delivery-analytics.png
+public/assets/projects/flowak/screenshots/04-ai-flow-audit.png
+public/assets/projects/flowak/screenshots/05-mock-payload.png
+public/assets/projects/flowak/screenshots/06-project-overview.png
 
-public/project-media/screens/logia-log-1.png
-public/project-media/screens/logia-log-2.png
-public/project-media/screens/logia-log-3.png
-public/project-media/screens/logia-log-4.png
-public/project-media/screens/logia-log-5.png
-public/project-media/screens/logia-log-6.png
+public/assets/projects/logia-log/screenshots/01-log-stream.png
+public/assets/projects/logia-log/screenshots/02-root-cause.png
+public/assets/projects/logia-log/screenshots/03-recommendation.png
+public/assets/projects/logia-log/screenshots/04-error-cluster.png
+public/assets/projects/logia-log/screenshots/05-rabbitmq-queue.png
+public/assets/projects/logia-log/screenshots/06-incident-report.png
 ```
 
 Jika mengganti dari `.svg` ke `.png`, update path screenshot di `src/components/ProjectsSection.tsx` agar mengarah ke ekstensi baru.
@@ -105,9 +105,9 @@ Ukuran aman:
 Nama file yang dipakai aplikasi:
 
 ```text
-public/project-media/videos/lapor-kos-demo.mp4
-public/project-media/videos/flowak-demo.mp4
-public/project-media/videos/logia-log-demo.mp4
+public/assets/projects/lapor-kos/videos/demo.mp4
+public/assets/projects/flowak/videos/demo.mp4
+public/assets/projects/logia-log/videos/demo.mp4
 ```
 
 ## Area Aman Desain
