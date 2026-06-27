@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     siteName: "YRM Portfolio",
     images: [
       {
-        url: "/yosua_profile.png",
+        url: "/assets/images/profile/yosua-profile.png",
         width: 800,
         height: 800,
         alt: "Yosua Reynaldi M. Profile Picture",
@@ -38,10 +38,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Yosua Reynaldi M. | Fullstack Software Engineer",
     description: "I build scalable backend systems and modern web applications.",
-    images: ["/yosua_profile.png"],
+    images: ["/assets/images/profile/yosua-profile.png"],
   },
   icons: {
-    icon: "/icon_aplikasi.png",
+    icon: "/assets/images/brand/app-icon.png",
   },
 };
 
