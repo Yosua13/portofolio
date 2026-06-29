@@ -28,6 +28,7 @@ Semua cover project saat ini berukuran 1280 x 800 px, rasio 16:10.
 | --- | --- | --- |
 | Lapor Kos | `public/assets/projects/lapor-kos/cover.svg` | 1280 x 800 px |
 | Flowak | `public/assets/projects/flowak/cover.svg` | 1280 x 800 px |
+| Sion Ministry | `public/assets/projects/sion-ministry/cover.svg` | 1280 x 800 px |
 | Logia Log | `public/assets/projects/logia-log/cover.svg` | 1280 x 800 px |
 
 ### Screenshot Aplikasi
@@ -38,6 +39,7 @@ Screenshot dummy Flowak dan Logia Log masih berukuran 1280 x 720 px, rasio 16:9.
 | --- | --- | --- | --- |
 | Lapor Kos | `public/assets/projects/lapor-kos/screenshots/00-login.png` sampai `15-tagihan-penghuni.png` | 16 gambar | 1920 x 901/902 px |
 | Flowak | `public/assets/projects/flowak/screenshots/01-project-flow-board.svg` sampai `06-project-overview.svg` | 6 gambar | 1280 x 720 px |
+| Sion Ministry | `public/assets/projects/sion-ministry/screenshots/01-dashboard.svg` sampai `06-laporan-absensi.svg` | 6 gambar | 1280 x 720 px |
 | Logia Log | `public/assets/projects/logia-log/screenshots/01-log-stream.svg` sampai `06-incident-report.svg` | 6 gambar | 1280 x 720 px |
 
 ### Video Demo
@@ -48,6 +50,7 @@ Semua video demo saat ini berukuran 1280 x 720 px, rasio 16:9, durasi 15 detik, 
 | --- | --- | --- | --- |
 | Lapor Kos | `public/assets/projects/lapor-kos/videos/demo.mp4` | 1280 x 720 px | 15 detik |
 | Flowak | `public/assets/projects/flowak/videos/demo.mp4` | 1280 x 720 px | 15 detik |
+| Sion Ministry | `public/assets/projects/sion-ministry/videos/demo.mp4` | 1280 x 720 px | 15 detik |
 | Logia Log | `public/assets/projects/logia-log/videos/demo.mp4` | 1280 x 720 px | 15 detik |
 
 ## Rekomendasi Pembuatan Screenshot
@@ -78,6 +81,13 @@ public/assets/projects/flowak/screenshots/04-ai-flow-audit.png
 public/assets/projects/flowak/screenshots/05-mock-payload.png
 public/assets/projects/flowak/screenshots/06-project-overview.png
 
+public/assets/projects/sion-ministry/screenshots/01-dashboard.svg
+public/assets/projects/sion-ministry/screenshots/02-jadwal-ibadah.svg
+public/assets/projects/sion-ministry/screenshots/03-pendaftaran-kegiatan.svg
+public/assets/projects/sion-ministry/screenshots/04-kanal-doa.svg
+public/assets/projects/sion-ministry/screenshots/05-manajemen-konten.svg
+public/assets/projects/sion-ministry/screenshots/06-laporan-absensi.svg
+
 public/assets/projects/logia-log/screenshots/01-log-stream.png
 public/assets/projects/logia-log/screenshots/02-root-cause.png
 public/assets/projects/logia-log/screenshots/03-recommendation.png
@@ -107,6 +117,7 @@ Nama file yang dipakai aplikasi:
 ```text
 public/assets/projects/lapor-kos/videos/demo.mp4
 public/assets/projects/flowak/videos/demo.mp4
+public/assets/projects/sion-ministry/videos/demo.mp4
 public/assets/projects/logia-log/videos/demo.mp4
 ```
 
@@ -127,7 +138,8 @@ Urutan project di aplikasi:
 
 1. Lapor Kos
 2. Flowak
-3. Logia Log
+3. Sion Ministry
+4. Logia Log
 
 Setiap project idealnya punya:
 
