@@ -169,6 +169,39 @@ const projectsData = [
     ])
   },
   {
+    id: "sion-ministry",
+    title: "Sion Ministry",
+    category: "Fullstack",
+    location: "2026 | SPIRITUAL COMMUNITY OPERATIONS",
+    role: "FULLSTACK DEVELOPER",
+    headline: "SPIRITUAL PORTAL, WORSHIP SCHEDULER, AND ACTIVITY MONITORING",
+    description: "A web platform for the Sion Ministry community to view and manage spiritual activities, services, prayer requests, and community announcements.",
+    fullDescription: "Sion Ministry is a digital hub designed to support a spiritual community. It facilitates members in viewing and registering for upcoming services, retreats, and group activities, while enabling ministry leaders to coordinate schedules, prayer requests, content, and attendance.",
+    problem: "Spiritual communities often face challenges in coordinating events, collecting prayer requests, and tracking member participation through scattered communication channels.",
+    contribution: "Developed the scheduling module, community prayer board, event registration flow, back-office administration panel, and attendance tracking analytics.",
+    impact: "Centralizes event coordination and community updates, boosting member engagement and offering administrators clear visibility into activity attendance.",
+    image: "/assets/projects/sion-ministry/cover.svg",
+    video: "/assets/projects/sion-ministry/videos/demo.mp4",
+    tags: ["Ministry Platform", "Worship Scheduler", "Community", "Spiritual Portal"],
+    techStack: ["Next.js", "Tailwind CSS", "Go", "Gin", "PostgreSQL", "Supabase", "Gemini API"],
+    previewTone: "from-violet-600 via-indigo-600 to-amber-500",
+    screens: buildScreens("sion-ministry", [
+      "01-dashboard.svg",
+      "02-jadwal-ibadah.svg",
+      "03-pendaftaran-kegiatan.svg",
+      "04-kanal-doa.svg",
+      "05-manajemen-konten.svg",
+      "06-laporan-absensi.svg"
+    ], [
+      { title: "Dashboard", caption: "Overview of upcoming services, announcements, and quick actions" },
+      { title: "Jadwal Ibadah", caption: "Worship schedule, sermon topics, and location details" },
+      { title: "Pendaftaran Kegiatan", caption: "Register for retreats, bible study, and fellowship events" },
+      { title: "Kanal Doa", caption: "Submit prayer requests, track active prayers, and assign intercessors" },
+      { title: "Manajemen Konten", caption: "Admin tools to publish new events, updates, and materials" },
+      { title: "Laporan Absensi", caption: "Attendance graphs, community growth charts, and activity summaries" }
+    ])
+  },
+  {
     id: "logia-log",
     title: "Logia Log",
     category: "Backend",

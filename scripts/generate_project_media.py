@@ -5,6 +5,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
+# pyrefly: ignore [missing-import]
 from PIL import Image, ImageDraw, ImageFont
 
 
@@ -61,6 +62,28 @@ PROJECTS = {
         ],
         "metrics": [("Errors", "14"), ("Severity", "High"), ("Fixes", "5")],
         "feed": ["Stack trace clustered", "Gemini summary ready", "RabbitMQ job completed"],
+    },
+    "sion-ministry": {
+        "name": "Sion Ministry",
+        "colors": ("#09070f", "#6d28d9", "#fbbf24"),
+        "screens": [
+            ("Dashboard", "Overview of upcoming services, announcements, and quick actions"),
+            ("Jadwal Ibadah", "Worship schedule, sermon topics, and location details"),
+            ("Pendaftaran Kegiatan", "Register for retreats, bible study, and fellowship events"),
+            ("Kanal Doa", "Submit prayer requests, track active prayers, and assign intercessors"),
+            ("Manajemen Konten", "Admin tools to publish new events, updates, and materials"),
+            ("Laporan Absensi", "Attendance graphs, community growth charts, and activity summaries"),
+        ],
+        "filenames": [
+            "01-dashboard.svg",
+            "02-jadwal-ibadah.svg",
+            "03-pendaftaran-kegiatan.svg",
+            "04-kanal-doa.svg",
+            "05-manajemen-konten.svg",
+            "06-laporan-absensi.svg",
+        ],
+        "metrics": [("Services", "4/wk"), ("Members", "312"), ("Prayers", "18")],
+        "feed": ["New prayer request approved", "Worship guide updated", "Youth retreat registration open"],
     },
 }
 
@@ -172,7 +195,10 @@ def save_svg(project_key: str, screen_index: int) -> None:
     project = PROJECTS[project_key]
     title, caption = project["screens"][screen_index]
     base, primary, accent = project["colors"]
-    slug = f"{screen_index + 1:02d}-dummy-{project_key}.svg"
+    if "filenames" in project:
+        slug = project["filenames"][screen_index]
+    else:
+        slug = f"{screen_index + 1:02d}-dummy-{project_key}.svg"
     out = OUT / project_key / "screenshots" / slug
     out.parent.mkdir(parents=True, exist_ok=True)
     sidebar_items = "".join(
