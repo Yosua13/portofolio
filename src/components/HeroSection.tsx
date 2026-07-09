@@ -289,7 +289,7 @@ function StarCanvas({
         }
       });
       lasers.length = 0;
-      
+
       // Update DOM
       const scoreValEl = document.getElementById("hud-score-val");
       if (scoreValEl) scoreValEl.textContent = "00000";
@@ -313,7 +313,7 @@ function StarCanvas({
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
         return;
       }
-      
+
       const key = e.key.toLowerCase();
       if (key === 'w' || key === 'a' || key === 's' || key === 'd') {
         pressedKeys[key] = true;
@@ -370,7 +370,7 @@ function StarCanvas({
 
     const createDroneMesh = () => {
       const group = new THREE.Group();
-      
+
       // Main dark metallic chassis
       const darkMetal = new THREE.MeshStandardMaterial({
         color: 0x111827,
@@ -467,7 +467,7 @@ function StarCanvas({
       }
 
       scene.add(mesh);
-      
+
       const tData: Target = {
         mesh,
         type: isDrone ? "drone" : "asteroid",
@@ -520,6 +520,16 @@ function StarCanvas({
       // Rotate environments based on mouse input
       starPoints.rotation.y = currentMX * 0.06;
       starPoints.rotation.x = currentMY * 0.06;
+
+      // Check document theme to update star color dynamically
+      const isLightMode = document.documentElement.classList.contains("light");
+      if (isLightMode) {
+        starMaterial.color.setHex(0x3730a3); // Dark indigo stars in light mode
+        starMaterial.opacity = 0.85;
+      } else {
+        starMaterial.color.setHex(0xffffff); // White stars in dark mode
+        starMaterial.opacity = 0.5;
+      }
 
       // Animate Stars (moving forward)
       const positions = starGeometry.attributes.position.array as Float32Array;
@@ -597,7 +607,7 @@ function StarCanvas({
               const dx = l.mesh.position.x - targetObj.mesh.position.x;
               const dy = l.mesh.position.y - targetObj.mesh.position.y;
               const dz = l.mesh.position.z - targetObj.mesh.position.z;
-              const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+              const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
               if (dist < (targetObj.radius + l.radius)) {
                 // Hit explosion!
@@ -652,7 +662,7 @@ function StarCanvas({
             const dx = spaceship.position.x - t.mesh.position.x;
             const dy = spaceship.position.y - t.mesh.position.y;
             const dz = spaceship.position.z - t.mesh.position.z;
-            const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+            const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
             if (dist < (t.radius + 0.65)) {
               // Crash explosion
@@ -721,13 +731,13 @@ function StarCanvas({
       if (scoreValEl) {
         scoreValEl.textContent = String(score).padStart(5, "0");
       }
-      
+
       const shieldValEl = document.getElementById("hud-shield-val");
       const shieldBarEl = document.getElementById("hud-shield-bar");
       if (shieldValEl && shieldBarEl) {
         shieldValEl.textContent = `${shield}%`;
         shieldBarEl.style.width = `${shield}%`;
-        
+
         if (shield <= 20) {
           shieldBarEl.style.backgroundColor = "#ef4444";
           shieldValEl.style.color = "#ef4444";
@@ -827,12 +837,12 @@ function StarCanvas({
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
       window.removeEventListener("resize", onResize);
-      
+
       // Clean up meshes and geometries
       lasers.forEach(l => scene.remove(l.mesh));
       targets.forEach(t => scene.remove(t.mesh));
       particles.forEach(p => scene.remove(p.mesh));
-      
+
       asteroidGeom.dispose();
       asteroidMat.dispose();
       laserGeom.dispose();
@@ -1004,7 +1014,7 @@ export default function HeroSection({
       }
 
       const triggerStart = window.innerHeight * 0.1;       /* 10vh */
-      const triggerEnd   = window.innerHeight * 0.7;       /* full effect range */
+      const triggerEnd = window.innerHeight * 0.7;       /* full effect range */
       const scrollY = window.scrollY;
 
       if (scrollY <= triggerStart) {
@@ -1015,8 +1025,8 @@ export default function HeroSection({
       }
 
       const progress = Math.min((scrollY - triggerStart) / (triggerEnd - triggerStart), 1);
-      const blur   = progress * 24;                        /* max 24px */
-      const scale  = 1 - progress * 0.04;                 /* min 0.96 */
+      const blur = progress * 24;                        /* max 24px */
+      const scale = 1 - progress * 0.04;                 /* min 0.96 */
       const opacity = 1 - progress * 1.0;                 /* min 0.0 */
 
       el.style.filter = `blur(${blur}px)`;
@@ -1171,27 +1181,6 @@ export default function HeroSection({
           align-items: stretch;
           gap: 20px;
           transform: translateY(-40px);
-        }
-
-        /* ── Badge ────────────────────────────────────── */
-        .badge-available {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 6px 18px;
-          border-radius: 9999px;
-          border: 1px solid rgba(34,197,94,.35);
-          background: rgba(34,197,94,.08);
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 13px;
-          color: #22c55e;
-          margin-bottom: 20px;
-        }
-        .badge-dot {
-          width: 8px; height: 8px;
-          border-radius: 50%;
-          background: #22c55e;
-          animation: pulseDot 2s ease-in-out infinite;
         }
 
         /* ── Label mono ──────────────────────────────── */
@@ -1425,6 +1414,70 @@ export default function HeroSection({
           animation: pulseDot 2s ease-in-out infinite;
         }
 
+        /* ── Light Mode Overrides inside Hero ── */
+        html.light .hero-footer {
+          background: rgba(255, 255, 255, 0.92) !important;
+          border-top-color: rgba(15, 23, 42, 0.12) !important;
+          color: #0f172a !important;
+        }
+        html.light .testimonial-dot:not(.active) {
+          background-color: rgba(15, 23, 42, 0.18) !important;
+        }
+        html.light .testimonial-dot:not(.active):hover {
+          background-color: rgba(15, 23, 42, 0.35) !important;
+        }
+        html.light .border-slate-800 {
+          border-color: rgba(15, 23, 42, 0.18) !important;
+        }
+        html.light .hero-testimonial .relative {
+          background-color: rgba(255, 255, 255, 0.88) !important;
+          border-color: rgba(15, 23, 42, 0.18) !important;
+        }
+
+        /* ── Game HUD Light Mode Overrides ── */
+        html.light .game-panel {
+          background-color: rgba(255, 255, 255, 0.88) !important;
+          border-color: rgba(15, 23, 42, 0.14) !important;
+          box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08) !important;
+        }
+        html.light .game-panel .bg-white\/10 {
+          background-color: rgba(15, 23, 42, 0.12) !important;
+        }
+        html.light .game-panel .bg-indigo-500\/10 {
+          background-color: rgba(79, 70, 229, 0.12) !important;
+          border-color: rgba(79, 70, 229, 0.22) !important;
+        }
+
+        /* ── Game Left Column Keyboard Visuals and Greeting Bubble Overrides ── */
+        html.light .game-controls-card {
+          background-color: rgba(255, 255, 255, 0.88) !important;
+          border-color: rgba(15, 23, 42, 0.14) !important;
+          box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08) !important;
+        }
+        html.light .game-controls-card div.w-7.h-7,
+        html.light .game-controls-card div.w-16 {
+          background-color: #e2e8f0 !important;
+          border-color: rgba(15, 23, 42, 0.18) !important;
+          color: #0f172a !important;
+        }
+        html.light #hud-greeting-bubble {
+          background-color: rgba(255, 255, 255, 0.94) !important;
+          border-color: rgba(15, 23, 42, 0.16) !important;
+          box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15) !important;
+        }
+        html.light #hud-greeting-bubble span,
+        html.light #hud-greeting-bubble p {
+          color: #334155 !important;
+        }
+        html.light #hud-greeting-bubble button {
+          background-color: rgba(15, 23, 42, 0.05) !important;
+          border-color: rgba(15, 23, 42, 0.1) !important;
+          color: #334155 !important;
+        }
+        html.light #hud-greeting-bubble > div:last-child {
+          border-top-color: rgba(255, 255, 255, 0.94) !important;
+        }
+
         /* ── Scroll spacer ───────────────────────────── */
         .hero-scroll-spacer {
           height: 100vh;
@@ -1438,9 +1491,6 @@ export default function HeroSection({
           .hero-content {
             padding: 70px 5vw 85px;
             gap: 32px;
-          }
-          .badge-available {
-            margin-bottom: 12px;
           }
           .hero-right {
             transform: translateY(-20px);
@@ -1637,7 +1687,7 @@ export default function HeroSection({
                   </p>
 
                   {/* Keyboard Visual Controls */}
-                  <div className="bg-black/30 border border-white/5 p-4 rounded-xl max-w-sm space-y-4">
+                  <div className="game-controls-card bg-black/30 border border-white/5 p-4 rounded-xl max-w-sm space-y-4">
                     <div className="flex gap-4 items-center">
                       <div className="flex flex-col items-center gap-1 font-mono shrink-0 scale-90">
                         <div className="w-7 h-7 flex items-center justify-center bg-[#151726] border border-white/15 rounded-md text-[10px] font-bold text-white shadow-md">W</div>
@@ -1652,7 +1702,7 @@ export default function HeroSection({
                         <span className="text-[10px] text-slate-500 font-mono">WASD KEYS</span>
                       </div>
                     </div>
-                    
+
                     <div className="flex gap-4 items-center">
                       <div className="w-16 py-1.5 bg-[#151726] border border-white/15 rounded-md text-[9px] font-bold text-cyan-400 uppercase tracking-wider font-mono text-center shadow-md scale-90">
                         Space
@@ -1666,22 +1716,17 @@ export default function HeroSection({
 
                   {/* Exit Game Button */}
                   <div className="pt-2">
-                    <button 
+                    <button
                       onClick={() => setPlayMode(false)}
                       className="inline-flex items-center gap-2.5 px-6 py-3 bg-red-950/20 hover:bg-red-950/45 border border-red-500/35 hover:border-red-500/60 text-red-400 hover:text-red-300 font-bold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg shadow-red-500/5 hover:shadow-red-500/15"
                     >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
                       Close Console
                     </button>
                   </div>
                 </div>
               ) : (
                 <>
-                  {/* Available badge */}
-                  <div className="badge-available">
-                    <span className="badge-dot" />
-                    Available for work
-                  </div>
 
                   {/* Monospace label */}
                   <p className="label-mono">{"Hi, I'm"}</p>
@@ -1734,27 +1779,27 @@ export default function HeroSection({
 
                   {/* CTA buttons */}
                   <div className="flex flex-wrap gap-4 items-center mt-6">
-                    <a 
-                      href="#projects" 
+                    <a
+                      href="#projects"
                       className="inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg shadow-indigo-500/15 hover:shadow-indigo-500/25 active:scale-95 duration-300"
                     >
                       View Projects
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
                     </a>
-                    <a 
-                      href="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf" 
-                      download 
+                    <a
+                      href="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf"
+                      download
                       className="inline-flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg active:scale-95 duration-300"
                     >
                       Download CV
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
                     </a>
-                    <a 
-                      href="#contact" 
+                    <a
+                      href="#contact"
                       className="inline-flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg active:scale-95 duration-300"
                     >
                       Hire Me
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg>
                     </a>
                   </div>
 
@@ -1795,21 +1840,16 @@ export default function HeroSection({
                       </div>
 
                       <div className="hero-testimonial-quote relative min-h-[140px]">
-                        <div className="flex items-start gap-3">
-                          <div className={`grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br ${currentTestimonial.accent} text-sm font-black text-white shadow-lg`}>
-                            {currentTestimonial.name.split(" ").map((part) => part[0]).slice(0, 2).join("")}
-                          </div>
-                          <div className="min-w-0">
-                            <span className="block text-sm font-extrabold leading-tight text-white">
-                              {currentTestimonial.name}
-                            </span>
-                            <span className="mt-0.5 block truncate text-[10px] font-medium text-slate-400">
-                              {currentTestimonial.role}
-                            </span>
-                            <span className="mt-1 inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-300">
-                              {currentTestimonial.relation}
-                            </span>
-                          </div>
+                        <div className="min-w-0">
+                          <span className="block text-sm font-extrabold leading-tight text-white">
+                            {currentTestimonial.name}
+                          </span>
+                          <span className="mt-0.5 block truncate text-[10px] font-medium text-slate-400">
+                            {currentTestimonial.role}
+                          </span>
+                          <span className="mt-1 inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-300">
+                            {currentTestimonial.relation}
+                          </span>
                         </div>
 
                         <p className="mt-4 text-[12px] sm:text-xs text-slate-300 leading-relaxed font-light">
@@ -1824,9 +1864,9 @@ export default function HeroSection({
                             type="button"
                             onClick={() => setActiveTestimonial(index)}
                             aria-label={`Show recommendation from ${testimonial.name}`}
-                            className={`h-1.5 rounded-full transition-all ${
+                            className={`testimonial-dot h-1.5 rounded-full transition-all ${
                               activeTestimonial === index
-                                ? "w-8 bg-indigo-400"
+                                ? "active w-8 bg-indigo-400"
                                 : "w-2 bg-white/15 hover:bg-white/30"
                             }`}
                           />
@@ -1842,7 +1882,7 @@ export default function HeroSection({
             <div className="hero-right">
               {/* Mission Console HUD (Only when playMode is active) */}
               {playMode && (
-                <div className="w-full bg-[#050508]/60 backdrop-blur-xl border border-white/5 p-4 rounded-xl flex flex-col gap-3 select-none shadow-[0_10px_40px_rgba(0,0,0,0.6)] relative overflow-hidden">
+                <div className="game-panel w-full bg-[#050508]/60 backdrop-blur-xl border border-white/5 p-4 rounded-xl flex flex-col gap-3 select-none shadow-[0_10px_40px_rgba(0,0,0,0.6)] relative overflow-hidden">
                   {/* Corner Brackets */}
                   <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t border-l border-cyan-500/80"></div>
                   <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-cyan-500/80"></div>
@@ -1894,7 +1934,7 @@ export default function HeroSection({
               {/* Developer Info Card */}
               {playMode ? (
                 /* High-Tech Developer ID Card for Gaming Mode */
-                <div className="w-full bg-[#070814]/75 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex flex-col gap-5 select-none relative shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden">
+                <div className="game-panel w-full bg-[#070814]/75 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex flex-col gap-5 select-none relative shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden">
                   <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t-2 border-l-2 border-cyan-500/70 rounded-tl-sm"></div>
                   <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t-2 border-r-2 border-cyan-500/70 rounded-tr-sm"></div>
                   <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b-2 border-l-2 border-cyan-500/70 rounded-bl-sm"></div>
@@ -1905,7 +1945,7 @@ export default function HeroSection({
                     <div className="w-20 h-20 rounded-xl border-2 border-cyan-500/40 relative overflow-hidden bg-cyan-950/20 shrink-0 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
                       <Image
                         src="/assets/images/profile/yosua-profile.png"
-                        alt="Yosua Reynaldi" 
+                        alt="Yosua Reynaldi"
                         fill
                         sizes="80px"
                         priority
@@ -1924,7 +1964,7 @@ export default function HeroSection({
                   </div>
 
                   <div className="w-full h-px bg-white/10"></div>
-                  
+
                   <div className="grid grid-cols-2 gap-3 text-left font-mono text-[10px] text-slate-400">
                     <div className="flex flex-col gap-0.5">
                       <span className="text-slate-500 uppercase tracking-widest text-[8px] font-bold">Expertise</span>
@@ -1944,12 +1984,12 @@ export default function HeroSection({
                 <div className="w-full bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-[24px] p-5 flex flex-col gap-4 relative shadow-[0_30px_60px_rgba(0,0,0,0.4)] overflow-hidden group">
                   {/* Subtle Top Glow Accent */}
                   <div className="absolute top-0 left-10 right-10 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
-                  
+
                   {/* Large Vertical Image Frame */}
                   <div className="relative aspect-[1/1] w-full overflow-hidden rounded-2xl border border-white/5 bg-slate-950/20 shadow-inner">
                     <Image
                       src="/assets/images/profile/yosua-profile.png"
-                      alt="Yosua Reynaldi Manurun" 
+                      alt="Yosua Reynaldi Manurun"
                       fill
                       sizes="(max-width: 900px) 90vw, 300px"
                       priority
@@ -1957,7 +1997,7 @@ export default function HeroSection({
                     />
                     {/* Dynamic Overlay Gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#050508]/80 via-transparent to-transparent" />
-                    
+
                     {/* Status badge embedded inside the picture corner */}
                     <div className="absolute top-3 left-3 bg-black/45 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 flex items-center gap-1.5 select-none">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -2023,11 +2063,11 @@ export default function HeroSection({
               <span className="text-slate-400 text-xs font-light">Open to freelance &amp; full-time opportunities | Bandung, ID</span>
             </div>
             <div className="flex items-center gap-3 shrink-0">
-              <a 
-                href="mailto:reyyosua29@gmail.com" 
+              <a
+                href="mailto:reyyosua29@gmail.com"
                 className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/35 hover:border-indigo-500/50 rounded-full text-[10px] font-mono font-bold text-indigo-400 hover:text-indigo-300 transition-all uppercase tracking-wider"
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" /></svg>
                 Email Me
               </a>
               <MusicPlayer playOnStart={playMusicOnStart} playMode={playMode} setPlayMode={setPlayMode} inline={true} />
@@ -2041,9 +2081,8 @@ export default function HeroSection({
 
       {/* Game Over Floating Panel */}
       {isGameOver && (
-        <div className={`fixed top-24 left-1/2 z-[150] p-4 pointer-events-auto transition-all duration-300 ${
-          scrollY > 100 ? "opacity-0 pointer-events-none -translate-x-1/2 -translate-y-4" : "opacity-100 -translate-x-1/2 translate-y-0"
-        }`}>
+        <div className={`fixed top-24 left-1/2 z-[150] p-4 pointer-events-auto transition-all duration-300 ${scrollY > 100 ? "opacity-0 pointer-events-none -translate-x-1/2 -translate-y-4" : "opacity-100 -translate-x-1/2 translate-y-0"
+          }`}>
           <div className="bg-[#0c0d19]/90 border border-red-500/60 rounded-xl p-4 w-72 text-center relative shadow-[0_0_30px_rgba(239,68,68,0.3)] backdrop-blur-md font-mono select-none overflow-hidden">
             {/* Corner Brackets */}
             <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-red-500/80"></div>
