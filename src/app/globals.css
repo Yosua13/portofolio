@@ -374,3 +374,55 @@ html.light .modal-chip {
   border-color: rgba(15, 23, 42, 0.12) !important;
   color: #334155 !important;
 }
+
+/* Light mode overrides for Controls button and Controls Guide modal */
+html.light .game-controls-btn {
+  background-color: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #3730a3 !important;
+}
+
+html.light .game-controls-btn:hover {
+  background-color: #ffffff !important;
+  color: #4f46e5 !important;
+  border-color: rgba(15, 23, 42, 0.22) !important;
+}
+
+html.light .game-modal {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.16) !important;
+}
+
+html.light .game-modal div.w-7.h-7,
+html.light .game-modal div.w-16 {
+  background-color: #e2e8f0 !important;
+  border-color: rgba(15, 23, 42, 0.18) !important;
+  color: #0f172a !important;
+}
+
+html.light .game-modal button.w-full {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+}
+
+html.light .game-modal button.w-full:hover {
+  background-color: #1e293b !important;
+}
+
+/* Light mode overrides for gamepad console toggle button */
+html.light .console-toggle-btn {
+  background-color: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  color: #3730a3 !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08) !important;
+}
+
+html.light .console-toggle-btn:hover {
+  background-color: #ffffff !important;
+  color: #4f46e5 !important;
+  border-color: rgba(15, 23, 42, 0.22) !important;
+}
+
+
+
