@@ -289,7 +289,7 @@ function StarCanvas({
         }
       });
       lasers.length = 0;
-      
+
       // Update DOM
       const scoreValEl = document.getElementById("hud-score-val");
       if (scoreValEl) scoreValEl.textContent = "00000";
@@ -313,7 +313,7 @@ function StarCanvas({
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
         return;
       }
-      
+
       const key = e.key.toLowerCase();
       if (key === 'w' || key === 'a' || key === 's' || key === 'd') {
         pressedKeys[key] = true;
@@ -370,7 +370,7 @@ function StarCanvas({
 
     const createDroneMesh = () => {
       const group = new THREE.Group();
-      
+
       // Main dark metallic chassis
       const darkMetal = new THREE.MeshStandardMaterial({
         color: 0x111827,
@@ -467,7 +467,7 @@ function StarCanvas({
       }
 
       scene.add(mesh);
-      
+
       const tData: Target = {
         mesh,
         type: isDrone ? "drone" : "asteroid",
@@ -520,6 +520,16 @@ function StarCanvas({
       // Rotate environments based on mouse input
       starPoints.rotation.y = currentMX * 0.06;
       starPoints.rotation.x = currentMY * 0.06;
+
+      // Check document theme to update star color dynamically
+      const isLightMode = document.documentElement.classList.contains("light");
+      if (isLightMode) {
+        starMaterial.color.setHex(0x3730a3); // Dark indigo stars in light mode
+        starMaterial.opacity = 0.85;
+      } else {
+        starMaterial.color.setHex(0xffffff); // White stars in dark mode
+        starMaterial.opacity = 0.5;
+      }
 
       // Animate Stars (moving forward)
       const positions = starGeometry.attributes.position.array as Float32Array;
@@ -597,7 +607,7 @@ function StarCanvas({
               const dx = l.mesh.position.x - targetObj.mesh.position.x;
               const dy = l.mesh.position.y - targetObj.mesh.position.y;
               const dz = l.mesh.position.z - targetObj.mesh.position.z;
-              const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+              const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
               if (dist < (targetObj.radius + l.radius)) {
                 // Hit explosion!
@@ -652,7 +662,7 @@ function StarCanvas({
             const dx = spaceship.position.x - t.mesh.position.x;
             const dy = spaceship.position.y - t.mesh.position.y;
             const dz = spaceship.position.z - t.mesh.position.z;
-            const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+            const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
             if (dist < (t.radius + 0.65)) {
               // Crash explosion
@@ -721,13 +731,13 @@ function StarCanvas({
       if (scoreValEl) {
         scoreValEl.textContent = String(score).padStart(5, "0");
       }
-      
+
       const shieldValEl = document.getElementById("hud-shield-val");
       const shieldBarEl = document.getElementById("hud-shield-bar");
       if (shieldValEl && shieldBarEl) {
         shieldValEl.textContent = `${shield}%`;
         shieldBarEl.style.width = `${shield}%`;
-        
+
         if (shield <= 20) {
           shieldBarEl.style.backgroundColor = "#ef4444";
           shieldValEl.style.color = "#ef4444";
@@ -827,12 +837,12 @@ function StarCanvas({
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
       window.removeEventListener("resize", onResize);
-      
+
       // Clean up meshes and geometries
       lasers.forEach(l => scene.remove(l.mesh));
       targets.forEach(t => scene.remove(t.mesh));
       particles.forEach(p => scene.remove(p.mesh));
-      
+
       asteroidGeom.dispose();
       asteroidMat.dispose();
       laserGeom.dispose();
@@ -1004,7 +1014,7 @@ export default function HeroSection({
       }
 
       const triggerStart = window.innerHeight * 0.1;       /* 10vh */
-      const triggerEnd   = window.innerHeight * 0.7;       /* full effect range */
+      const triggerEnd = window.innerHeight * 0.7;       /* full effect range */
       const scrollY = window.scrollY;
 
       if (scrollY <= triggerStart) {
@@ -1015,8 +1025,8 @@ export default function HeroSection({
       }
 
       const progress = Math.min((scrollY - triggerStart) / (triggerEnd - triggerStart), 1);
-      const blur   = progress * 24;                        /* max 24px */
-      const scale  = 1 - progress * 0.04;                 /* min 0.96 */
+      const blur = progress * 24;                        /* max 24px */
+      const scale = 1 - progress * 0.04;                 /* min 0.96 */
       const opacity = 1 - progress * 1.0;                 /* min 0.0 */
 
       el.style.filter = `blur(${blur}px)`;
@@ -1030,544 +1040,7 @@ export default function HeroSection({
 
   return (
     <>
-      {/* ── Inline CSS animations ────────────────────── */}
-      <style>{`
-        /* ── Fonts (Google) ───────────────────────────── */
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@900&display=swap');
 
-        /* ── Spinning rings ──────────────────────────── */
-        @keyframes spinRing   { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
-        @keyframes counterSpin{ 0%{transform:rotate(0deg)} 100%{transform:rotate(-360deg)} }
-
-        /* ── Floating wave for YOSUA letters ─────────── */
-        @keyframes floatWave {
-          0%, 100% { transform: translateY(0); }
-          50%      { transform: translateY(-14px); }
-        }
-
-        /* ── Pulsing green dot ───────────────────────── */
-        @keyframes pulseDot {
-          0%, 100% { opacity:1; box-shadow:0 0 0 0 rgba(34,197,94,.6); }
-          50%      { opacity:.85; box-shadow:0 0 0 6px rgba(34,197,94,0); }
-        }
-
-        /* ── Gradient text animation ─────────────────── */
-        @keyframes gradientShift {
-          0%   { background-position: 0% 50%; }
-          50%  { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-
-        /* ── Hero wrapper (sticky + scroll‑blur) ─────── */
-        .hero-sticky-wrap {
-          position: sticky;
-          top: 0;
-          z-index: 1;
-        }
-
-        /* ── Hero root ───────────────────────────────── */
-        .hero-root {
-          position: relative;
-          width: 100%;
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          background: #030305;
-          overflow: hidden;
-          will-change: filter, transform, opacity;
-        }
-
-        /* ── Floating blobs for professional mesh background ── */
-        @keyframes floatBlob1 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33%      { transform: translate(30px, -50px) scale(1.1); }
-          66%      { transform: translate(-20px, 20px) scale(0.9); }
-        }
-        @keyframes floatBlob2 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50%      { transform: translate(-40px, 40px) scale(1.15); }
-        }
-
-        .mesh-grid-bg {
-          position: absolute;
-          inset: 0;
-          background: #030305;
-          z-index: 0;
-          overflow: hidden;
-          pointer-events: none;
-        }
-        .mesh-grid-pattern {
-          position: absolute;
-          inset: 0;
-          background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-          background-size: 32px 32px;
-          mask-image: radial-gradient(circle at center, black 40%, transparent 95%);
-          z-index: 1;
-        }
-        .blob-1 {
-          position: absolute;
-          top: 10%;
-          left: 15%;
-          width: 45vw;
-          height: 45vw;
-          background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
-          border-radius: 50%;
-          filter: blur(60px);
-          animation: floatBlob1 20s infinite ease-in-out;
-          z-index: 0;
-        }
-        .blob-2 {
-          position: absolute;
-          bottom: 10%;
-          right: 15%;
-          width: 40vw;
-          height: 40vw;
-          background: radial-gradient(circle, rgba(6, 182, 212, 0.06) 0%, transparent 70%);
-          border-radius: 50%;
-          filter: blur(50px);
-          animation: floatBlob2 18s infinite ease-in-out;
-          z-index: 0;
-        }
-
-        /* ── Ambient glows ───────────────────────────── */
-        .glow-left {
-          position: absolute;
-          top: 20%;
-          left: -10%;
-          width: 50vw;
-          height: 60vh;
-          background: radial-gradient(circle, rgba(99,102,241,.12) 0%, transparent 70%);
-          pointer-events: none;
-        }
-        .glow-right {
-          position: absolute;
-          bottom: 10%;
-          right: -10%;
-          width: 50vw;
-          height: 60vh;
-          background: radial-gradient(circle, rgba(167,139,250,.10) 0%, transparent 70%);
-          pointer-events: none;
-        }
-
-        /* ── Content wrapper ─────────────────────────── */
-        .hero-content {
-          flex: 1;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 100px 5vw 90px;
-          width: 100%;
-          gap: 48px;
-          position: relative;
-          z-index: 2;
-        }
-        .hero-left  { flex: 1; min-width: 0; }
-        .hero-right {
-          flex: 0 0 auto;
-          width: 100%;
-          max-width: 300px;
-          display: flex;
-          flex-direction: column;
-          align-items: stretch;
-          gap: 20px;
-          transform: translateY(-40px);
-        }
-
-        /* ── Badge ────────────────────────────────────── */
-        .badge-available {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 6px 18px;
-          border-radius: 9999px;
-          border: 1px solid rgba(34,197,94,.35);
-          background: rgba(34,197,94,.08);
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 13px;
-          color: #22c55e;
-          margin-bottom: 20px;
-        }
-        .badge-dot {
-          width: 8px; height: 8px;
-          border-radius: 50%;
-          background: #22c55e;
-          animation: pulseDot 2s ease-in-out infinite;
-        }
-
-        /* ── Label mono ──────────────────────────────── */
-        .label-mono {
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 14px;
-          color: #64748b;
-          margin-bottom: 12px;
-          letter-spacing: .5px;
-        }
-
-        /* ── Name ─────────────────────────────────────── */
-        
-
-        /* ── Description ──────────────────────────────── */
-        .hero-desc {
-          font-size: 16px;
-          line-height: 1.7;
-          color: #94a3b8;
-          max-width: 520px;
-          margin-bottom: 28px;
-        }
-        .hero-desc em {
-          font-style: italic;
-          color: #cbd5e1;
-        }
-
-        /* ── Tech pills ──────────────────────────────── */
-        .tech-pills {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-          margin-bottom: 36px;
-        }
-        .tech-pill {
-          padding: 6px 18px;
-          border-radius: 9999px;
-          border: 1px solid rgba(99,102,241,.35);
-          color: #a78bfa;
-          font-size: 13px;
-          font-family: 'JetBrains Mono', monospace;
-          background: transparent;
-          transition: all .25s ease;
-          cursor: default;
-        }
-        .tech-pill:hover {
-          background: rgba(99,102,241,.12);
-          border-color: rgba(99,102,241,.6);
-          color: #c4b5fd;
-          transform: translateY(-2px);
-        }
-
-        /* ── CTA buttons ─────────────────────────────── */
-        .cta-group {
-          display: flex;
-          gap: 16px;
-          flex-wrap: wrap;
-        }
-        .cta-solid {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 14px 32px;
-          border-radius: 12px;
-          background: linear-gradient(135deg, #6366f1, #a78bfa);
-          color: #fff;
-          font-weight: 600;
-          font-size: 15px;
-          border: none;
-          cursor: pointer;
-          transition: all .3s ease;
-          text-decoration: none;
-        }
-        .cta-solid:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 30px rgba(99,102,241,.4);
-        }
-        .cta-ghost {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 14px 32px;
-          border-radius: 12px;
-          background: transparent;
-          color: #a78bfa;
-          font-weight: 600;
-          font-size: 15px;
-          border: 1px solid rgba(167,139,250,.35);
-          cursor: pointer;
-          transition: all .3s ease;
-          text-decoration: none;
-        }
-        .cta-ghost:hover {
-          background: rgba(167,139,250,.08);
-          border-color: rgba(167,139,250,.6);
-          transform: translateY(-2px);
-        }
-
-        /* ── Profile photo + rings ───────────────────── */
-        .profile-ring-wrap {
-          position: relative;
-          width: 220px;
-          height: 220px;
-        }
-        .ring-outer {
-          position: absolute;
-          inset: 0;
-          border-radius: 50%;
-          border: 2px dashed rgba(99,102,241,.45);
-          animation: spinRing 18s linear infinite;
-        }
-        .ring-inner {
-          position: absolute;
-          inset: 14px;
-          border-radius: 50%;
-          border: 2.5px solid rgba(167,139,250,.5);
-          animation: counterSpin 12s linear infinite;
-        }
-        .profile-img-wrap {
-          position: absolute;
-          inset: 28px;
-          border-radius: 50%;
-          overflow: hidden;
-          background: #1e1b4b;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        /* Replace the placeholder below with: <img src="/your-photo.jpg" alt="Yosua" style="width:100%;height:100%;object-fit:cover;" /> */
-        .profile-placeholder {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(135deg, #1e1b4b, #312e81);
-        }
-        .profile-placeholder svg {
-          width: 56%;
-          height: 56%;
-          color: rgba(167,139,250,.5);
-        }
-
-        /* ── Floating YOSUA ──────────────────────────── */
-        .floating-name {
-          display: flex;
-          gap: 4px;
-          user-select: none;
-        }
-        .floating-letter {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: clamp(42px, 5vw, 64px);
-          color: transparent;
-          -webkit-text-stroke: 1.5px rgba(99,102,241,.45);
-          text-stroke: 1.5px rgba(99,102,241,.45);
-          animation: floatWave 3s ease-in-out infinite;
-          transition: text-shadow .3s ease, -webkit-text-stroke-color .3s ease;
-          cursor: default;
-          line-height: 1;
-        }
-        .floating-letter:hover {
-          animation-play-state: paused;
-          -webkit-text-stroke-color: rgba(167,139,250,.9);
-          text-shadow: 0 0 24px rgba(167,139,250,.6), 0 0 48px rgba(167,139,250,.3);
-        }
-
-        /* ── Stat cards ──────────────────────────────── */
-        .stat-cards {
-          display: flex;
-          gap: 12px;
-          width: 100%;
-        }
-        .stat-card {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 12px 10px;
-          border-radius: 16px;
-          border: 1px solid rgba(255,255,255,.06);
-          background: rgba(255,255,255,.03);
-          backdrop-filter: blur(8px);
-          transition: all .3s ease;
-          cursor: default;
-          flex: 1;
-          min-width: 0;
-        }
-        .stat-card:hover {
-          border-color: rgba(99,102,241,.35);
-          background: rgba(99,102,241,.06);
-          transform: translateY(-3px);
-        }
-        .stat-value {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: 24px;
-          color: #f1f5f9;
-          line-height: 1;
-        }
-        .stat-label {
-          font-size: 12px;
-          color: #64748b;
-          margin-top: 4px;
-          font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* ── Footer strip ────────────────────────────── */
-        .hero-footer {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 10px;
-          padding: 16px 5vw;
-          border-top: 1px solid rgba(255,255,255,.05);
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 13px;
-          color: #64748b;
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          background: rgba(3, 3, 5, 0.75);
-          backdrop-filter: blur(8px);
-          z-index: 10;
-        }
-        .hero-footer .footer-dot {
-          width: 8px; height: 8px;
-          border-radius: 50%;
-          background: #22c55e;
-          animation: pulseDot 2s ease-in-out infinite;
-        }
-
-        /* ── Scroll spacer ───────────────────────────── */
-        .hero-scroll-spacer {
-          height: 100vh;
-          position: relative;
-          z-index: 0;
-          pointer-events: none;
-        }
-
-        /* ── Height-based media queries for desktop to prevent clipping ── */
-        @media (min-width: 901px) and (max-height: 950px) {
-          .hero-content {
-            padding: 70px 5vw 85px;
-            gap: 32px;
-          }
-          .badge-available {
-            margin-bottom: 12px;
-          }
-          .hero-right {
-            transform: translateY(-20px);
-          }
-          .hero-testimonial {
-            margin-top: 16px;
-          }
-          .hero-testimonial-quote {
-            min-height: 140px;
-          }
-        }
-        @media (min-width: 901px) and (max-height: 850px) {
-          .hero-content {
-            padding: 60px 5vw 80px;
-            gap: 24px;
-          }
-          .hero-desc {
-            margin-bottom: 16px;
-          }
-          .hero-right {
-            transform: translateY(0);
-            max-width: 260px;
-          }
-          .profile-tech-stack,
-          .profile-tech-divider {
-            display: none !important;
-          }
-          .floating-letter {
-            font-size: clamp(36px, 4vw, 54px);
-          }
-          .hero-testimonial {
-            margin-top: 12px;
-          }
-          .hero-testimonial-quote {
-            min-height: 120px;
-          }
-        }
-        @media (min-width: 901px) and (max-height: 760px) {
-          .hero-content {
-            padding: 50px 5vw 75px;
-            gap: 16px;
-          }
-          .hero-right {
-            max-width: 230px;
-          }
-          .hero-footer {
-            padding: 10px 5vw;
-          }
-          .floating-letter {
-            font-size: clamp(30px, 3.5vw, 44px);
-          }
-          .hero-testimonial {
-            margin-top: 8px;
-          }
-          .hero-testimonial-quote {
-            min-height: 100px;
-          }
-        }
-
-        /* ── Responsive ──────────────────────────────── */
-        @media (max-width: 900px) {
-          .hero-sticky-wrap {
-            position: relative;
-          }
-          .hero-root {
-            height: auto;
-            min-height: 100svh;
-            overflow: visible;
-          }
-          .hero-content {
-            flex-direction: column;
-            align-items: stretch;
-            padding: 96px 24px 32px;
-            gap: 28px;
-            text-align: left;
-            justify-content: flex-start;
-          }
-          .hero-left {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-          }
-          .hero-desc {
-            text-align: left;
-          }
-          .tech-pills {
-            justify-content: flex-start;
-          }
-          .cta-group {
-            justify-content: flex-start;
-          }
-          .profile-ring-wrap {
-            width: 180px;
-            height: 180px;
-          }
-          .ring-inner { inset: 12px; }
-          .profile-img-wrap { inset: 24px; }
-          .stat-cards {
-            gap: 10px;
-            width: 100%;
-          }
-          .stat-card {
-            padding: 12px 8px;
-            min-width: 0;
-            flex: 1;
-          }
-          .hero-right {
-            transform: translateY(0);
-            max-width: 100%;
-          }
-          .hero-footer {
-            position: relative;
-            bottom: auto;
-            left: auto;
-            width: 100%;
-            background: transparent;
-            backdrop-filter: none;
-            justify-content: center;
-            flex-wrap: wrap;
-            padding: 14px 24px;
-            gap: 12px;
-          }
-          .hero-scroll-spacer {
-            height: 0;
-          }
-        }
-      `}</style>
 
       {/* Sticky wrapper — hero pins to top while scrolling */}
       <div className="hero-sticky-wrap">
@@ -1637,7 +1110,7 @@ export default function HeroSection({
                   </p>
 
                   {/* Keyboard Visual Controls */}
-                  <div className="bg-black/30 border border-white/5 p-4 rounded-xl max-w-sm space-y-4">
+                  <div className="game-controls-card bg-black/30 border border-white/5 p-4 rounded-xl max-w-sm space-y-4">
                     <div className="flex gap-4 items-center">
                       <div className="flex flex-col items-center gap-1 font-mono shrink-0 scale-90">
                         <div className="w-7 h-7 flex items-center justify-center bg-[#151726] border border-white/15 rounded-md text-[10px] font-bold text-white shadow-md">W</div>
@@ -1652,7 +1125,7 @@ export default function HeroSection({
                         <span className="text-[10px] text-slate-500 font-mono">WASD KEYS</span>
                       </div>
                     </div>
-                    
+
                     <div className="flex gap-4 items-center">
                       <div className="w-16 py-1.5 bg-[#151726] border border-white/15 rounded-md text-[9px] font-bold text-cyan-400 uppercase tracking-wider font-mono text-center shadow-md scale-90">
                         Space
@@ -1666,22 +1139,17 @@ export default function HeroSection({
 
                   {/* Exit Game Button */}
                   <div className="pt-2">
-                    <button 
+                    <button
                       onClick={() => setPlayMode(false)}
                       className="inline-flex items-center gap-2.5 px-6 py-3 bg-red-950/20 hover:bg-red-950/45 border border-red-500/35 hover:border-red-500/60 text-red-400 hover:text-red-300 font-bold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg shadow-red-500/5 hover:shadow-red-500/15"
                     >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
                       Close Console
                     </button>
                   </div>
                 </div>
               ) : (
                 <>
-                  {/* Available badge */}
-                  <div className="badge-available">
-                    <span className="badge-dot" />
-                    Available for work
-                  </div>
 
                   {/* Monospace label */}
                   <p className="label-mono">{"Hi, I'm"}</p>
@@ -1734,27 +1202,27 @@ export default function HeroSection({
 
                   {/* CTA buttons */}
                   <div className="flex flex-wrap gap-4 items-center mt-6">
-                    <a 
-                      href="#projects" 
+                    <a
+                      href="#projects"
                       className="inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg shadow-indigo-500/15 hover:shadow-indigo-500/25 active:scale-95 duration-300"
                     >
                       View Projects
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
                     </a>
-                    <a 
-                      href="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf" 
-                      download 
+                    <a
+                      href="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf"
+                      download
                       className="inline-flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg active:scale-95 duration-300"
                     >
                       Download CV
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
                     </a>
-                    <a 
-                      href="#contact" 
+                    <a
+                      href="#contact"
                       className="inline-flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg active:scale-95 duration-300"
                     >
                       Hire Me
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg>
                     </a>
                   </div>
 
@@ -1795,21 +1263,16 @@ export default function HeroSection({
                       </div>
 
                       <div className="hero-testimonial-quote relative min-h-[140px]">
-                        <div className="flex items-start gap-3">
-                          <div className={`grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br ${currentTestimonial.accent} text-sm font-black text-white shadow-lg`}>
-                            {currentTestimonial.name.split(" ").map((part) => part[0]).slice(0, 2).join("")}
-                          </div>
-                          <div className="min-w-0">
-                            <span className="block text-sm font-extrabold leading-tight text-white">
-                              {currentTestimonial.name}
-                            </span>
-                            <span className="mt-0.5 block truncate text-[10px] font-medium text-slate-400">
-                              {currentTestimonial.role}
-                            </span>
-                            <span className="mt-1 inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-300">
-                              {currentTestimonial.relation}
-                            </span>
-                          </div>
+                        <div className="min-w-0">
+                          <span className="block text-sm font-extrabold leading-tight text-white">
+                            {currentTestimonial.name}
+                          </span>
+                          <span className="mt-0.5 block truncate text-[10px] font-medium text-slate-400">
+                            {currentTestimonial.role}
+                          </span>
+                          <span className="mt-1 inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-300">
+                            {currentTestimonial.relation}
+                          </span>
                         </div>
 
                         <p className="mt-4 text-[12px] sm:text-xs text-slate-300 leading-relaxed font-light">
@@ -1824,9 +1287,9 @@ export default function HeroSection({
                             type="button"
                             onClick={() => setActiveTestimonial(index)}
                             aria-label={`Show recommendation from ${testimonial.name}`}
-                            className={`h-1.5 rounded-full transition-all ${
+                            className={`testimonial-dot h-1.5 rounded-full transition-all ${
                               activeTestimonial === index
-                                ? "w-8 bg-indigo-400"
+                                ? "active w-8 bg-indigo-400"
                                 : "w-2 bg-white/15 hover:bg-white/30"
                             }`}
                           />
@@ -1842,7 +1305,7 @@ export default function HeroSection({
             <div className="hero-right">
               {/* Mission Console HUD (Only when playMode is active) */}
               {playMode && (
-                <div className="w-full bg-[#050508]/60 backdrop-blur-xl border border-white/5 p-4 rounded-xl flex flex-col gap-3 select-none shadow-[0_10px_40px_rgba(0,0,0,0.6)] relative overflow-hidden">
+                <div className="game-panel w-full bg-[#050508]/60 backdrop-blur-xl border border-white/5 p-4 rounded-xl flex flex-col gap-3 select-none shadow-[0_10px_40px_rgba(0,0,0,0.6)] relative overflow-hidden">
                   {/* Corner Brackets */}
                   <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t border-l border-cyan-500/80"></div>
                   <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-cyan-500/80"></div>
@@ -1894,7 +1357,7 @@ export default function HeroSection({
               {/* Developer Info Card */}
               {playMode ? (
                 /* High-Tech Developer ID Card for Gaming Mode */
-                <div className="w-full bg-[#070814]/75 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex flex-col gap-5 select-none relative shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden">
+                <div className="game-panel w-full bg-[#070814]/75 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex flex-col gap-5 select-none relative shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden">
                   <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t-2 border-l-2 border-cyan-500/70 rounded-tl-sm"></div>
                   <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t-2 border-r-2 border-cyan-500/70 rounded-tr-sm"></div>
                   <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b-2 border-l-2 border-cyan-500/70 rounded-bl-sm"></div>
@@ -1905,7 +1368,7 @@ export default function HeroSection({
                     <div className="w-20 h-20 rounded-xl border-2 border-cyan-500/40 relative overflow-hidden bg-cyan-950/20 shrink-0 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
                       <Image
                         src="/assets/images/profile/yosua-profile.png"
-                        alt="Yosua Reynaldi" 
+                        alt="Yosua Reynaldi"
                         fill
                         sizes="80px"
                         priority
@@ -1924,7 +1387,7 @@ export default function HeroSection({
                   </div>
 
                   <div className="w-full h-px bg-white/10"></div>
-                  
+
                   <div className="grid grid-cols-2 gap-3 text-left font-mono text-[10px] text-slate-400">
                     <div className="flex flex-col gap-0.5">
                       <span className="text-slate-500 uppercase tracking-widest text-[8px] font-bold">Expertise</span>
@@ -1944,12 +1407,12 @@ export default function HeroSection({
                 <div className="w-full bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-[24px] p-5 flex flex-col gap-4 relative shadow-[0_30px_60px_rgba(0,0,0,0.4)] overflow-hidden group">
                   {/* Subtle Top Glow Accent */}
                   <div className="absolute top-0 left-10 right-10 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
-                  
+
                   {/* Large Vertical Image Frame */}
                   <div className="relative aspect-[1/1] w-full overflow-hidden rounded-2xl border border-white/5 bg-slate-950/20 shadow-inner">
                     <Image
                       src="/assets/images/profile/yosua-profile.png"
-                      alt="Yosua Reynaldi Manurun" 
+                      alt="Yosua Reynaldi Manurun"
                       fill
                       sizes="(max-width: 900px) 90vw, 300px"
                       priority
@@ -1957,7 +1420,7 @@ export default function HeroSection({
                     />
                     {/* Dynamic Overlay Gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#050508]/80 via-transparent to-transparent" />
-                    
+
                     {/* Status badge embedded inside the picture corner */}
                     <div className="absolute top-3 left-3 bg-black/45 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 flex items-center gap-1.5 select-none">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -2023,11 +1486,11 @@ export default function HeroSection({
               <span className="text-slate-400 text-xs font-light">Open to freelance &amp; full-time opportunities | Bandung, ID</span>
             </div>
             <div className="flex items-center gap-3 shrink-0">
-              <a 
-                href="mailto:reyyosua29@gmail.com" 
+              <a
+                href="mailto:reyyosua29@gmail.com"
                 className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/35 hover:border-indigo-500/50 rounded-full text-[10px] font-mono font-bold text-indigo-400 hover:text-indigo-300 transition-all uppercase tracking-wider"
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" /></svg>
                 Email Me
               </a>
               <MusicPlayer playOnStart={playMusicOnStart} playMode={playMode} setPlayMode={setPlayMode} inline={true} />
@@ -2041,9 +1504,8 @@ export default function HeroSection({
 
       {/* Game Over Floating Panel */}
       {isGameOver && (
-        <div className={`fixed top-24 left-1/2 z-[150] p-4 pointer-events-auto transition-all duration-300 ${
-          scrollY > 100 ? "opacity-0 pointer-events-none -translate-x-1/2 -translate-y-4" : "opacity-100 -translate-x-1/2 translate-y-0"
-        }`}>
+        <div className={`fixed top-24 left-1/2 z-[150] p-4 pointer-events-auto transition-all duration-300 ${scrollY > 100 ? "opacity-0 pointer-events-none -translate-x-1/2 -translate-y-4" : "opacity-100 -translate-x-1/2 translate-y-0"
+          }`}>
           <div className="bg-[#0c0d19]/90 border border-red-500/60 rounded-xl p-4 w-72 text-center relative shadow-[0_0_30px_rgba(239,68,68,0.3)] backdrop-blur-md font-mono select-none overflow-hidden">
             {/* Corner Brackets */}
             <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-red-500/80"></div>

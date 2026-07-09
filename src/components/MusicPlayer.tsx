@@ -194,7 +194,7 @@ export default function MusicPlayer({
       {/* Floating Game Toggle Button (Gamepad Icon) */}
       <button
         onClick={() => setPlayMode?.(!playMode)}
-        className={`flex items-center justify-center rounded-full border hover:scale-105 active:scale-95 transition-all cursor-pointer group shrink-0 ${
+        className={`console-toggle-btn flex items-center justify-center rounded-full border hover:scale-105 active:scale-95 transition-all cursor-pointer group shrink-0 ${
           inline ? "w-8 h-8" : "w-12 h-12 shadow-xl"
         } ${
           playMode 

@@ -729,7 +729,7 @@ export default function Portfolio() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             onClick={() => setShowControlsGuide(true)}
-            className="fixed bottom-24 right-6 z-[60] inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-950/70 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-cyan-300 shadow-xl backdrop-blur-md transition-colors hover:border-cyan-400/60 hover:text-cyan-100"
+            className="game-controls-btn fixed bottom-24 right-6 z-[60] inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-950/70 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-cyan-300 shadow-xl backdrop-blur-md transition-colors hover:border-cyan-400/60 hover:text-cyan-100"
           >
             <Gamepad2 className="w-4 h-4" />
             Controls
@@ -755,7 +755,7 @@ export default function Portfolio() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 15 }}
               transition={{ type: "spring", duration: 0.4 }}
-              className="bg-[#0b0c16] border border-white/10 rounded-2xl p-6 md:p-8 max-w-md w-full relative z-10 text-center shadow-2xl flex flex-col items-center"
+              className="game-modal bg-[#0b0c16] border border-white/10 rounded-2xl p-6 md:p-8 max-w-md w-full relative z-10 text-center shadow-2xl flex flex-col items-center"
             >
               {/* Close Button */}
               <button

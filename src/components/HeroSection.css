@@ -1,0 +1,659 @@
+
+/* ── Spinning rings ──────────────────────────── */
+@keyframes spinRing   { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+@keyframes counterSpin{ 0%{transform:rotate(0deg)} 100%{transform:rotate(-360deg)} }
+
+/* ── Floating wave for YOSUA letters ─────────── */
+@keyframes floatWave {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+
+/* ── Pulsing green dot ───────────────────────── */
+@keyframes pulseDot {
+  0%, 100% { opacity:1; box-shadow:0 0 0 0 rgba(34,197,94,.6); }
+  50%      { opacity:.85; box-shadow:0 0 0 6px rgba(34,197,94,0); }
+}
+
+/* ── Gradient text animation ─────────────────── */
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Hero wrapper (sticky + scroll‑blur) ─────── */
+.hero-sticky-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* ── Hero root ───────────────────────────────── */
+.hero-root {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #030305;
+  overflow: hidden;
+  will-change: filter, transform, opacity;
+}
+
+/* ── Floating blobs for professional mesh background ── */
+@keyframes floatBlob1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(30px, -50px) scale(1.1); }
+  66%      { transform: translate(-20px, 20px) scale(0.9); }
+}
+@keyframes floatBlob2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-40px, 40px) scale(1.15); }
+}
+
+.mesh-grid-bg {
+  position: absolute;
+  inset: 0;
+  background: #030305;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.mesh-grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 95%);
+  z-index: 1;
+}
+.blob-1 {
+  position: absolute;
+  top: 10%;
+  left: 15%;
+  width: 45vw;
+  height: 45vw;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(60px);
+  animation: floatBlob1 20s infinite ease-in-out;
+  z-index: 0;
+}
+.blob-2 {
+  position: absolute;
+  bottom: 10%;
+  right: 15%;
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.06) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(50px);
+  animation: floatBlob2 18s infinite ease-in-out;
+  z-index: 0;
+}
+
+/* ── Ambient glows ───────────────────────────── */
+.glow-left {
+  position: absolute;
+  top: 20%;
+  left: -10%;
+  width: 50vw;
+  height: 60vh;
+  background: radial-gradient(circle, rgba(99,102,241,.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.glow-right {
+  position: absolute;
+  bottom: 10%;
+  right: -10%;
+  width: 50vw;
+  height: 60vh;
+  background: radial-gradient(circle, rgba(167,139,250,.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ── Content wrapper ─────────────────────────── */
+.hero-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 100px 5vw 90px;
+  width: 100%;
+  gap: 48px;
+  position: relative;
+  z-index: 2;
+}
+.hero-left  { flex: 1; min-width: 0; }
+.hero-right {
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+  transform: translateY(-40px);
+}
+
+/* ── Label mono ──────────────────────────────── */
+.label-mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 12px;
+  letter-spacing: .5px;
+}
+
+/* ── Description ──────────────────────────────── */
+.hero-desc {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #94a3b8;
+  max-width: 520px;
+  margin-bottom: 28px;
+}
+.hero-desc em {
+  font-style: italic;
+  color: #cbd5e1;
+}
+
+/* ── Tech pills ──────────────────────────────── */
+.tech-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 36px;
+}
+.tech-pill {
+  padding: 6px 18px;
+  border-radius: 9999px;
+  border: 1px solid rgba(99,102,241,.35);
+  color: #a78bfa;
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+  background: transparent;
+  transition: all .25s ease;
+  cursor: default;
+}
+.tech-pill:hover {
+  background: rgba(99,102,241,.12);
+  border-color: rgba(99,102,241,.6);
+  color: #c4b5fd;
+  transform: translateY(-2px);
+}
+
+/* ── CTA buttons ─────────────────────────────── */
+.cta-group {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.cta-solid {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6366f1, #a78bfa);
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: all .3s ease;
+  text-decoration: none;
+}
+.cta-solid:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(99,102,241,.4);
+}
+.cta-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  border-radius: 12px;
+  background: transparent;
+  color: #a78bfa;
+  font-weight: 600;
+  font-size: 15px;
+  border: 1px solid rgba(167,139,250,.35);
+  cursor: pointer;
+  transition: all .3s ease;
+  text-decoration: none;
+}
+.cta-ghost:hover {
+  background: rgba(167,139,250,.08);
+  border-color: rgba(167,139,250,.6);
+  transform: translateY(-2px);
+}
+
+/* ── Profile photo + rings ───────────────────── */
+.profile-ring-wrap {
+  position: relative;
+  width: 220px;
+  height: 220px;
+}
+.ring-outer {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px dashed rgba(99,102,241,.45);
+  animation: spinRing 18s linear infinite;
+}
+.ring-inner {
+  position: absolute;
+  inset: 14px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(167,139,250,.5);
+  animation: counterSpin 12s linear infinite;
+}
+.profile-img-wrap {
+  position: absolute;
+  inset: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #1e1b4b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.profile-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1e1b4b, #312e81);
+}
+.profile-placeholder svg {
+  width: 56%;
+  height: 56%;
+  color: rgba(167,139,250,.5);
+}
+
+/* ── Floating YOSUA ──────────────────────────── */
+.floating-name {
+  display: flex;
+  gap: 4px;
+  user-select: none;
+}
+.floating-letter {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(42px, 5vw, 64px);
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(99,102,241,.45);
+  text-stroke: 1.5px rgba(99,102,241,.45);
+  animation: floatWave 3s ease-in-out infinite;
+  transition: text-shadow .3s ease, -webkit-text-stroke-color .3s ease;
+  cursor: default;
+  line-height: 1;
+}
+.floating-letter:hover {
+  animation-play-state: paused;
+  -webkit-text-stroke-color: rgba(167,139,250,.9);
+  text-shadow: 0 0 24px rgba(167,139,250,.6), 0 0 48px rgba(167,139,250,.3);
+}
+
+/* ── Stat cards ──────────────────────────────── */
+.stat-cards {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 10px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.03);
+  backdrop-filter: blur(8px);
+  transition: all .3s ease;
+  cursor: default;
+  flex: 1;
+  min-width: 0;
+}
+.stat-card:hover {
+  border-color: rgba(99,102,241,.35);
+  background: rgba(99,102,241,.06);
+  transform: translateY(-3px);
+}
+.stat-value {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 24px;
+  color: #f1f5f9;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Footer strip ────────────────────────────── */
+.hero-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 16px 5vw;
+  border-top: 1px solid rgba(255,255,255,.05);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: #64748b;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(3, 3, 5, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+.hero-footer .footer-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+/* ── Light Mode Overrides inside Hero ── */
+html.light .hero-footer {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-top-color: rgba(15, 23, 42, 0.12) !important;
+  color: #0f172a !important;
+}
+html.light .testimonial-dot:not(.active) {
+  background-color: rgba(15, 23, 42, 0.18) !important;
+}
+html.light .testimonial-dot:not(.active):hover {
+  background-color: rgba(15, 23, 42, 0.35) !important;
+}
+html.light .border-slate-800 {
+  border-color: rgba(15, 23, 42, 0.18) !important;
+}
+html.light .hero-testimonial .relative {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(15, 23, 42, 0.18) !important;
+}
+
+/* ── Game HUD Light Mode Overrides ── */
+html.light .game-panel {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08) !important;
+}
+html.light .game-panel .bg-white\/10 {
+  background-color: rgba(15, 23, 42, 0.12) !important;
+}
+html.light .game-panel .bg-indigo-500\/10 {
+  background-color: rgba(79, 70, 229, 0.12) !important;
+  border-color: rgba(79, 70, 229, 0.22) !important;
+}
+
+/* ── Game Left Column Keyboard Visuals and Greeting Bubble Overrides ── */
+html.light .game-controls-card {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08) !important;
+}
+html.light .game-controls-card div.w-7.h-7,
+html.light .game-controls-card div.w-16 {
+  background-color: #e2e8f0 !important;
+  border-color: rgba(15, 23, 42, 0.18) !important;
+  color: #0f172a !important;
+}
+html.light #hud-greeting-bubble {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+  border-color: rgba(15, 23, 42, 0.16) !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15) !important;
+}
+html.light #hud-greeting-bubble span,
+html.light #hud-greeting-bubble p {
+  color: #334155 !important;
+}
+html.light #hud-greeting-bubble button {
+  background-color: rgba(15, 23, 42, 0.05) !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+  color: #334155 !important;
+}
+html.light #hud-greeting-bubble > div:last-child {
+  border-top-color: rgba(255, 255, 255, 0.94) !important;
+}
+
+/* ── Scroll spacer ───────────────────────────── */
+.hero-scroll-spacer {
+  height: 100vh;
+  position: relative;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── Responsive adjustments for narrower laptop screens (13-inch to 15-inch) ── */
+@media (min-width: 901px) and (max-width: 1150px) {
+  .hero-content {
+    padding: 80px 3vw 80px;
+    gap: 20px;
+  }
+  .hero-left {
+    max-width: 50%;
+  }
+  .hero-right {
+    max-width: 250px;
+  }
+}
+
+/* ── Height-based media queries for desktop to prevent clipping ── */
+@media (min-width: 901px) and (max-height: 950px) {
+  .hero-content {
+    padding: 70px 5vw 85px;
+    gap: 32px;
+  }
+  .hero-right {
+    transform: translateY(-20px);
+  }
+  .hero-testimonial {
+    margin-top: 16px;
+  }
+  .hero-testimonial-quote {
+    min-height: 140px;
+  }
+}
+@media (min-width: 901px) and (max-height: 850px) {
+  .hero-content {
+    padding: 60px 5vw 80px;
+    gap: 24px;
+  }
+  .hero-desc {
+    margin-bottom: 16px;
+  }
+  .hero-right {
+    transform: translateY(0);
+    max-width: 260px;
+  }
+  .profile-tech-stack,
+  .profile-tech-divider {
+    display: none !important;
+  }
+  .floating-letter {
+    font-size: clamp(36px, 4vw, 54px);
+  }
+  .hero-testimonial {
+    margin-top: 12px;
+  }
+  .hero-testimonial-quote {
+    min-height: 120px;
+  }
+}
+@media (min-width: 901px) and (max-height: 760px) {
+  .hero-content {
+    padding: 50px 5vw 75px;
+    gap: 16px;
+  }
+  .hero-right {
+    max-width: 230px;
+  }
+  .hero-footer {
+    padding: 10px 5vw;
+  }
+  .floating-letter {
+    font-size: clamp(30px, 3.5vw, 44px);
+  }
+  .hero-testimonial {
+    margin-top: 8px;
+  }
+  .hero-testimonial-quote {
+    min-height: 100px;
+  }
+}
+
+/* Defensive media queries for low-height viewports (extremely common on small laptops) */
+@media (min-width: 901px) and (max-height: 720px) {
+  .hero-content {
+    padding: 40px 5vw 70px;
+    gap: 12px;
+  }
+  .hero-right {
+    max-width: 210px;
+    gap: 12px;
+  }
+  .floating-letter {
+    font-size: clamp(26px, 3vw, 36px);
+  }
+  .hero-desc {
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .tech-pills {
+    margin-bottom: 16px;
+  }
+  .hero-testimonial {
+    margin-top: 6px;
+  }
+  .hero-testimonial-quote {
+    min-height: 80px;
+  }
+  .hero-footer {
+    padding: 8px 5vw;
+    font-size: 11px;
+  }
+}
+
+@media (min-width: 901px) and (max-height: 640px) {
+  .hero-content {
+    padding: 30px 5vw 60px;
+    gap: 10px;
+  }
+  .hero-right {
+    max-width: 190px;
+    gap: 10px;
+  }
+  .floating-letter {
+    font-size: clamp(22px, 2.5vw, 30px);
+  }
+  .hero-desc {
+    display: none !important; /* Hide description paragraph to guarantee spacing */
+  }
+  .tech-pills {
+    margin-bottom: 10px;
+  }
+  .hero-testimonial {
+    display: none !important; /* Hide testimonial to guarantee spacing */
+  }
+  .hero-footer {
+    padding: 6px 5vw;
+    font-size: 10px;
+  }
+}
+
+/* ── Responsive Mobile & Tablet Layout ──────────────── */
+@media (max-width: 900px) {
+  .hero-sticky-wrap {
+    position: relative;
+  }
+  .hero-root {
+    height: auto;
+    min-height: 100svh;
+    overflow: visible;
+  }
+  .hero-content {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 96px 24px 32px;
+    gap: 28px;
+    text-align: left;
+    justify-content: flex-start;
+  }
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hero-desc {
+    text-align: left;
+  }
+  .tech-pills {
+    justify-content: flex-start;
+  }
+  .cta-group {
+    justify-content: flex-start;
+  }
+  .profile-ring-wrap {
+    width: 180px;
+    height: 180px;
+  }
+  .ring-inner { inset: 12px; }
+  .profile-img-wrap { inset: 24px; }
+  .stat-cards {
+    gap: 10px;
+    width: 100%;
+  }
+  .stat-card {
+    padding: 12px 8px;
+    min-width: 0;
+    flex: 1;
+  }
+  .hero-right {
+    transform: translateY(0);
+    max-width: 100%;
+  }
+  .hero-footer {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    background: transparent;
+    backdrop-filter: none;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 14px 24px;
+    gap: 12px;
+  }
+  .hero-scroll-spacer {
+    height: 0;
+  }
+}
+
+/* Mobile adjustments for small display widths (e.g. iPhone SE, smaller Android devices) */
+@media (max-width: 480px) {
+  .stat-cards {
+    gap: 6px;
+  }
+  .stat-card {
+    padding: 8px 4px;
+  }
+  .stat-value {
+    font-size: 18px;
+  }
+  .stat-label {
+    font-size: 8px;
+  }
+}
