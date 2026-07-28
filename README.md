@@ -16,6 +16,7 @@ Portofolio ini menampilkan 4 proyek utama yang dikembangkan dengan arsitektur mo
 * **Deskripsi**: Platform manajemen kos-kosan komprehensif yang mempermudah pemilik kos mengelola ketersediaan kamar, kontrak penghuni, riwayat pembayaran, pengingat tagihan otomatis via WhatsApp (Fonnte), serta penanganan komplain fasilitas.
 * **Fitur Utama**: Dashboard pemilik & penghuni, manajemen kamar & harga, laporan keuangan, kalender pembayaran, sistem komplain fasilitas, serta pengingat tagihan.
 * **Tech Stack**: Next.js, Tailwind CSS, Golang (Gin), Supabase, Fonnte API, Gemini API, Vercel, Railway.
+* **Repository**: [github.com/Yosua13/lapor-kos](https://github.com/Yosua13/lapor-kos)
 * **Live Web**: [https://lapor-kos.vercel.app/](https://lapor-kos.vercel.app/)
 
 ---
@@ -26,6 +27,7 @@ Portofolio ini menampilkan 4 proyek utama yang dikembangkan dengan arsitektur mo
 * **Deskripsi**: Aplikasi manajemen alur kerja dan tugas proyek IT. Membantu tim pengembang memetakan arsitektur flow, membagi pekerjaan menjadi task terukur, memantau kendala (blockers), serta menjaga visibilitas progres antar divisi (Design, Frontend, Backend, QA, Deployment).
 * **Fitur Utama**: Interactive Flow Board, Kanban Task Board, Kanvas visual arsitektur proyek, AI Flow Audit (Gemini API), analitik kecepatan sprint, dan mock payload generator.
 * **Tech Stack**: React, TypeScript, Vite, Tailwind CSS, Zustand, Go (Gin), PostgreSQL, JWT, Gemini API.
+* **Repository**: [github.com/Yosua13/flowak](https://github.com/Yosua13/flowak)
 
 ---
 
@@ -35,6 +37,7 @@ Portofolio ini menampilkan 4 proyek utama yang dikembangkan dengan arsitektur mo
 * **Deskripsi**: Hub digital untuk mendukung operasional komunitas pelayanan gereja. Memfasilitasi anggota jemaat dalam melihat jadwal ibadah, mendaftar kegiatan/retret, menyampaikan permohonan doa, serta memberikan akses admin untuk mengkoordinasikan jadwal dan laporan absensi.
 * **Fitur Utama**: Jadwal ibadah & pembicara, pendaftaran kegiatan, Kanal Doa interaktif, Jurnal PA (Penelaahan Alkitab), Sion Care & Donasi sosial, Sion Careers, serta berita acara gereja.
 * **Tech Stack**: Next.js, Tailwind CSS, Go (Gin), PostgreSQL, Supabase, Gemini API.
+* **Repository**: [github.com/Yosua13/sion-ministry](https://github.com/Yosua13/sion-ministry)
 
 ---
 
@@ -45,6 +48,7 @@ Portofolio ini menampilkan 4 proyek utama yang dikembangkan dengan arsitektur mo
 * **Fitur Utama**: Live Log Stream, Error Clustering, AI-Assisted Root Cause Diagnosis (Gemini API), RabbitMQ async analysis queue, serta Incident Report Exporter.
 * **Status**: *Under Active Development (Work in Progress)*
 * **Tech Stack**: React, TypeScript, Vite, Tailwind CSS, Java (Spring Boot), JWT, RabbitMQ, Gemini API.
+* **Repository**: [github.com/Yosua13/logia-log](https://github.com/Yosua13/logia-log)
 
 ---
 
