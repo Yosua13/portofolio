@@ -628,7 +628,7 @@ export default function Portfolio() {
                           <span className="h-2.5 w-2.5 rounded-full bg-emerald-300" />
                         </div>
                         <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/60">
-                          15s Application Demo
+                          Application Demo
                         </span>
                       </div>
                       <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 bg-slate-950/80">
