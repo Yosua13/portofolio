@@ -33,25 +33,14 @@ Semua cover project saat ini berukuran 1280 x 800 px, rasio 16:10.
 
 ### Screenshot Aplikasi
 
-Screenshot dummy Flowak dan Logia Log masih berukuran 1280 x 720 px, rasio 16:9. Screenshot Lapor Kos terbaru memakai ukuran sekitar 1920 x 901/902 px, dan tetap aman karena carousel sekarang mengikuti rasio natural gambar.
+Screenshot Lapor Kos, Flowak, dan Sion Ministry menggunakan PNG screenshot asli. Logia Log menggunakan SVG wireframe diagram.
 
-| Project | Pattern file | Jumlah | Ukuran |
+| Project | Pattern file | Jumlah | Format |
 | --- | --- | --- | --- |
-| Lapor Kos | `public/assets/projects/lapor-kos/screenshots/00-login.png` sampai `15-tagihan-penghuni.png` | 16 gambar | 1920 x 901/902 px |
-| Flowak | `public/assets/projects/flowak/screenshots/01-project-flow-board.svg` sampai `06-project-overview.svg` | 6 gambar | 1280 x 720 px |
-| Sion Ministry | `public/assets/projects/sion-ministry/screenshots/01-dashboard.svg` sampai `06-laporan-absensi.svg` | 6 gambar | 1280 x 720 px |
-| Logia Log | `public/assets/projects/logia-log/screenshots/01-log-stream.svg` sampai `06-incident-report.svg` | 6 gambar | 1280 x 720 px |
-
-### Video Demo
-
-Semua video demo saat ini berukuran 1280 x 720 px, rasio 16:9, durasi 15 detik, 12 fps.
-
-| Project | File | Ukuran | Durasi |
-| --- | --- | --- | --- |
-| Lapor Kos | `public/assets/projects/lapor-kos/videos/demo.mp4` | 1280 x 720 px | 15 detik |
-| Flowak | `public/assets/projects/flowak/videos/demo.mp4` | 1280 x 720 px | 15 detik |
-| Sion Ministry | `public/assets/projects/sion-ministry/videos/demo.mp4` | 1280 x 720 px | 15 detik |
-| Logia Log | `public/assets/projects/logia-log/videos/demo.mp4` | 1280 x 720 px | 15 detik |
+| Lapor Kos | `public/assets/projects/lapor-kos/screenshots/00-login.png` sampai `15-tagihan-penghuni.png` | 16 gambar | PNG |
+| Flowak | `public/assets/projects/flowak/screenshots/01-login.png` sampai `09-anggota-tim.png` | 9 gambar | PNG |
+| Sion Ministry | `public/assets/projects/sion-ministry/screenshots/01-login.png` sampai `08-tautan-sumber.png` | 8 gambar | PNG |
+| Logia Log | `public/assets/projects/logia-log/screenshots/01-log-stream.svg` sampai `06-incident-report.svg` | 6 gambar | SVG |
 
 ## Rekomendasi Pembuatan Screenshot
 
@@ -69,31 +58,18 @@ Nama file yang disarankan:
 ```text
 public/assets/projects/lapor-kos/screenshots/00-login.png
 public/assets/projects/lapor-kos/screenshots/01-dashboard.png
-public/assets/projects/lapor-kos/screenshots/02-manajemen-kamar.png
-public/assets/projects/lapor-kos/screenshots/03-penghuni-kontrak.png
-public/assets/projects/lapor-kos/screenshots/04-manajemen-pembayaran.png
-public/assets/projects/lapor-kos/screenshots/05-laporan.png
+...
 
-public/assets/projects/flowak/screenshots/01-project-flow-board.png
-public/assets/projects/flowak/screenshots/02-task-detail.png
-public/assets/projects/flowak/screenshots/03-delivery-analytics.png
-public/assets/projects/flowak/screenshots/04-ai-flow-audit.png
-public/assets/projects/flowak/screenshots/05-mock-payload.png
-public/assets/projects/flowak/screenshots/06-project-overview.png
+public/assets/projects/flowak/screenshots/01-login.png
+public/assets/projects/flowak/screenshots/02-landing-page.png
+...
 
-public/assets/projects/sion-ministry/screenshots/01-dashboard.svg
-public/assets/projects/sion-ministry/screenshots/02-jadwal-ibadah.svg
-public/assets/projects/sion-ministry/screenshots/03-pendaftaran-kegiatan.svg
-public/assets/projects/sion-ministry/screenshots/04-kanal-doa.svg
-public/assets/projects/sion-ministry/screenshots/05-manajemen-konten.svg
-public/assets/projects/sion-ministry/screenshots/06-laporan-absensi.svg
+public/assets/projects/sion-ministry/screenshots/01-login.png
+public/assets/projects/sion-ministry/screenshots/02-dashboard.png
+...
 
-public/assets/projects/logia-log/screenshots/01-log-stream.png
-public/assets/projects/logia-log/screenshots/02-root-cause.png
-public/assets/projects/logia-log/screenshots/03-recommendation.png
-public/assets/projects/logia-log/screenshots/04-error-cluster.png
-public/assets/projects/logia-log/screenshots/05-rabbitmq-queue.png
-public/assets/projects/logia-log/screenshots/06-incident-report.png
+public/assets/projects/logia-log/screenshots/01-log-stream.svg
+...
 ```
 
 Jika mengganti dari `.svg` ke `.png`, update path screenshot di `src/components/ProjectsSection.tsx` agar mengarah ke ekstensi baru.
