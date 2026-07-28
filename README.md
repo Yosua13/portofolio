@@ -13,41 +13,41 @@ Portofolio ini menampilkan 4 proyek utama yang dikembangkan dengan arsitektur mo
 ### 1. 🏢 [Lapor Kos](https://lapor-kos.vercel.app/)
 * **Kategori**: Fullstack Application (Boarding House Operations & Billing Management)
 * **Peran**: Fullstack Developer (2026)
-* **Deskripsi**: Platform manajemen kos-kosan komprehensif yang mempermudah pemilik kos mengelola ketersediaan kamar, kontrak penghuni, riwayat pembayaran, pengingat tagihan otomatis via WhatsApp (Fonnte), serta penanganan komplain fasilitas.
-* **Fitur Utama**: Dashboard pemilik & penghuni, manajemen kamar & harga, laporan keuangan, kalender pembayaran, sistem komplain fasilitas, serta pengingat tagihan.
-* **Tech Stack**: Next.js, Tailwind CSS, Golang (Gin), Supabase, Fonnte API, Gemini API, Vercel, Railway.
+* **Deskripsi**: Platform manajemen kos-kosan komprehensif yang mengotomatisasi pencatatan kamar, perhitungan tagihan sewa bulanan, bukti transaksi & kwitansi digital, kalender pengingat jatuh tempo kontrak, pengiriman notifikasi WhatsApp otomatis via Fonnte, klasifikasi prioritas perbaikan fasilitas berbasis AI Google Gemini, serta pembuat laporan keuangan PDF instan.
+* **Fitur Utama**: Room Visualizer, Billing Engine otomatis, Payment Tracking & Kwitansi Digital, Kalender Kontrak & Checkout, Klasifikasi Keluhan AI (Gemini), WhatsApp Gateway (Fonnte), dan Export Laporan Keuangan PDF (Gofpdf).
+* **Tech Stack**: Next.js 15, React, TypeScript, Tailwind CSS, Go (Gin), PostgreSQL, Supabase, Fonnte WhatsApp API, Google Gemini AI, Gofpdf, Docker & Docker Compose, Vercel, Railway.
 * **Repository**: [github.com/Yosua13/lapor-kos](https://github.com/Yosua13/lapor-kos)
 * **Live Web**: [https://lapor-kos.vercel.app/](https://lapor-kos.vercel.app/)
 
 ---
 
-### 2. ⚡ Flowak
-* **Kategori**: Fullstack Application (IT Project Workflow & Task Orchestration)
+### 2. ⚡ [Flowak](https://github.com/Yosua13/flowak)
+* **Kategori**: Fullstack Application (AI-Powered Business Process Modeler & System Architect)
 * **Peran**: Product / Fullstack Developer (2026)
-* **Deskripsi**: Aplikasi manajemen alur kerja dan tugas proyek IT. Membantu tim pengembang memetakan arsitektur flow, membagi pekerjaan menjadi task terukur, memantau kendala (blockers), serta menjaga visibilitas progres antar divisi (Design, Frontend, Backend, QA, Deployment).
-* **Fitur Utama**: Interactive Flow Board, Kanban Task Board, Kanvas visual arsitektur proyek, AI Flow Audit (Gemini API), analitik kecepatan sprint, dan mock payload generator.
-* **Tech Stack**: React, TypeScript, Vite, Tailwind CSS, Zustand, Go (Gin), PostgreSQL, JWT, Gemini API.
+* **Deskripsi**: Platform kolaboratif berbasis graf untuk memodelkan proses bisnis dan merancang arsitektur sistem teknis secara visual. Mengintegrasikan Google Gemini AI untuk mengonversi deskripsi kebutuhan bisnis menjadi diagram alur kerja teknis otomatis, audit risiko/bottleneck, dan pembuatan sampel payload JSON request/response.
+* **Fitur Utama**: Canvas Flow Modeler, Generasi Alur AI, Audit Bottleneck & Celah Keamanan AI, Auto Mock Payload JSON, Pembagian Tugas Peran (UI/UX, Frontend, Backend), Kanban Task Board, dan Arsitektur Standalone (Express) & Full-Stack (Go + PostgreSQL).
+* **Tech Stack**: React 19, TypeScript, Vite, Tailwind CSS v4, Zustand, Go (Gin), PostgreSQL, GORM, JWT, Express.js Proxy, Google Gemini AI (`@google/genai`).
 * **Repository**: [github.com/Yosua13/flowak](https://github.com/Yosua13/flowak)
 
 ---
 
-### 3. 🏛️ Sion Ministry
-* **Kategori**: Fullstack Application (Spiritual Portal & Community Operations)
+### 3. 🏛️ [Sion Ministry](https://github.com/Yosua13/sion-ministry)
+* **Kategori**: Fullstack Application (Offline-First Discipleship Tracking & Spiritual Portal)
 * **Peran**: Fullstack Developer (2026)
-* **Deskripsi**: Hub digital untuk mendukung operasional komunitas pelayanan gereja. Memfasilitasi anggota jemaat dalam melihat jadwal ibadah, mendaftar kegiatan/retret, menyampaikan permohonan doa, serta memberikan akses admin untuk mengkoordinasikan jadwal dan laporan absensi.
-* **Fitur Utama**: Jadwal ibadah & pembicara, pendaftaran kegiatan, Kanal Doa interaktif, Jurnal PA (Penelaahan Alkitab), Sion Care & Donasi sosial, Sion Careers, serta berita acara gereja.
-* **Tech Stack**: Next.js, Tailwind CSS, Go (Gin), PostgreSQL, Supabase, Gemini API.
+* **Deskripsi**: Platform manajemen dan pemantauan pemuridan (*discipleship tracking*) berpendekatan **offline-first**. Memungkinkan pekerja pelayanan tetap menginput data jemaat, berita acara, jurnal PA, dan donasi misi di daerah terpencil tanpa koneksi internet, lalu menyinkronkannya secara otomatis saat online.
+* **Fitur Utama**: Offline-First Storage & Auto Sync Manager, Dashboard Statistik Real-time, Tracking Tahap Pemuridan & Mentor-Mentee, Berita Acara & Jurnal PA, Donasi Misi, Papan Lowongan Pelayanan, serta Asisten AI Teologi (Google Gemini API).
+* **Tech Stack**: React 19, Vite 6, TypeScript, Tailwind CSS v4, Motion (Framer Motion), LocalStorage Cache (SionDatabase), Go (Fiber v2), GORM, PostgreSQL 15+, Google Gemini API (`gemini-3.5-flash`).
 * **Repository**: [github.com/Yosua13/sion-ministry](https://github.com/Yosua13/sion-ministry)
 
 ---
 
-### 4. 🛠️ Logia Log *(Work in Progress)*
-* **Kategori**: Backend & Tooling (Server Observability & Log Diagnostic Tool)
+### 4. 🛠️ [Logia Log](https://github.com/Yosua13/logia-log) *(Work in Progress)*
+* **Kategori**: Backend & Tooling (Real-Time Server Log Diagnostics & AI Observability Tool)
 * **Peran**: Backend / Tooling Developer (2026)
-* **Deskripsi**: Alat diagnostik log server/VM untuk membaca log sistem, mendeteksi pola anomali, mengelompokkan severity kesalahan, dan menghasilkan rekomendasi perbaikan berbasis AI secara otomatis.
-* **Fitur Utama**: Live Log Stream, Error Clustering, AI-Assisted Root Cause Diagnosis (Gemini API), RabbitMQ async analysis queue, serta Incident Report Exporter.
+* **Deskripsi**: Alat observabilitas dan diagnostik log server/VM real-time. Membaca stream log sistem, mengelompokkan stack trace berdasarkan severity error, menganalisis akar masalah (*Root Cause Analysis*) berbasis AI Google Gemini, serta memberikan daftar rekomendasi perintah penanganan teknis untuk mempercepat TTR.
+* **Fitur Utama**: Live Log Stream (WebSocket), Error Stack Trace Clustering, AI-Assisted Root Cause Diagnosis (Gemini API), Async Processing Queue (RabbitMQ AMQP), serta Export Incident Report.
 * **Status**: *Under Active Development (Work in Progress)*
-* **Tech Stack**: React, TypeScript, Vite, Tailwind CSS, Java (Spring Boot), JWT, RabbitMQ, Gemini API.
+* **Tech Stack**: React 19, TypeScript, Vite, Tailwind CSS v4, Java 21, Spring Boot (Web, Security, Data JPA, WebSocket, AMQP), RabbitMQ, PostgreSQL, Google Gemini AI.
 * **Repository**: [github.com/Yosua13/logia-log](https://github.com/Yosua13/logia-log)
 
 ---
