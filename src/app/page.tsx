@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, ExternalLink, Gamepad2, Maximize2, Menu, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clock, ExternalLink, Gamepad2, Maximize2, Menu, X } from "lucide-react";
 import Image from "next/image";
 import HeroSection from "@/components/HeroSection";
 import WelcomeScreen from "@/components/WelcomeScreen";
@@ -34,13 +34,14 @@ interface ProjectType {
   problem?: string;
   contribution?: string;
   impact?: string;
-  image: string;
-  video: string;
+  image?: string;
+  video?: string;
   tags: string[];
   techStack: string[];
   link?: string;
   previewTone: string;
-  screens: ProjectScreen[];
+  screens?: ProjectScreen[];
+  isWip?: boolean;
 }
 
 function ProjectScreenshotCarousel({ projectTitle, screens }: { projectTitle: string; screens: ProjectScreen[] }) {
@@ -597,42 +598,55 @@ export default function Portfolio() {
 
               {/* Scrollable Container */}
               <div className="overflow-y-auto w-full">
-                {/* Modal Wireframe Preview */}
-                <div className="relative w-full shrink-0 overflow-hidden bg-slate-950 p-5 sm:p-8">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(99,102,241,0.35),transparent_32%),radial-gradient(circle_at_80%_10%,rgba(6,182,212,0.22),transparent_28%),linear-gradient(135deg,rgba(15,23,42,0.96),rgba(3,7,18,0.98))]" />
-                  <div className="modal-soft-panel relative mx-auto max-w-3xl rounded-[24px] border border-white/10 bg-black/35 p-4 shadow-2xl shadow-black/60 backdrop-blur-md">
-                    <div className="mb-4 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
-                        <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
-                        <span className="h-2.5 w-2.5 rounded-full bg-emerald-300" />
+                {/* Modal Wireframe Preview / WIP Banner */}
+                {selectedProject.isWip ? (
+                  <div className="relative w-full shrink-0 overflow-hidden bg-slate-950 p-6 sm:p-10">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(245,158,11,0.18),transparent_60%),linear-gradient(135deg,rgba(15,23,42,0.96),rgba(3,7,18,0.98))]" />
+                    <div className="modal-soft-panel relative mx-auto max-w-2xl rounded-[24px] border border-amber-500/30 bg-black/45 p-6 sm:p-8 shadow-2xl shadow-black/60 backdrop-blur-md text-center space-y-3">
+                      <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/15 px-4 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-amber-300">
+                        <Clock className="h-4 w-4 text-amber-400 animate-pulse" />
+                        Work in Progress
                       </div>
-                      <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/60">
-                        15s Application Demo
-                      </span>
+                      <h3 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight">
+                        Under Active Development
+                      </h3>
+                      <p className="text-xs sm:text-sm text-slate-300 font-light leading-relaxed max-w-lg mx-auto">
+                        This backend observability application is currently being developed. Interactive demo video and screenshots will be published upon release.
+                      </p>
                     </div>
-                    <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 bg-slate-950/80">
-                      <video
-                        src={selectedProject.video}
-                        className="absolute inset-0 h-full w-full object-cover opacity-70"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        preload="metadata"
-                      />
-                      <Image
-                        src={selectedProject.image}
-                        alt={`${selectedProject.title} dummy interface preview`}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 768px"
-                        className="object-cover opacity-35 mix-blend-screen"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent" />
-                    </div>
+                    <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#070709] to-transparent" />
                   </div>
-                  <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#070709] to-transparent" />
-                </div>
+                ) : (
+                  <div className="relative w-full shrink-0 overflow-hidden bg-slate-950 p-5 sm:p-8">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(99,102,241,0.35),transparent_32%),radial-gradient(circle_at_80%_10%,rgba(6,182,212,0.22),transparent_28%),linear-gradient(135deg,rgba(15,23,42,0.96),rgba(3,7,18,0.98))]" />
+                    <div className="modal-soft-panel relative mx-auto max-w-3xl rounded-[24px] border border-white/10 bg-black/35 p-4 shadow-2xl shadow-black/60 backdrop-blur-md">
+                      <div className="mb-4 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
+                          <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
+                          <span className="h-2.5 w-2.5 rounded-full bg-emerald-300" />
+                        </div>
+                        <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/60">
+                          15s Application Demo
+                        </span>
+                      </div>
+                      <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-white/10 bg-slate-950/80">
+                        {selectedProject.video && (
+                          <video
+                            src={selectedProject.video}
+                            className="absolute inset-0 h-full w-full object-cover"
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                            preload="metadata"
+                          />
+                        )}
+                      </div>
+                    </div>
+                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#070709] to-transparent" />
+                  </div>
+                )}
 
                 {/* Modal Content */}
                 <div className="p-6 md:p-8 space-y-6">
@@ -679,13 +693,30 @@ export default function Portfolio() {
                     </div>
                   )}
 
-                  <div className="space-y-3">
-                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Screenshot Aplikasi</h4>
-                    <ProjectScreenshotCarousel
-                      projectTitle={selectedProject.title}
-                      screens={selectedProject.screens}
-                    />
-                  </div>
+                  {selectedProject.isWip ? (
+                    <div className="space-y-3">
+                      <h4 className="text-xs font-bold text-amber-400/90 uppercase tracking-widest">Development Status</h4>
+                      <div className="modal-soft-panel p-5 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-200 text-sm font-light leading-relaxed flex items-start gap-3.5">
+                        <Clock className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                        <div>
+                          <p className="font-bold text-white uppercase tracking-wider text-xs">Work in Progress</p>
+                          <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                            Core log ingestion pipelines, diagnostic services, and analytical tools are currently under active development. Media preview will be published upon release.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    selectedProject.screens && selectedProject.screens.length > 0 && (
+                      <div className="space-y-3">
+                        <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Screenshot Aplikasi</h4>
+                        <ProjectScreenshotCarousel
+                          projectTitle={selectedProject.title}
+                          screens={selectedProject.screens}
+                        />
+                      </div>
+                    )
+                  )}
 
                   <div className="space-y-3">
                     <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Technologies Used</h4>

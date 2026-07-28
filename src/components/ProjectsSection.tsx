@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ExternalLink, Play } from "lucide-react";
+import { ExternalLink, Play, Clock } from "lucide-react";
 import { useRef, useState, type FocusEvent, type RefObject } from "react";
 import SectionHeader from "./SectionHeader";
 
@@ -114,6 +114,97 @@ const laporKosScreens = [
   }
 ];
 
+const flowakScreens = [
+  {
+    title: "Login",
+    caption: "Akses masuk pengguna untuk mengelola workflow dan tugas proyek.",
+    image: "/assets/projects/flowak/screenshots/01-login.png"
+  },
+  {
+    title: "Landing Page",
+    caption: "Halaman utama platform Flowak dan pengenalan fitur.",
+    image: "/assets/projects/flowak/screenshots/02-landing-page.png"
+  },
+  {
+    title: "Kanvas Flow Project",
+    caption: "Kanvas visual untuk memetakan arsitektur dan alur kerja proyek.",
+    image: "/assets/projects/flowak/screenshots/03-kanvas.png"
+  },
+  {
+    title: "Tabel Status Fitur",
+    caption: "Daftar status pengerjaan fitur dan progres tim pengembang.",
+    image: "/assets/projects/flowak/screenshots/04-tabel-status.png"
+  },
+  {
+    title: "Spesifikasi Dokumen",
+    caption: "Dokumentasi teknis, PRD, dan spesifikasi modul.",
+    image: "/assets/projects/flowak/screenshots/05-spesifikasi-dokumen.png"
+  },
+  {
+    title: "Jadwal & Waktu Tim",
+    caption: "Alokasi waktu pengerjaan dan timeline pengerjaan tim.",
+    image: "/assets/projects/flowak/screenshots/06-jadwal-tim.png"
+  },
+  {
+    title: "Analitik Delivery",
+    caption: "Grafik performa delivery, sprint velocity, dan metrik proyek.",
+    image: "/assets/projects/flowak/screenshots/07-analitik.png"
+  },
+  {
+    title: "Kanban Task Board",
+    caption: "Papan kanban tugas dari backlog hingga tahap deployment.",
+    image: "/assets/projects/flowak/screenshots/08-kanban.png"
+  },
+  {
+    title: "Anggota & Peran Tim",
+    caption: "Manajemen anggota tim, peran, dan pembagian tanggung jawab.",
+    image: "/assets/projects/flowak/screenshots/09-anggota-tim.png"
+  }
+];
+
+const sionMinistryScreens = [
+  {
+    title: "Login Portal",
+    caption: "Halaman akses masuk portal pelayanan Sion Ministry.",
+    image: "/assets/projects/sion-ministry/screenshots/01-login.png"
+  },
+  {
+    title: "Dashboard Utama",
+    caption: "Ringkasan kegiatan ibadah, pengumuman, dan aktivitas pelayanan.",
+    image: "/assets/projects/sion-ministry/screenshots/02-dashboard.png"
+  },
+  {
+    title: "Data & Statistik Jemaat",
+    caption: "Manajemen data anggota jemaat dan grafik statistik pertumbuhan.",
+    image: "/assets/projects/sion-ministry/screenshots/03-data-jemaat.png"
+  },
+  {
+    title: "Jurnal Penelaahan Alkitab",
+    caption: "Modul materi dan jurnal diskusi Penelaahan Alkitab (PA).",
+    image: "/assets/projects/sion-ministry/screenshots/04-jurnal-pa.png"
+  },
+  {
+    title: "Berita Acara & Laporan",
+    caption: "Dokumentasi resmi berita acara kegiatan dan hasil rapat gereja.",
+    image: "/assets/projects/sion-ministry/screenshots/05-berita-acara.png"
+  },
+  {
+    title: "Donasi & Sion Care",
+    caption: "Pengelolaan donasi, bantuan sosial, dan program kepedulian jemaat.",
+    image: "/assets/projects/sion-ministry/screenshots/06-donasi-care.png"
+  },
+  {
+    title: "Sion Careers & Pelayanan",
+    caption: "Informasi lowongan staf pelayanan dan kesempatan berkarya.",
+    image: "/assets/projects/sion-ministry/screenshots/07-sion-careers.png"
+  },
+  {
+    title: "Tautan & Sumber Daya",
+    caption: "Kumpulan link penting, materi ibadah, dan sumber daya gereja.",
+    image: "/assets/projects/sion-ministry/screenshots/08-tautan-sumber.png"
+  }
+];
+
 const projectsData = [
   {
     id: "lapor-kos",
@@ -127,7 +218,7 @@ const projectsData = [
     problem: "Kos owners often manage room occupancy, rent payments, and tenant complaints manually, making it difficult to track late payments, room status, and unresolved facility reports.",
     contribution: "Built the full application flow from dashboard UI, room and tenant modules, complaint ticketing, backend API, database schema, and notification-ready workflows.",
     impact: "Creates a centralized operating system for kos management, making tenant data, billing status, and facility issues easier to monitor and resolve.",
-    image: "/assets/projects/lapor-kos/cover.svg",
+    image: "/assets/projects/lapor-kos/screenshots/01-dashboard.png",
     video: "/assets/projects/lapor-kos/videos/demo.mp4",
     tags: ["Next.js", "Golang", "Supabase", "Billing"],
     techStack: ["Next.js", "Tailwind CSS", "Golang", "Gin", "Supabase", "Fonnte", "Vercel", "Railway", "Gemini API"],
@@ -147,26 +238,12 @@ const projectsData = [
     problem: "Development teams often lose context when project tasks, blockers, discussions, and delivery flow are scattered across chat, documents, and manual status updates.",
     contribution: "Designed the product flow, dashboard hierarchy, task board, status tracking, project activity timeline, and dummy analytics views for delivery monitoring.",
     impact: "Improves visibility across project execution, helping teams understand what is being worked on, what is blocked, and what needs attention next.",
-    image: "/assets/projects/flowak/cover.svg",
+    image: "/assets/projects/flowak/screenshots/02-landing-page.png",
     video: "/assets/projects/flowak/videos/demo.mp4",
     tags: ["Task Flow", "Project IT", "Kanban", "Dashboard"],
     techStack: ["React", "TypeScript", "Vite", "Tailwind CSS", "Zustand", "Go", "Gin", "PostgreSQL", "JWT", "bcrypt", "Gemini API"],
     previewTone: "from-indigo-500 via-sky-500 to-emerald-500",
-    screens: buildScreens("flowak", [
-      "01-project-flow-board.svg",
-      "02-task-detail.svg",
-      "03-delivery-analytics.svg",
-      "04-ai-flow-audit.svg",
-      "05-mock-payload.svg",
-      "06-project-overview.svg"
-    ], [
-      { title: "Project Flow Board", caption: "Kanban-style development flow from backlog to deployment." },
-      { title: "Task Detail", caption: "Ownership, priority, checklist, blockers, and discussion context." },
-      { title: "Delivery Analytics", caption: "Sprint velocity, blocked work, and progress summary." },
-      { title: "AI Flow Audit", caption: "Gemini-powered flow risk, missing task, and bottleneck insight." },
-      { title: "Mock Payload", caption: "Generated payload examples for frontend and backend alignment." },
-      { title: "Project Overview", caption: "Delivery progress, active sprint, blockers, and owner summary." }
-    ])
+    screens: flowakScreens
   },
   {
     id: "sion-ministry",
@@ -180,26 +257,12 @@ const projectsData = [
     problem: "Spiritual communities often face challenges in coordinating events, collecting prayer requests, and tracking member participation through scattered communication channels.",
     contribution: "Developed the scheduling module, community prayer board, event registration flow, back-office administration panel, and attendance tracking analytics.",
     impact: "Centralizes event coordination and community updates, boosting member engagement and offering administrators clear visibility into activity attendance.",
-    image: "/assets/projects/sion-ministry/cover.svg",
+    image: "/assets/projects/sion-ministry/screenshots/02-dashboard.png",
     video: "/assets/projects/sion-ministry/videos/demo.mp4",
     tags: ["Ministry Platform", "Worship Scheduler", "Community", "Spiritual Portal"],
     techStack: ["Next.js", "Tailwind CSS", "Go", "Gin", "PostgreSQL", "Supabase", "Gemini API"],
     previewTone: "from-violet-600 via-indigo-600 to-amber-500",
-    screens: buildScreens("sion-ministry", [
-      "01-dashboard.svg",
-      "02-jadwal-ibadah.svg",
-      "03-pendaftaran-kegiatan.svg",
-      "04-kanal-doa.svg",
-      "05-manajemen-konten.svg",
-      "06-laporan-absensi.svg"
-    ], [
-      { title: "Dashboard", caption: "Overview of upcoming services, announcements, and quick actions" },
-      { title: "Jadwal Ibadah", caption: "Worship schedule, sermon topics, and location details" },
-      { title: "Pendaftaran Kegiatan", caption: "Register for retreats, bible study, and fellowship events" },
-      { title: "Kanal Doa", caption: "Submit prayer requests, track active prayers, and assign intercessors" },
-      { title: "Manajemen Konten", caption: "Admin tools to publish new events, updates, and materials" },
-      { title: "Laporan Absensi", caption: "Attendance graphs, community growth charts, and activity summaries" }
-    ])
+    screens: sionMinistryScreens
   },
   {
     id: "logia-log",
@@ -211,28 +274,13 @@ const projectsData = [
     description: "A diagnostic tool for reading VM or application server logs, identifying likely error causes, and generating actionable recommendations for resolution.",
     fullDescription: "Logia Log is a server log analysis application that reads logs from VMs or application servers, detects abnormal patterns, classifies error severity, explains likely root causes, and provides practical recommendations to help engineers resolve issues faster.",
     problem: "When production applications fail, engineers often spend too much time scanning long log files manually before understanding the actual root cause and next action.",
-    contribution: "Created the concept for log ingestion, error grouping, severity tagging, root-cause summary, and recommendation panels for operational debugging workflows.",
-    impact: "Shortens troubleshooting time by turning raw logs into prioritized insights, readable summaries, and suggested remediation steps.",
-    image: "/assets/projects/logia-log/cover.svg",
-    video: "/assets/projects/logia-log/videos/demo.mp4",
+    contribution: "Creating the architecture for log ingestion, error grouping, severity tagging, root-cause summary, and recommendation panels for operational debugging workflows.",
+    impact: "Designed to shorten troubleshooting time by turning raw logs into prioritized insights, readable summaries, and suggested remediation steps.",
     tags: ["Log Analyzer", "VM", "Root Cause", "Recommendation"],
     techStack: ["React", "TypeScript", "Vite", "Tailwind CSS", "Java", "Spring Boot", "JWT", "Gemini API", "RabbitMQ"],
     previewTone: "from-rose-500 via-red-500 to-amber-500",
-    screens: buildScreens("logia-log", [
-      "01-log-stream.svg",
-      "02-root-cause.svg",
-      "03-recommendation.svg",
-      "04-error-cluster.svg",
-      "05-rabbitmq-queue.svg",
-      "06-incident-report.svg"
-    ], [
-      { title: "Log Stream", caption: "Live-style log reader with severity grouping and timestamps." },
-      { title: "Root Cause", caption: "Readable diagnosis explaining the likely source of failure." },
-      { title: "Recommendation", caption: "Suggested remediation steps for engineers and operators." },
-      { title: "Error Cluster", caption: "Grouped stack traces, frequency, and impacted service." },
-      { title: "RabbitMQ Queue", caption: "Async analysis jobs, retry count, and processing status." },
-      { title: "Incident Report", caption: "Readable summary, timeline, and exported investigation result." }
-    ])
+    isWip: true,
+    screens: []
   }
 ];
 
@@ -266,26 +314,19 @@ function ProjectPreviewVideo({
   videoRef: RefObject<HTMLVideoElement | null>;
   isPreviewPlaying: boolean;
 }) {
+  if (project.isWip || !project.video) return null;
+
   return (
     <div className="relative h-full w-full overflow-hidden bg-slate-950">
-      <div className={`absolute inset-0 bg-gradient-to-br ${project.previewTone} opacity-45 transition-opacity duration-500 group-hover:opacity-75`} />
       <video
         ref={videoRef}
         src={project.video}
-        className="absolute inset-0 h-full w-full object-cover opacity-45 mix-blend-screen transition-all duration-700 group-hover:scale-105 group-hover:opacity-70"
+        className="absolute inset-0 h-full w-full object-cover transition-all duration-700 group-hover:scale-105"
         muted
         loop
         playsInline
         preload="metadata"
       />
-      <Image
-        src={project.image}
-        alt=""
-        fill
-        sizes="(max-width: 768px) 100vw, 50vw"
-        className="object-cover opacity-35 mix-blend-screen transition-all duration-700 group-hover:scale-105 group-hover:opacity-50"
-      />
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:28px_28px] opacity-25" />
 
       <div className={`pointer-events-none absolute bottom-9 left-0 right-0 flex justify-center transition-opacity duration-500 ${isPreviewPlaying ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}>
         <div className="project-preview-badge flex items-center gap-2 rounded-full border border-white/20 bg-black/55 px-3.5 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-white shadow-2xl backdrop-blur-md">
@@ -314,6 +355,7 @@ function ProjectCard({
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
 
   const playPreview = () => {
+    if (project.isWip) return;
     const video = videoRef.current;
 
     if (!video) return;
@@ -323,6 +365,7 @@ function ProjectCard({
   };
 
   const stopPreview = () => {
+    if (project.isWip) return;
     const video = videoRef.current;
 
     if (!video) return;
@@ -350,13 +393,15 @@ function ProjectCard({
       className="group relative overflow-hidden rounded-[24px] border border-white/10 bg-[#0d0f18]/45 transition-all duration-500 hover:-translate-y-1 hover:border-indigo-500/35 hover:bg-[#0d0f18]/70 focus:outline-none focus-visible:border-indigo-400 focus-visible:ring-2 focus-visible:ring-indigo-300/40"
     >
       <div className="absolute inset-0 z-0">
-        <Image
-          src={project.image}
-          alt=""
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover opacity-15 blur-[3px] transition-transform duration-700 ease-out group-hover:scale-105"
-        />
+        {project.image && !project.isWip && (
+          <Image
+            src={project.image}
+            alt=""
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover opacity-15 blur-[3px] transition-transform duration-700 ease-out group-hover:scale-105"
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-black/30" />
       </div>
 
@@ -413,13 +458,35 @@ function ProjectCard({
         </div>
 
         <div className="flex items-center justify-center p-5 sm:p-8 md:p-10">
-          <div className="relative w-full max-w-xl overflow-hidden rounded-[22px] border border-white/10 bg-slate-950 shadow-2xl shadow-black/80 aspect-[16/10] transition-transform duration-500 ease-out group-hover:scale-[1.02]">
-            <ProjectPreviewVideo
-              project={project}
-              videoRef={videoRef}
-              isPreviewPlaying={isPreviewPlaying}
-            />
-          </div>
+          {project.isWip ? (
+            <div className="relative w-full max-w-xl overflow-hidden rounded-[22px] border border-amber-500/30 bg-slate-950/90 shadow-2xl shadow-black/80 aspect-[16/10] flex flex-col items-center justify-center p-6 text-center group-hover:border-amber-400/50 transition-colors">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(245,158,11,0.12),transparent_60%)] pointer-events-none" />
+              <div className="relative z-10 flex flex-col items-center gap-3">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-amber-500/30 bg-amber-500/15 text-amber-400 shadow-inner">
+                  <Clock className="h-7 w-7 animate-pulse" />
+                </div>
+                <div className="space-y-1.5">
+                  <span className="inline-block rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-amber-300">
+                    Work in Progress
+                  </span>
+                  <h5 className="text-lg font-extrabold text-white tracking-tight uppercase font-sans">
+                    Under Active Development
+                  </h5>
+                  <p className="max-w-xs text-xs text-slate-400 font-light leading-relaxed">
+                    Media preview and full demonstration will be available upon feature release.
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="relative w-full max-w-xl overflow-hidden rounded-[22px] border border-white/10 bg-slate-950 shadow-2xl shadow-black/80 aspect-[16/10] transition-transform duration-500 ease-out group-hover:scale-[1.02]">
+              <ProjectPreviewVideo
+                project={project}
+                videoRef={videoRef}
+                isPreviewPlaying={isPreviewPlaying}
+              />
+            </div>
+          )}
         </div>
       </div>
     </motion.article>
