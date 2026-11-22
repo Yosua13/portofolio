@@ -1,12 +1,14 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface WelcomeScreenProps {
   onComplete: (sound: boolean, destination: string) => void;
 }
 
 export default function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
+  const { language } = useLanguage();
   const loaded = true;
 
   return (
@@ -16,7 +18,6 @@ export default function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
 
       {/* Main Container */}
       <div className="relative flex flex-col items-center justify-center text-center px-4 max-w-sm">
-        
         {/* Top Loading Status */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -25,17 +26,24 @@ export default function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
           className="flex flex-col items-center gap-3"
         >
           <span className="text-[9px] font-semibold tracking-[0.3em] uppercase text-indigo-400/80 font-mono">
-            {loaded ? "SYSTEM INITIATED" : "LOADING SYSTEM"}
+            {loaded
+              ? language === "id"
+                ? "SISTEM SIAP DIJALANKAN"
+                : "SYSTEM INITIATED"
+              : language === "id"
+              ? "MEMUAT SISTEM"
+              : "LOADING SYSTEM"}
           </span>
-          
+
           {/* Minimal 1px Progress Bar */}
           <div className="w-16 h-[1px] bg-white/10 overflow-hidden relative">
             <motion.div
               initial={{ left: "-100%" }}
               animate={loaded ? { left: "0%" } : { left: ["-100%", "0%"] }}
-              transition={loaded 
-                ? { duration: 0.5, ease: "easeOut" } 
-                : { repeat: Infinity, duration: 1.2, ease: "easeInOut" }
+              transition={
+                loaded
+                  ? { duration: 0.5, ease: "easeOut" }
+                  : { repeat: Infinity, duration: 1.2, ease: "easeInOut" }
               }
               className="absolute top-0 bottom-0 left-0 w-full bg-indigo-400"
             />
@@ -54,7 +62,7 @@ export default function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 className="text-4xl sm:text-5xl font-light text-white uppercase font-sans pl-[0.25em]"
               >
-                READY
+                {language === "id" ? "READY" : "READY"}
               </motion.h1>
             ) : (
               <motion.span
@@ -84,7 +92,7 @@ export default function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
                 onClick={() => onComplete(true, "hero")}
                 className="border border-white/15 text-white bg-transparent px-10 py-3 rounded-full text-[10px] font-semibold tracking-[0.3em] uppercase hover:bg-white hover:text-black hover:border-white transition-all duration-500 cursor-pointer min-w-[200px] text-center shadow-lg hover:shadow-white/5 active:scale-[0.98]"
               >
-                START EXPERIENCE
+                {language === "id" ? "MULAI PENGALAMAN" : "START EXPERIENCE"}
               </button>
 
               {/* Start Without Music Button */}
@@ -92,7 +100,7 @@ export default function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
                 onClick={() => onComplete(false, "hero")}
                 className="text-slate-500 hover:text-slate-300 text-[9px] font-semibold tracking-[0.2em] uppercase transition-colors cursor-pointer mt-5 bg-transparent border-none outline-none hover:tracking-[0.22em] duration-300"
               >
-                START WITHOUT MUSIC
+                {language === "id" ? "MULAI TANPA MUSIK" : "START WITHOUT MUSIC"}
               </button>
             </motion.div>
           )}

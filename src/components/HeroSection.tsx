@@ -3,8 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import Image from "next/image";
-import { X, Flame } from "lucide-react";
+import { X, Flame, MapPin, ArrowUpRight, Download } from "lucide-react";
+import { SiGmail } from "react-icons/si";
 import MusicPlayer from "./MusicPlayer";
+import { useLanguage } from "@/context/LanguageContext";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
 
 /* ───────────────────────────────────────────
    Star‑field canvas with mouse parallax
@@ -870,44 +875,59 @@ function StarCanvas({
 /* ───────────────────────────────────────────
    Main Hero Component
    ─────────────────────────────────────────── */
-const HERO_STATS = [
-  { value: "5+", label: "Projects Delivered" },
-  { value: "3yr", label: "Experience" },
-  { value: "10+", label: "APIs Built" },
-];
+const HERO_STATS = {
+  id: [
+    { value: "5+", label: "Proyek Dirilis" },
+    { value: "2+ Thn", label: "Pengalaman" },
+    { value: "UMKM & B2B", label: "Fokus Solusi" },
+  ],
+  en: [
+    { value: "5+", label: "Projects Shipped" },
+    { value: "2+ Yr", label: "Experience" },
+    { value: "SME & B2B", label: "Solutions Focus" },
+  ],
+};
 
 const TESTIMONIALS = [
   {
     name: "Gina Sausan Solihah",
-    role: "Project Manager",
-    relation: "Worked with Yosua on the same team",
+    role: { id: "Project Manager", en: "Project Manager" },
+    relation: { id: "Rekan satu tim dengan Yosua", en: "Worked with Yosua on the same team" },
     accent: "from-rose-500 to-orange-400",
-    quote:
-      "I've had the pleasure of working with Yosua in our team, and he has been an excellent developer. Proactive, reliable, and always ready to solve problems with clean and efficient code. A great asset to any tech team!"
+    quote: {
+      id: "Saya senang bekerja bersama Yosua di tim kami, dan ia merupakan developer yang sangat handal. Proaktif, dapat diandalkan, dan selalu siap menyelesaikan masalah dengan kode yang bersih dan efisien. Aset luar biasa bagi tim teknologi manapun!",
+      en: "I've had the pleasure of working with Yosua in our team, and he has been an excellent developer. Proactive, reliable, and always ready to solve problems with clean and efficient code. A great asset to any tech team!"
+    }
   },
   {
     name: "Farah Nadia Putri",
-    role: "UI/UX Designer at PT Tabel Data Informatika",
-    relation: "Worked with Yosua on the same team",
+    role: { id: "UI/UX Designer di PT Tabel Data Informatika", en: "UI/UX Designer at PT Tabel Data Informatika" },
+    relation: { id: "Rekan satu tim dengan Yosua", en: "Worked with Yosua on the same team" },
     accent: "from-amber-200 to-pink-300",
-    quote:
-      "I had the pleasure of working with Yosua on several mobile app projects, and I can confidently say that he was very responsible, conscientious and dedicated to his work as mobile developer with a strong command of both Android and iOS platforms. What sets Yosua apart is not just technical skills, but also his ability to communicate clearly, collaborate effectively, and solve problems creatively."
+    quote: {
+      id: "Saya berkesempatan bekerja bersama Yosua di beberapa proyek aplikasi mobile, dan saya dapat mengatakan dengan yakin bahwa ia sangat bertanggung jawab, teliti, dan berdedikasi tinggi dengan penguasaan platform Android maupun iOS yang kuat. Keunggulan Yosua bukan hanya kemampuan teknis, tetapi juga komunikasi yang jelas, kolaborasi efektif, dan penyelesaian masalah yang kreatif.",
+      en: "I had the pleasure of working with Yosua on several mobile app projects, and I can confidently say that he was very responsible, conscientious and dedicated to his work as mobile developer with a strong command of both Android and iOS platforms. What sets Yosua apart is not just technical skills, but also his ability to communicate clearly, collaborate effectively, and solve problems creatively."
+    }
   },
   {
     name: "Fahmi Fazlurrahman",
-    role: "Lecturer and collaborator",
-    relation: "Managed Yosua directly",
+    role: { id: "Dosen & Kolaborator", en: "Lecturer and collaborator" },
+    relation: { id: "Membimbing Yosua secara langsung", en: "Managed Yosua directly" },
     accent: "from-sky-500 to-cyan-300",
-    quote:
-      "I had the privilege of teaching and working alongside Yosua during his time at Tabel Data Informatika. He quickly distinguished himself through his eagerness to learn, technical proficiency, and dedication to his work. Yosua was proactive in taking on responsibilities beyond his role. I believe Yosua has great potential and will continue to grow and contribute significantly in his future endeavors."
+    quote: {
+      id: "Saya memiliki kehormatan mengajar sekaligus bekerja bersama Yosua selama di Tabel Data Informatika. Ia menonjol melalui semangat belajarnya yang tinggi, kecakapan teknis, dan dedikasinya. Yosua selalu proaktif mengambil tanggung jawab melebihi ekspektasi perannya.",
+      en: "I had the privilege of teaching and working alongside Yosua during his time at Tabel Data Informatika. He quickly distinguished himself through his eagerness to learn, technical proficiency, and dedication to his work. Yosua was proactive in taking on responsibilities beyond his role. I believe Yosua has great potential and will continue to grow and contribute significantly in his future endeavors."
+    }
   },
   {
     name: "Mochamad Salman Ramadhan",
-    role: "Senior Data Platform Engineer",
-    relation: "Managed Yosua directly",
+    role: { id: "Senior Data Platform Engineer", en: "Senior Data Platform Engineer" },
+    relation: { id: "Membimbing Yosua secara langsung", en: "Managed Yosua directly" },
     accent: "from-emerald-500 to-lime-300",
-    quote:
-      "He is a highly adaptable professional who consistently meets tight deadlines and demonstrates a strong sense of responsibility. I have been particularly impressed by his critical thinking abilities and the confident manner in which he approaches and manages tasks."
+    quote: {
+      id: "Ia adalah profesional yang sangat adaptif, konsisten memenuhi tenggat waktu yang ketat, dan menunjukkan rasa tanggung jawab yang kuat. Saya sangat terkesan dengan kemampuan berpikir kritis serta ketenangannya dalam menangani setiap tugas.",
+      en: "He is a highly adaptable professional who consistently meets tight deadlines and demonstrates a strong sense of responsibility. I have been particularly impressed by his critical thinking abilities and the confident manner in which he approaches and manages tasks."
+    }
   }
 ];
 
@@ -920,6 +940,7 @@ export default function HeroSection({
   setPlayMode: (val: boolean) => void;
   playMusicOnStart?: boolean;
 }) {
+  const { language } = useLanguage();
   const [showGreeting, setShowGreeting] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
@@ -975,7 +996,7 @@ export default function HeroSection({
     setIsGameOver(false);
   };
 
-  const stats = HERO_STATS;
+  const stats = HERO_STATS[language];
   const testimonials = TESTIMONIALS;
 
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -1101,11 +1122,11 @@ export default function HeroSection({
                     <div className="h-[2px] w-12 bg-cyan-400 rounded-full animate-pulse" />
                   </div>
 
-                  <h2 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-sans leading-tight">
+                  <h2 className="text-4xl sm:text-5xl font-black text-[var(--foreground)] tracking-tight font-sans leading-tight">
                     Intercept the Anomalies.
                   </h2>
 
-                  <p className="text-sm text-slate-400 font-light leading-relaxed max-w-md">
+                  <p className="text-sm text-[var(--muted-foreground)] font-light leading-relaxed max-w-md">
                     Steer your spacecraft to clear space debris and glowing drones. Protect system integrity at all costs. Use keyboard keys to operate weapon systems and navigation thrusters.
                   </p>
 
@@ -1121,8 +1142,8 @@ export default function HeroSection({
                         </div>
                       </div>
                       <div className="text-left">
-                        <span className="block text-xs font-bold text-slate-300 uppercase tracking-wide">Steer Ship</span>
-                        <span className="text-[10px] text-slate-500 font-mono">WASD KEYS</span>
+                        <span className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-wide">Steer Ship</span>
+                        <span className="text-[10px] text-[var(--muted-foreground)] font-mono">WASD KEYS</span>
                       </div>
                     </div>
 
@@ -1131,8 +1152,8 @@ export default function HeroSection({
                         Space
                       </div>
                       <div className="text-left">
-                        <span className="block text-xs font-bold text-slate-300 uppercase tracking-wide">Fire Laser</span>
-                        <span className="text-[10px] text-slate-500 font-mono">SPACEBAR</span>
+                        <span className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-wide">Fire Laser</span>
+                        <span className="text-[10px] text-[var(--muted-foreground)] font-mono">SPACEBAR</span>
                       </div>
                     </div>
                   </div>
@@ -1152,7 +1173,7 @@ export default function HeroSection({
                 <>
 
                   {/* Monospace label */}
-                  <p className="label-mono">{"Hi, I'm"}</p>
+                  <p className="label-mono">{language === "id" ? "Halo, saya" : "Hi, I'm"}</p>
 
                   {/* Name with video mask background following jesky.dev */}
                   <div className="relative w-full max-w-2xl select-none mb-4 overflow-visible">
@@ -1190,107 +1211,97 @@ export default function HeroSection({
                     </svg>
                   </div>
 
-                  {/* Professional Headline & Subtitle */}
+                  {/* Role Badge & Punchy 2-Line Description */}
                   <div className="text-left space-y-3">
-                    <h2 className="text-2xl sm:text-3xl font-extrabold text-indigo-400 tracking-wide uppercase font-sans leading-none">
+                    <Badge variant="accent" className="text-[11px] px-3 py-1">
                       Fullstack Software Engineer
-                    </h2>
-                    <p className="text-slate-400 font-light leading-relaxed max-w-lg text-sm sm:text-base">
-                      I build scalable backend systems and modern web applications using Java, Spring Boot, Golang, Next.js, and TypeScript. Experienced in developing business applications, database workflows, and clean user interfaces.
+                    </Badge>
+                    <p className="text-[var(--muted-foreground)] font-normal leading-relaxed max-w-lg text-sm sm:text-base">
+                      {language === "id"
+                        ? "Membangun sistem backend tangguh & solusi software digital untuk UMKM maupun perusahaan."
+                        : "Building scalable backend systems & digital software solutions for SMEs and enterprises."}
                     </p>
                   </div>
 
-                  {/* CTA buttons */}
-                  <div className="flex flex-wrap gap-4 items-center mt-6">
-                    <a
-                      href="#projects"
-                      className="inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg shadow-indigo-500/15 hover:shadow-indigo-500/25 active:scale-95 duration-300"
-                    >
-                      View Projects
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
-                    </a>
-                    <a
-                      href="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf"
-                      download
-                      className="inline-flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg active:scale-95 duration-300"
-                    >
-                      Download CV
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
-                    </a>
-                    <a
-                      href="#contact"
-                      className="inline-flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg active:scale-95 duration-300"
-                    >
-                      Hire Me
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg>
-                    </a>
+                  {/* 3 Clean CTAs */}
+                  <div className="flex flex-wrap gap-3 items-center mt-6">
+                    <Button variant="accent" size="lg" asChild>
+                      <a href="#projects">
+                        {language === "id" ? "Lihat Proyek" : "View Projects"}
+                        <ArrowUpRight className="h-4 w-4" />
+                      </a>
+                    </Button>
+                    <Button variant="outline" size="lg" asChild>
+                      <a href="#what-i-do">
+                        {language === "id" ? "Solusi Bisnis" : "Solutions"}
+                      </a>
+                    </Button>
+                    <Button variant="ghost" size="lg" asChild>
+                      <a href="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf" download>
+                        <Download className="h-4 w-4" />
+                        {language === "id" ? "Unduh CV" : "Download CV"}
+                      </a>
+                    </Button>
                   </div>
 
-
-                  {/* Testimonial & Social Proof */}
+                  {/* Compact Testimonial Bar */}
                   <div className="hero-testimonial mt-5 hidden sm:block max-w-lg select-none text-left">
-                    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025] p-4 shadow-2xl shadow-black/20 backdrop-blur-md">
-                      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-400/50 to-transparent pointer-events-none" />
-                      <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" />
-
-                      <div className="mb-4 flex items-start justify-between gap-4">
-                        <div>
-                          <span className="text-[9px] font-mono font-bold text-indigo-400 uppercase tracking-widest block">
-                            LinkedIn Recommendations
+                    <div className="relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 backdrop-blur-md">
+                      <div className="mb-2.5 flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="text-[10px] font-mono font-bold text-[var(--accent-text)] uppercase tracking-widest">
+                            {language === "id" ? "Rekomendasi LinkedIn" : "LinkedIn Review"}
                           </span>
-                          <span className="mt-1 block text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                            {activeTestimonial + 1} of {testimonials.length} received reviews
+                          <span className="text-[10px] font-mono text-[var(--muted-foreground)]">
+                            · {activeTestimonial + 1}/{testimonials.length}
                           </span>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5">
                           <button
                             type="button"
                             onClick={previousTestimonial}
                             aria-label="Previous recommendation"
-                            className="grid h-8 w-8 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-slate-400 transition-colors hover:border-indigo-400/50 hover:text-white"
+                            className="grid h-7 w-7 place-items-center rounded-full border border-[var(--border)] bg-[var(--surface-elevated)] text-xs text-[var(--muted-foreground)] transition-colors hover:border-[var(--accent)]/50 hover:text-[var(--foreground)] cursor-pointer"
                           >
-                            <span aria-hidden="true">&lt;</span>
+                            &lt;
                           </button>
                           <button
                             type="button"
                             onClick={nextTestimonial}
                             aria-label="Next recommendation"
-                            className="grid h-8 w-8 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-slate-400 transition-colors hover:border-indigo-400/50 hover:text-white"
+                            className="grid h-7 w-7 place-items-center rounded-full border border-[var(--border)] bg-[var(--surface-elevated)] text-xs text-[var(--muted-foreground)] transition-colors hover:border-[var(--accent)]/50 hover:text-[var(--foreground)] cursor-pointer"
                           >
-                            <span aria-hidden="true">&gt;</span>
+                            &gt;
                           </button>
                         </div>
                       </div>
 
-                      <div className="hero-testimonial-quote relative min-h-[140px]">
-                        <div className="min-w-0">
-                          <span className="block text-sm font-extrabold leading-tight text-white">
+                      <div className="hero-testimonial-quote min-h-[82px]">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-xs font-extrabold text-[var(--foreground)]">
                             {currentTestimonial.name}
                           </span>
-                          <span className="mt-0.5 block truncate text-[10px] font-medium text-slate-400">
-                            {currentTestimonial.role}
-                          </span>
-                          <span className="mt-1 inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-300">
-                            {currentTestimonial.relation}
+                          <span className="text-[10px] text-[var(--muted-foreground)] truncate">
+                            — {currentTestimonial.role[language]}
                           </span>
                         </div>
 
-                        <p className="mt-4 text-[12px] sm:text-xs text-slate-300 leading-relaxed font-light">
-                          &ldquo;{currentTestimonial.quote}&rdquo;
+                        <p className="mt-2 text-xs text-[var(--muted-foreground)] leading-relaxed line-clamp-3">
+                          &ldquo;{currentTestimonial.quote[language]}&rdquo;
                         </p>
                       </div>
 
-                      <div className="mt-4 flex items-center gap-2">
+                      <div className="mt-3 flex items-center gap-1.5">
                         {testimonials.map((testimonial, index) => (
                           <button
                             key={testimonial.name}
                             type="button"
                             onClick={() => setActiveTestimonial(index)}
                             aria-label={`Show recommendation from ${testimonial.name}`}
-                            className={`testimonial-dot h-1.5 rounded-full transition-all ${
+                            className={`testimonial-dot h-1.5 rounded-full transition-all cursor-pointer ${
                               activeTestimonial === index
-                                ? "active w-8 bg-indigo-400"
-                                : "w-2 bg-white/15 hover:bg-white/30"
+                                ? "active w-6 bg-[var(--accent)]"
+                                : "w-1.5 bg-[var(--border-strong)] hover:bg-[var(--accent)]/50"
                             }`}
                           />
                         ))}
@@ -1325,20 +1336,20 @@ export default function HeroSection({
 
                   {/* Focus Project Info */}
                   <div className="flex flex-col gap-0.5 font-mono text-left">
-                    <span className="text-[8px] text-slate-500 uppercase tracking-wider">Focus Project</span>
-                    <span className="text-[11px] text-slate-200 font-bold">Lapor Kos</span>
+                    <span className="text-[8px] text-[var(--muted-foreground)] uppercase tracking-wider">Focus Project</span>
+                    <span className="text-[11px] text-[var(--foreground)] font-bold">Lapor Kos</span>
                   </div>
 
                   {/* Shipped Projects */}
                   <div className="flex items-center justify-between font-mono">
-                    <span className="text-[9px] text-slate-500 uppercase tracking-wider">Projects Shipped:</span>
-                    <span className="text-[11px] font-bold text-white bg-indigo-500/10 px-2 py-0.5 border border-indigo-500/20 rounded">5+</span>
+                    <span className="text-[9px] text-[var(--muted-foreground)] uppercase tracking-wider">Projects Shipped:</span>
+                    <span className="text-[11px] font-bold text-[var(--foreground)] bg-indigo-500/10 px-2 py-0.5 border border-indigo-500/20 rounded">5+</span>
                   </div>
 
                   {/* Availability progress bar */}
                   <div className="flex flex-col gap-1 font-mono text-left">
                     <div className="flex items-center justify-between text-[9px]">
-                      <span className="text-slate-500 uppercase tracking-wider">System Integrity:</span>
+                      <span className="text-[var(--muted-foreground)] uppercase tracking-wider">System Integrity:</span>
                       <span id="hud-shield-val" className="font-bold text-cyan-400">100%</span>
                     </div>
                     <div className="w-full h-1.5 bg-white/5 border border-white/10 rounded-full overflow-hidden">
@@ -1348,8 +1359,8 @@ export default function HeroSection({
 
                   {/* Score represented as anomalies cleared */}
                   <div className="flex items-center justify-between font-mono">
-                    <span className="text-[9px] text-slate-500 uppercase tracking-wider">Anomali Diatasi:</span>
-                    <span id="hud-score-val" className="text-xs font-bold text-slate-200 font-mono tracking-widest">00000</span>
+                    <span className="text-[9px] text-[var(--muted-foreground)] uppercase tracking-wider">Anomali Diatasi:</span>
+                    <span id="hud-score-val" className="text-xs font-bold text-[var(--foreground)] font-mono tracking-widest">00000</span>
                   </div>
                 </div>
               )}
@@ -1378,8 +1389,8 @@ export default function HeroSection({
 
                     <div className="flex flex-col text-left font-mono min-w-0">
                       <span className="text-[9px] text-cyan-400 font-extrabold uppercase tracking-widest">DEVELOPER PROFILE</span>
-                      <h3 className="text-lg font-black text-white tracking-wide truncate font-sans mt-1">Yosua Reynaldi M.</h3>
-                      <span className="text-xs text-slate-300 mt-1 font-sans font-medium flex items-center gap-1">
+                      <h3 className="text-lg font-black text-[var(--foreground)] tracking-wide truncate font-sans mt-1">Yosua Reynaldi M.</h3>
+                      <span className="text-xs text-[var(--muted-foreground)] mt-1 font-sans font-medium flex items-center gap-1">
                         Bandung, Indonesia
                       </span>
                       <span className="text-[10px] text-indigo-400 font-extrabold mt-1 tracking-wider uppercase">Fullstack Developer / SE</span>
@@ -1388,13 +1399,13 @@ export default function HeroSection({
 
                   <div className="w-full h-px bg-white/10"></div>
 
-                  <div className="grid grid-cols-2 gap-3 text-left font-mono text-[10px] text-slate-400">
+                  <div className="grid grid-cols-2 gap-3 text-left font-mono text-[10px] text-[var(--muted-foreground)]">
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-slate-500 uppercase tracking-widest text-[8px] font-bold">Expertise</span>
-                      <span className="text-slate-200 font-bold font-sans">Web & Mobile</span>
+                      <span className="text-[var(--muted-foreground)] uppercase tracking-widest text-[8px] font-bold">Expertise</span>
+                      <span className="text-[var(--foreground)] font-bold font-sans">Web & Mobile</span>
                     </div>
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-slate-500 uppercase tracking-widest text-[8px] font-bold">Status</span>
+                      <span className="text-[var(--muted-foreground)] uppercase tracking-widest text-[8px] font-bold">Status</span>
                       <span className="text-emerald-400 font-bold font-sans flex items-center gap-1">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                         Open for Work
@@ -1403,76 +1414,59 @@ export default function HeroSection({
                   </div>
                 </div>
               ) : (
-                /* Sleek Professional Profile Card for Branding Mode */
-                <div className="w-full bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-[24px] p-5 flex flex-col gap-4 relative shadow-[0_30px_60px_rgba(0,0,0,0.4)] overflow-hidden group">
-                  {/* Subtle Top Glow Accent */}
-                  <div className="absolute top-0 left-10 right-10 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
+                /* Sleek Compact Profile Card for Branding Mode */
+                <SpotlightCard className="w-full p-4">
+                  <div className="flex flex-col gap-3.5">
+                    <div className="relative aspect-[1/1] w-full overflow-hidden rounded-xl border border-[var(--border)] bg-slate-950/20">
+                      <Image
+                        src="/assets/images/profile/yosua-profile.png"
+                        alt="Yosua Reynaldi Manurun"
+                        fill
+                        sizes="(max-width: 900px) 90vw, 300px"
+                        priority
+                        className="object-cover object-[center_15%] group-hover:scale-[1.03] transition-transform duration-700 ease-out"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-                  {/* Large Vertical Image Frame */}
-                  <div className="relative aspect-[1/1] w-full overflow-hidden rounded-2xl border border-white/5 bg-slate-950/20 shadow-inner">
-                    <Image
-                      src="/assets/images/profile/yosua-profile.png"
-                      alt="Yosua Reynaldi Manurun"
-                      fill
-                      sizes="(max-width: 900px) 90vw, 300px"
-                      priority
-                      className="object-cover object-[center_15%] group-hover:scale-[1.03] transition-transform duration-700 ease-out"
-                    />
-                    {/* Dynamic Overlay Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#050508]/80 via-transparent to-transparent" />
+                      <div className="absolute top-3 left-3 bg-black/55 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 flex items-center gap-1.5 select-none">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="text-[9px] font-mono font-bold text-slate-200 uppercase tracking-widest">
+                          {language === "id"
+                            ? "Freelance · Siap Kerja Tetap"
+                            : "Freelance · Open Full-Time"}
+                        </span>
+                      </div>
+                    </div>
 
-                    {/* Status badge embedded inside the picture corner */}
-                    <div className="absolute top-3 left-3 bg-black/45 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 flex items-center gap-1.5 select-none">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="text-[9px] font-mono font-bold text-slate-300 uppercase tracking-widest">Active Status</span>
+                    <div className="text-left space-y-1">
+                      <h3 className="text-lg font-black text-[var(--foreground)] tracking-tight leading-none">
+                        Yosua Reynaldi M.
+                      </h3>
+                      <p className="text-xs font-bold text-[var(--accent-text)] tracking-wider uppercase font-mono">
+                        Fullstack Software Engineer
+                      </p>
+                      <span className="inline-flex items-center gap-1 text-[11px] text-[var(--muted-foreground)] pt-0.5">
+                        <MapPin className="h-3 w-3 text-[var(--accent-text)]" />
+                        Bandung, ID
+                      </span>
                     </div>
                   </div>
-
-                  {/* Persona Details */}
-                  <div className="text-left space-y-1">
-                    <h3 className="text-xl font-black text-white tracking-wide uppercase font-sans leading-none">
-                      Yosua Reynaldi M.
-                    </h3>
-                    <p className="text-xs font-bold text-indigo-400 tracking-wider uppercase font-mono">
-                      Fullstack Software Engineer
-                    </p>
-                  </div>
-
-                  {/* Small Divider */}
-                  <div className="w-full h-px bg-white/5 profile-tech-divider" />
-
-                  {/* Tech Stack Groups */}
-                  <div className="space-y-3 text-left select-none profile-tech-stack">
-                    <span className="text-[8px] text-slate-500 font-mono font-bold uppercase tracking-widest block">Tech Stack</span>
-                    <div className="flex flex-col gap-2.5 font-sans text-[11px] text-slate-400">
-                      {[
-                        { category: "Frontend", items: ["Next.js", "Angular", "TypeScript", "Tailwind CSS"] },
-                        { category: "Backend", items: ["Java", "Spring Boot", "Golang"] },
-                        { category: "Database & Cloud", items: ["SQL Server", "PostgreSQL", "MySQL"] },
-                        { category: "Tools", items: ["Git", "Docker", "REST API", "Postman"] }
-                      ].map((group, idx) => (
-                        <div key={idx} className="space-y-1">
-                          <span className="text-[8px] font-bold text-slate-500 uppercase tracking-wider block">{group.category}</span>
-                          <div className="flex flex-wrap gap-1.5">
-                            {group.items.map((item) => (
-                              <span key={item} className="px-2 py-0.5 bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-[9px] font-medium rounded-md">
-                                {item}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                </SpotlightCard>
               )}
 
-              {/* Stats Cards (moved from left column) */}
-              <div className="flex gap-3 w-full">
+              {/* Compact Stats Strip */}
+              <div className="grid grid-cols-3 gap-2.5 w-full">
                 {stats.map((s) => (
-                  <div key={s.label} className="flex-1 flex flex-col items-center justify-center p-3 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-md hover:border-indigo-500/35 hover:bg-indigo-500/5 transition-all duration-300 transform hover:-translate-y-1">
-                    <span className="text-xl sm:text-2xl font-black text-white tracking-tight font-sans leading-none">{s.value}</span>
-                    <span className="text-[9px] sm:text-[10px] text-slate-500 font-bold tracking-wider uppercase mt-1.5 text-center leading-tight">{s.label}</span>
+                  <div
+                    key={s.label}
+                    className="flex flex-col items-center justify-center p-2.5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] backdrop-blur-md transition-all duration-300 hover:border-[var(--accent)]/40 hover:-translate-y-0.5"
+                  >
+                    <span className="text-base sm:text-lg font-black text-[var(--foreground)] tracking-tight leading-none text-center">
+                      {s.value}
+                    </span>
+                    <span className="text-[9px] text-[var(--muted-foreground)] font-bold tracking-wider uppercase mt-1 text-center leading-tight">
+                      {s.label}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -1483,15 +1477,19 @@ export default function HeroSection({
           <div className="hero-footer flex items-center justify-between w-full pointer-events-auto">
             <div className="flex items-center gap-2">
               <span className="footer-dot" />
-              <span className="text-slate-400 text-xs font-light">Open to freelance &amp; full-time opportunities | Bandung, ID</span>
+              <span className="text-[var(--muted-foreground)] text-xs font-normal">
+                {language === "id"
+                  ? "Terbuka untuk proyek UMKM, freelance & peluang kerja tetap | Bandung, ID"
+                  : "Open to SME projects, freelance & full-time opportunities | Bandung, ID"}
+              </span>
             </div>
             <div className="flex items-center gap-3 shrink-0">
               <a
                 href="mailto:reyyosua29@gmail.com"
-                className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/35 hover:border-indigo-500/50 rounded-full text-[10px] font-mono font-bold text-indigo-400 hover:text-indigo-300 transition-all uppercase tracking-wider"
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[var(--accent-soft)] hover:brightness-110 border border-[var(--accent)]/35 rounded-full text-[10px] font-mono font-bold text-[var(--accent-text)] transition-all uppercase tracking-wider"
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" /></svg>
-                Email Me
+                <SiGmail className="h-3 w-3 text-[#EA4335]" />
+                {language === "id" ? "Kirim Email" : "Email Me"}
               </a>
               <MusicPlayer playOnStart={playMusicOnStart} playMode={playMode} setPlayMode={setPlayMode} inline={true} />
             </div>

@@ -2,556 +2,1124 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ExternalLink, Play, Clock } from "lucide-react";
+import { ExternalLink, Play, Layers, CheckCircle2, ArrowUpRight, Sparkles } from "lucide-react";
+import { FaGithub } from "react-icons/fa6";
 import { useRef, useState, type FocusEvent, type RefObject } from "react";
 import SectionHeader from "./SectionHeader";
+import { useLanguage, type Language } from "@/context/LanguageContext";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TechIcon } from "@/components/ui/tech-icon";
 
-const buildScreens = (
-  projectKey: string,
-  fileNames: string[],
-  screens: { title: string; caption: string }[]
-) => screens.map((screen, index) => ({
-  ...screen,
-  image: `/assets/projects/${projectKey}/screenshots/${fileNames[index]}`
-}));
+export interface ProjectScreen {
+  title: string;
+  caption: string;
+  image?: string;
+  aspectRatio?: string;
+  moduleTag?: string;
+}
 
-const laporKosScreens = [
+export interface ProjectStackGroups {
+  frontend: string[];
+  backend: string[];
+  infra: string[];
+}
+
+export interface ProjectData {
+  id: string;
+  title: string;
+  filterGroup: "saas" | "platform" | "enterprise";
+  category: string;
+  role: string;
+  headline: string;
+  description: string;
+  problem: string;
+  contribution: string;
+  impact: string;
+  image?: string;
+  video?: string;
+  hasVideoFile?: boolean;
+  techStack: string[];
+  stackGroups: ProjectStackGroups;
+  highlights: string[];
+  link?: string;
+  githubLink?: string;
+  previewTone: string;
+  screens: ProjectScreen[];
+}
+
+interface BilingualText {
+  id: string;
+  en: string;
+}
+
+interface BilingualScreen {
+  title: BilingualText;
+  caption: BilingualText;
+  image?: string;
+  aspectRatio?: string;
+  moduleTag?: string;
+}
+
+interface RawProjectData {
+  id: string;
+  title: string;
+  filterGroup: "saas" | "platform" | "enterprise";
+  category: BilingualText;
+  role: BilingualText;
+  headline: BilingualText;
+  description: BilingualText;
+  problem: BilingualText;
+  contribution: BilingualText;
+  impact: BilingualText;
+  image?: string;
+  video?: string;
+  hasVideoFile?: boolean;
+  techStack: string[];
+  stackGroups: ProjectStackGroups;
+  highlights: { id: string[]; en: string[] };
+  link?: string;
+  githubLink?: string;
+  previewTone: string;
+  screens: BilingualScreen[];
+}
+
+const laporKosScreens: BilingualScreen[] = [
   {
-    title: "Login",
-    caption: "Akses masuk untuk pemilik dan penghuni kos.",
+    title: { id: "Portal Login & Otorisasi", en: "Login & Authorization Portal" },
+    caption: {
+      id: "Akses masuk multi-peran pemilik, staf properti, dan penghuni dengan verifikasi OTP.",
+      en: "Multi-role sign-in for owners, property staff, and tenants with OTP verification."
+    },
     image: "/assets/projects/lapor-kos/screenshots/00-login.png",
     aspectRatio: "1920 / 901"
   },
   {
-    title: "Dashboard",
-    caption: "Ringkasan kamar, tagihan, komplain, dan aktivitas kos.",
+    title: { id: "Dashboard Multi-Properti", en: "Multi-Property Dashboard" },
+    caption: {
+      id: "Ringkasan okupansi kamar, tagihan bulanan, dan metrik SLA komplain secara real-time.",
+      en: "Real-time overview of room occupancy, monthly billing, and complaint SLA metrics."
+    },
     image: "/assets/projects/lapor-kos/screenshots/01-dashboard.png",
     aspectRatio: "1920 / 902"
   },
   {
-    title: "Manajemen Kamar",
-    caption: "Kelola kamar, status hunian, harga, dan fasilitas.",
+    title: { id: "Manajemen & Denah Kamar", en: "Room Inventory & Floorplan" },
+    caption: {
+      id: "Denah interaktif per lantai untuk kamar kosong, terisi, perbaikan, dan transfer kamar.",
+      en: "Interactive floor visualizer tracking vacant, occupied, maintenance, and room transfers."
+    },
     image: "/assets/projects/lapor-kos/screenshots/02-manajemen-kamar.png",
     aspectRatio: "1920 / 901"
   },
   {
-    title: "Penghuni & Kontrak",
-    caption: "Pantau data penghuni, kontrak, dan relasi kamar.",
+    title: { id: "Penghuni, Kontrak & Checkout", en: "Tenants, Contracts & Checkout" },
+    caption: {
+      id: "Kelola profil penghuni, undangan onboarding, kontrak sewa, dan inspeksi checkout.",
+      en: "Manage tenant profiles, onboarding invites, active leases, and checkout inspections."
+    },
     image: "/assets/projects/lapor-kos/screenshots/03-penghuni-kontrak.png",
     aspectRatio: "1920 / 902"
   },
   {
-    title: "Manajemen Pembayaran",
-    caption: "Kelola tagihan, status pembayaran, dan transaksi.",
+    title: { id: "Pembayaran Midtrans Snap & Manual", en: "Midtrans Snap & Manual Payments" },
+    caption: {
+      id: "Pelunasan instan VA, QRIS, E-Wallet via Midtrans atau validasi bukti transfer manual.",
+      en: "Instant checkout via VA, QRIS, and E-Wallet with Midtrans or manual transfer validation."
+    },
     image: "/assets/projects/lapor-kos/screenshots/04-manajemen-pembayaran.png",
     aspectRatio: "1920 / 902"
   },
   {
-    title: "Laporan",
-    caption: "Rekap operasional kos dalam tabel dan grafik.",
+    title: { id: "Laporan Operasional & Audit", en: "Operational Analytics & Audit" },
+    caption: {
+      id: "Rekap operasional hunian, pengeluaran properti, dan log audit aktivitas sistem.",
+      en: "Operational summaries, property expenses, and system-wide audit trail records."
+    },
     image: "/assets/projects/lapor-kos/screenshots/05-laporan.png",
     aspectRatio: "1920 / 902"
   },
   {
-    title: "Peraturan Kos",
-    caption: "Kelola aturan kos yang dapat dibaca penghuni.",
+    title: { id: "Peraturan Kos & Visitor Pass", en: "House Rules & Guest Permits" },
+    caption: {
+      id: "Tata tertib hunian digital serta persetujuan izin tamu dengan QR Visitor Pass.",
+      en: "Digital house rules and guest/overnight permit approvals with tokenized Visitor Passes."
+    },
     image: "/assets/projects/lapor-kos/screenshots/06-peraturan-kos.png",
     aspectRatio: "1920 / 902"
   },
   {
-    title: "Kalender",
-    caption: "Jadwal pembayaran, kontrak, dan aktivitas kos.",
+    title: { id: "Kalender Jatuh Tempo", en: "Contract & Billing Calendar" },
+    caption: {
+      id: "Kalender FullCalendar untuk jatuh tempo pembayaran, kontrak, dan jadwal checkout.",
+      en: "Interactive FullCalendar tracking rent due dates, contract renewals, and checkouts."
+    },
     image: "/assets/projects/lapor-kos/screenshots/07-kalender.png",
     aspectRatio: "1920 / 902"
   },
   {
-    title: "Komplain",
-    caption: "Daftar laporan penghuni dengan status penanganan.",
+    title: { id: "Triase Komplain Gemini AI", en: "Gemini AI Complaint Triage" },
+    caption: {
+      id: "Klasifikasi otomatis urgensi kerusakan fasilitas berbasis AI beserta SLA perbaikan.",
+      en: "Automated facility issue urgency classification powered by Google Gemini AI."
+    },
     image: "/assets/projects/lapor-kos/screenshots/08-komplain.png",
     aspectRatio: "1920 / 902"
   },
   {
-    title: "Pengaturan",
-    caption: "Konfigurasi akun, preferensi, dan data aplikasi.",
+    title: { id: "Pengaturan Properti & WhatsApp", en: "Property & Notification Settings" },
+    caption: {
+      id: "Konfigurasi multi-properti, pengingat WhatsApp Fonnte, email SMTP, dan RBAC.",
+      en: "Multi-property configuration, Fonnte WhatsApp alerts, SMTP email, and RBAC settings."
+    },
     image: "/assets/projects/lapor-kos/screenshots/09-pengaturan.png",
     aspectRatio: "1920 / 902"
   },
   {
-    title: "Form Data",
-    caption: "Form input untuk menambah atau mengubah data kos.",
+    title: { id: "Form Input Tervalidasi Zod", en: "Zod-Validated Data Forms" },
+    caption: {
+      id: "Formulir kamar, kontrak, dan transaksi dengan validasi skema React Hook Form & Zod.",
+      en: "Schema-validated forms for rooms, contracts, and billing using React Hook Form & Zod."
+    },
     image: "/assets/projects/lapor-kos/screenshots/10-form.png",
     aspectRatio: "1920 / 902"
   },
   {
-    title: "Laporan Keuangan",
-    caption: "Ringkasan pemasukan, pengeluaran, dan performa keuangan.",
+    title: { id: "Laporan Keuangan & Kwitansi SHA-256", en: "Finance & SHA-256 PDF Receipts" },
+    caption: {
+      id: "Arus kas pemasukan/pengeluaran serta ekspor laporan & kwitansi PDF ber-hash SHA-256.",
+      en: "Cashflow reconciliation with instant PDF exports and cryptographic SHA-256 receipts."
+    },
     image: "/assets/projects/lapor-kos/screenshots/11-laporan-keuangan.png",
     aspectRatio: "1920 / 902"
   },
   {
-    title: "Detail Penghuni",
-    caption: "Profil penghuni dengan kamar, kontrak, dan tagihan.",
+    title: { id: "Detail & Riwayat Penghuni", en: "Tenant Profile & History" },
+    caption: {
+      id: "Rincian profil penghuni, histori pindah kamar, kontrak, dan rekam pembayaran.",
+      en: "Detailed tenant profile with room transfer history, contracts, and payment ledger."
+    },
     image: "/assets/projects/lapor-kos/screenshots/12-detail-penghuni.png",
     aspectRatio: "1920 / 902"
   },
   {
-    title: "Dashboard Penghuni",
-    caption: "Beranda penghuni untuk tagihan dan informasi kos.",
+    title: { id: "Portal Mandiri Penghuni", en: "Tenant Self-Service Portal" },
+    caption: {
+      id: "Beranda penghuni untuk melihat detail kamar, izin tamu, dan tagihan aktif.",
+      en: "Dedicated tenant home displaying room info, guest permits, and active invoices."
+    },
     image: "/assets/projects/lapor-kos/screenshots/13-dashboard-penghuni.png",
     aspectRatio: "1920 / 902"
   },
   {
-    title: "Komplain Penghuni",
-    caption: "Form dan riwayat komplain dari sisi penghuni.",
+    title: { id: "Komplain Fasilitas Penghuni", en: "Tenant Maintenance Tickets" },
+    caption: {
+      id: "Pelaporan kerusakan dengan unggahan foto ke Supabase Storage dan status progres.",
+      en: "Facility ticket submission with Supabase photo upload and resolution tracking."
+    },
     image: "/assets/projects/lapor-kos/screenshots/14-komplain-penghuni.png",
     aspectRatio: "1920 / 902"
   },
   {
-    title: "Tagihan Penghuni",
-    caption: "Daftar tagihan penghuni beserta status pembayarannya.",
+    title: { id: "Checkout Midtrans Snap Penghuni", en: "Tenant Midtrans Snap Checkout" },
+    caption: {
+      id: "Tagihan penghuni dengan popup Midtrans Snap, auto-sync status, dan cetak kwitansi.",
+      en: "Tenant billing with Midtrans Snap checkout, real-time sync, and receipt printing."
+    },
     image: "/assets/projects/lapor-kos/screenshots/15-tagihan-penghuni.png",
     aspectRatio: "1920 / 902"
   }
 ];
 
-const flowakScreens = [
+const flowakScreens: BilingualScreen[] = [
   {
-    title: "Login",
-    caption: "Akses masuk pengguna untuk mengelola workflow dan tugas proyek.",
+    title: { id: "Portal Login & Sesi Aman", en: "Secure Auth & Session Portal" },
+    caption: {
+      id: "Autentikasi JWT dengan Argon2/Bcrypt dan pencabutan sesi via Redis Blacklist.",
+      en: "JWT auth secured with Argon2/Bcrypt and Redis session blacklisting."
+    },
     image: "/assets/projects/flowak/screenshots/01-login.png"
   },
   {
-    title: "Landing Page",
-    caption: "Halaman utama platform Flowak dan pengenalan fitur.",
+    title: { id: "Project Hub Multi-Tenant", en: "Multi-Tenant Project Hub" },
+    caption: {
+      id: "Pusat manajemen proyek kolaboratif dengan isolasi akses berbasis peran (RBAC).",
+      en: "Collaborative workspace hub with multi-tenant role-based access control."
+    },
     image: "/assets/projects/flowak/screenshots/02-landing-page.png"
   },
   {
-    title: "Kanvas Flow Project",
-    caption: "Kanvas visual untuk memetakan arsitektur dan alur kerja proyek.",
+    title: { id: "Kanvas Visual & API Runner", en: "Interactive Canvas & API Runner" },
+    caption: {
+      id: "Kanvas graf dengan deteksi siklus, AI flow generator, dan eksekutor cURL API.",
+      en: "Interactive graph canvas with cycle detection, AI generation, and cURL API runner."
+    },
     image: "/assets/projects/flowak/screenshots/03-kanvas.png"
   },
   {
-    title: "Tabel Status Fitur",
-    caption: "Daftar status pengerjaan fitur dan progres tim pengembang.",
+    title: { id: "Matriks Traceability Fitur", en: "Feature Traceability Matrix" },
+    caption: {
+      id: "Pemetaan ketertelusuran dari node proses bisnis ke status pengerjaan lintas divisi.",
+      en: "End-to-end traceability mapping business nodes to cross-functional delivery status."
+    },
     image: "/assets/projects/flowak/screenshots/04-tabel-status.png"
   },
   {
-    title: "Spesifikasi Dokumen",
-    caption: "Dokumentasi teknis, PRD, dan spesifikasi modul.",
+    title: { id: "Inspector Node Multidisiplin", en: "Multi-Discipline Node Inspector" },
+    caption: {
+      id: "Spesifikasi terstruktur per node meliputi Bisnis/SLA, UI/UX, Frontend, dan Backend.",
+      en: "Structured per-node specs covering Business/SLA, UI/UX, Frontend, and Backend."
+    },
     image: "/assets/projects/flowak/screenshots/05-spesifikasi-dokumen.png"
   },
   {
-    title: "Jadwal & Waktu Tim",
-    caption: "Alokasi waktu pengerjaan dan timeline pengerjaan tim.",
+    title: { id: "Kalender & Timeline Tim", en: "Team Calendar & Timeline" },
+    caption: {
+      id: "Penjadwalan tenggat modul dan sinkronisasi milestone tim pengembang.",
+      en: "Module delivery scheduling and engineering milestone calendar."
+    },
     image: "/assets/projects/flowak/screenshots/06-jadwal-tim.png"
   },
   {
-    title: "Analitik Delivery",
-    caption: "Grafik performa delivery, sprint velocity, dan metrik proyek.",
+    title: { id: "Analitik Delivery & Audit AI", en: "Delivery Analytics & AI Audit" },
+    caption: {
+      id: "Metrik velocity sprint dan deteksi bottleneck alur kerja berbasis Gemini AI.",
+      en: "Sprint velocity metrics and Gemini AI workflow bottleneck detection."
+    },
     image: "/assets/projects/flowak/screenshots/07-analitik.png"
   },
   {
-    title: "Kanban Task Board",
-    caption: "Papan kanban tugas dari backlog hingga tahap deployment.",
+    title: { id: "Real-Time SSE Kanban Board", en: "Real-Time SSE Kanban Board" },
+    caption: {
+      id: "Papan Kanban bervalidasi state-machine dengan siaran perubahan langsung via SSE.",
+      en: "State-machine validated Kanban board with live updates broadcast over SSE."
+    },
     image: "/assets/projects/flowak/screenshots/08-kanban.png"
   },
   {
-    title: "Anggota & Peran Tim",
-    caption: "Manajemen anggota tim, peran, dan pembagian tanggung jawab.",
+    title: { id: "Anggota & Peran Teknis", en: "Team Members & Roles" },
+    caption: {
+      id: "Manajemen kolaborator lintas peran PM, UI/UX, Frontend, dan Backend.",
+      en: "Collaborator management across PM, UI/UX, Frontend, and Backend roles."
+    },
     image: "/assets/projects/flowak/screenshots/09-anggota-tim.png"
   }
 ];
 
-const sionMinistryScreens = [
+const sionMinistryScreens: BilingualScreen[] = [
   {
-    title: "Login Portal",
-    caption: "Halaman akses masuk portal pelayanan Sion Ministry.",
+    title: { id: "Landing Page & Portal RBAC", en: "Landing Page & RBAC Portal" },
+    caption: {
+      id: "Registrasi publik dengan alur persetujuan admin serta login Google OAuth2.",
+      en: "Public registration with admin approval workflow and Google OAuth2 sign-in."
+    },
     image: "/assets/projects/sion-ministry/screenshots/01-login.png"
   },
   {
-    title: "Dashboard Utama",
-    caption: "Ringkasan kegiatan ibadah, pengumuman, dan aktivitas pelayanan.",
+    title: { id: "Dashboard & Peta Indonesia", en: "Dashboard & Indonesia Map" },
+    caption: {
+      id: "Peta interaktif persebaran pelayanan kota/kampus Indonesia beserta grafik Recharts.",
+      en: "Interactive Indonesia ministry distribution map with real-time Recharts analytics."
+    },
     image: "/assets/projects/sion-ministry/screenshots/02-dashboard.png"
   },
   {
-    title: "Data & Statistik Jemaat",
-    caption: "Manajemen data anggota jemaat dan grafik statistik pertumbuhan.",
+    title: { id: "Data Jemaat, Wilayah & Kampus", en: "Members, Regions & Campuses" },
+    caption: {
+      id: "Pelacakan tahap pemuridan, relasi mentor-mentee, dan direktori kota/kampus.",
+      en: "Discipleship stage tracking, mentor-mentee pairing, and regional directories."
+    },
     image: "/assets/projects/sion-ministry/screenshots/03-data-jemaat.png"
   },
   {
-    title: "Jurnal Penelaahan Alkitab",
-    caption: "Modul materi dan jurnal diskusi Penelaahan Alkitab (PA).",
+    title: { id: "Jurnal PA & Modul Medium-Style", en: "PA Journals & Medium Modules" },
+    caption: {
+      id: "Jurnal Pendalaman Alkitab offline-first serta ruang baca Modul Belajar bergaya Medium.",
+      en: "Offline-first PA journals and full-width Medium-style learning module reader."
+    },
     image: "/assets/projects/sion-ministry/screenshots/04-jurnal-pa.png"
   },
   {
-    title: "Berita Acara & Laporan",
-    caption: "Dokumentasi resmi berita acara kegiatan dan hasil rapat gereja.",
+    title: { id: "Berita Acara & Storage S3", en: "Activity Reports & S3 Storage" },
+    caption: {
+      id: "Pelaporan kegiatan lapangan dengan kompresi gambar dan Supabase S3 Storage.",
+      en: "Field activity reporting with client image compression and Supabase S3 storage."
+    },
     image: "/assets/projects/sion-ministry/screenshots/05-berita-acara.png"
   },
   {
-    title: "Donasi & Sion Care",
-    caption: "Pengelolaan donasi, bantuan sosial, dan program kepedulian jemaat.",
+    title: { id: "Donasi & Crowdfunding Misi", en: "Mission Crowdfunding & Care" },
+    caption: {
+      id: "Pengelolaan kampanye donasi misi, pencatatan donatur, dan progres target.",
+      en: "Mission fundraising campaign management, donor ledger, and goal tracking."
+    },
     image: "/assets/projects/sion-ministry/screenshots/06-donasi-care.png"
   },
   {
-    title: "Sion Careers & Pelayanan",
-    caption: "Informasi lowongan staf pelayanan dan kesempatan berkarya.",
+    title: { id: "Sion Careers & Pelayanan", en: "Sion Careers & Opportunities" },
+    caption: {
+      id: "Papan informasi lowongan pelayanan lengkap dengan pengajuan lamaran.",
+      en: "Ministry opportunities board with integrated applicant submissions."
+    },
     image: "/assets/projects/sion-ministry/screenshots/07-sion-careers.png"
   },
   {
-    title: "Tautan & Sumber Daya",
-    caption: "Kumpulan link penting, materi ibadah, dan sumber daya gereja.",
+    title: { id: "Tautan Sumber & Audit Keamanan", en: "Resources & Security Audit" },
+    caption: {
+      id: "Direktori sumber daya, manajemen user, dan log audit keamanan sistem.",
+      en: "Resource directory, user approval controls, and security audit trail."
+    },
     image: "/assets/projects/sion-ministry/screenshots/08-tautan-sumber.png"
   }
 ];
 
-const projectsData = [
+const ministrySchedulingScreens: BilingualScreen[] = [
+  {
+    title: { id: "Denah Interaktif SVG Main Hall", en: "Interactive SVG Main Hall Floorplan" },
+    caption: {
+      id: "Pemilihan titik posisi Usher (Samping, Tengah, Balkon, Kolekte) langsung di denah SVG.",
+      en: "Visual self-scheduling for Usher stations directly on an interactive SVG floorplan."
+    },
+    moduleTag: "SVG FLOORPLAN"
+  },
+  {
+    title: { id: "Selector Gerbang Greeter & OM", en: "Greeter Gate & OM Selector" },
+    caption: {
+      id: "Penugasan posisi Greeter (Pintu Utama, Lobby, Selasar) dan Operational Manager (OM 1–4).",
+      en: "Station selectors for Greeters (Main Entrance, Lobby, Corridor) and OM 1–4."
+    },
+    moduleTag: "STATION ENGINE"
+  },
+  {
+    title: { id: "Tracker Kuota Pelayanan", en: "Monthly Service Quota Validator" },
+    caption: {
+      id: "Validasi aturan domain otomatis: maksimal 1 shift/hari dan 3 shift/bulan.",
+      en: "Automated domain invariant enforcement: max 1 shift/day and 3 shifts/month."
+    },
+    moduleTag: "DOMAIN RULES"
+  },
+  {
+    title: { id: "Peer-to-Peer Shift Swap", en: "Peer-to-Peer Shift Swap" },
+    caption: {
+      id: "Pengajuan tukar jadwal antar pelayan dengan notifikasi email Nodemailer otomatis.",
+      en: "Peer-to-peer shift swap requests with automated Nodemailer email notifications."
+    },
+    moduleTag: "SHIFT SWAP"
+  },
+  {
+    title: { id: "Dashboard Koordinator & Ekspor", en: "Coordinator Dashboard & Export" },
+    caption: {
+      id: "Pemantauan keterisian shift real-time, approval swap, dan ekspor CSV/Cetak.",
+      en: "Real-time shift monitoring, swap approvals, and CSV/printable roster export."
+    },
+    moduleTag: "COORDINATOR HUB"
+  },
+  {
+    title: { id: "Google OAuth2 SSO & Role Requests", en: "Google OAuth2 SSO & Role Management" },
+    caption: {
+      id: "Login cepat Google SSO dan manajemen permintaan role relawan.",
+      en: "Seamless Google OAuth2 Single Sign-On and volunteer role upgrade management."
+    },
+    moduleTag: "GOOGLE SSO"
+  }
+];
+
+const logiaLogScreens: BilingualScreen[] = [
+  {
+    title: { id: "MOD-01: Grafana Live Log Explorer", en: "MOD-01: Grafana Live Log Explorer" },
+    caption: {
+      id: "Streaming log real-time via SSE dengan query filter, severity tagging, & deduplikasi SHA-256.",
+      en: "Real-time SSE log stream with query filtering, severity tags, and SHA-256 deduplication."
+    },
+    moduleTag: "MOD-01 OBSERVABILITY"
+  },
+  {
+    title: { id: "MOD-02: Postman API Testing Studio", en: "MOD-02: Postman API Testing Studio" },
+    caption: {
+      id: "Pengujian HTTP/REST interaktif dengan Auth Selector dan HTTP Proxy Engine terintegrasi.",
+      en: "Interactive HTTP/REST testing studio with Auth Selector and built-in Proxy Engine."
+    },
+    moduleTag: "MOD-02 API STUDIO"
+  },
+  {
+    title: { id: "MOD-03/04: 7-Layer GitHub AI Audit", en: "MOD-03/04: 7-Layer GitHub AI Audit" },
+    caption: {
+      id: "Diagnosis 7-lapis yang mengkorelasikan stack trace, skema DDL DB, dan kode sumber GitHub.",
+      en: "7-layer diagnosis correlating stack traces, target DB DDL schemas, and GitHub source."
+    },
+    moduleTag: "MOD-03/04 AI AUDIT"
+  },
+  {
+    title: { id: "CFG: Target-Agnostic Profiles", en: "CFG: Target-Agnostic Profiles" },
+    caption: {
+      id: "Konfigurasi dinamis untuk menghubungkan server target, DB read-only, dan repositori GitHub.",
+      en: "Dynamic profiles connecting external servers, read-only DB inspectors, and GitHub repos."
+    },
+    moduleTag: "CFG PROFILES"
+  },
+  {
+    title: { id: "Java 25 Virtual Threads & RabbitMQ DLQ", en: "Java 25 Virtual Threads & RabbitMQ DLQ" },
+    caption: {
+      id: "Konkurensi tinggi Java 25 LTS, penahan lonjakan log RabbitMQ 4.x, & Upstash Redis TLS.",
+      en: "Java 25 LTS concurrency backed by RabbitMQ 4.x DLX/DLQ and Upstash Redis TLS."
+    },
+    moduleTag: "VIRTUAL THREADS"
+  },
+  {
+    title: { id: "60-30-10 Obsidian & Gold FSD UI", en: "60-30-10 Obsidian & Gold FSD UI" },
+    caption: {
+      id: "Antarmuka Feature-Sliced Design (FSD) presisi tinggi Obsidian Black & Royal Gold.",
+      en: "High-contrast Feature-Sliced Design UI crafted with Obsidian Black & Royal Gold."
+    },
+    moduleTag: "FSD TACTICAL UI"
+  }
+];
+
+const rawProjectsData: RawProjectData[] = [
   {
     id: "lapor-kos",
     title: "Lapor Kos",
-    category: "Fullstack",
-    location: "2026 | BOARDING HOUSE OPERATIONS",
-    role: "FULLSTACK DEVELOPER",
-    headline: "BOARDING HOUSE MANAGEMENT, AUTOMATED BILLING, AND AI COMPLAINT WORKFLOW",
-    description: "An integrated management platform for boarding house owners to automate monthly rent billing, payment verification, digital receipts, tenant contract tracking, and AI-categorized facility maintenance tickets.",
-    fullDescription: "Lapor Kos automates manual boarding house operations for landlords and tenants. It features automated monthly billing calculations, payment tracking with digital receipt generation, a contract renewal calendar, AI-driven facility complaint classification using Google Gemini, and automated WhatsApp billing reminders via Fonnte.",
-    problem: "Kos owners face manual administrative overhead with paper or spreadsheet records, resulting in late rent collections, unorganized facility maintenance reports, and slow financial cashflow analysis.",
-    contribution: "Architected the decoupled application from Next.js 15 UI, Go Gin REST API, PostgreSQL database schema, Supabase storage, Google Gemini AI complaint prioritization, Fonnte WhatsApp integration, to automated Gofpdf financial report generation.",
-    impact: "Centralizes operations into an automated system, boosting billing collection efficiency, accelerating maintenance resolution, and providing instant PDF financial reports.",
+    filterGroup: "saas",
+    category: { id: "Bisnis & SaaS", en: "Business & SaaS" },
+    role: { id: "Fullstack Developer", en: "Fullstack Developer" },
+    headline: {
+      id: "Manajemen Multi-Kos, Billing Midtrans & Triase Komplain AI",
+      en: "Multi-Property Boarding SaaS, Midtrans Billing & AI Triage"
+    },
+    description: {
+      id: "Catatan sewa di kertas, tagihan yang terus telat, dan bukti transfer yang menumpuk di chat. Lapor Kos mengubah kekacauan operasional kos menjadi mesin bisnis otomatis—dari pembayaran instan Midtrans hingga triase keluhan berbasis AI.",
+      en: "Paper rent ledgers, overdue reminders, and transfer proofs buried in chat threads. Lapor Kos turns chaotic property management into an autonomous business engine—from instant Midtrans checkout to AI complaint triage."
+    },
+    problem: {
+      id: "Pengelola kos kesulitan menangani pembukuan manual lintas properti, verifikasi transfer yang lambat, dan antrean komplain penghuni.",
+      en: "Boarding operators struggled with manual multi-property bookkeeping, slow transfer checks, and untracked maintenance tickets."
+    },
+    contribution: {
+      id: "Membangun backend Hexagonal Go 1.25 (Gin) & SPA React 19, integrasi Midtrans Snap + Webhook SHA-512, Redis 7, RabbitMQ 3.13, Fonnte WhatsApp, dan Gemini AI.",
+      en: "Built the Go 1.25 Hexagonal backend & React 19 SPA, integrating Midtrans Snap + SHA-512 webhooks, Redis 7, RabbitMQ 3.13, Fonnte WhatsApp, and Gemini AI."
+    },
+    impact: {
+      id: "Mengotomatisasi siklus tagihan hingga pelunasan real-time, mencegah pembayaran ganda, dan mempercepat penanganan fasilitas.",
+      en: "Automated billing-to-settlement in real time, eliminated duplicate payments, and accelerated maintenance resolution."
+    },
     image: "/assets/projects/lapor-kos/screenshots/01-dashboard.png",
     video: "/assets/projects/lapor-kos/videos/demo.mp4",
-    tags: ["Next.js", "Golang", "Supabase", "WhatsApp API", "Billing"],
-    techStack: ["Next.js 15", "React", "TypeScript", "Tailwind CSS", "Go (Gin)", "PostgreSQL", "Supabase", "Fonnte WhatsApp API", "Google Gemini AI", "Gofpdf", "Docker", "Vercel", "Railway"],
+    hasVideoFile: true,
+    techStack: [
+      "React 19", "Go (Gin)", "Midtrans", "RabbitMQ", "Redis 7", "PostgreSQL 15+",
+      "Supabase Storage", "Google Gemini AI", "Fonnte WhatsApp", "Vite 8", "TypeScript",
+      "React Router v7", "Tailwind CSS v4", "FullCalendar", "Gofpdf", "Docker"
+    ],
+    stackGroups: {
+      frontend: ["React 19", "Vite 8", "TypeScript", "React Router v7", "Tailwind CSS v4", "Zod & React Hook Form", "FullCalendar"],
+      backend: ["Go 1.25 (Gin)", "Hexagonal Architecture", "pgx/v5", "JWT & Gomail (OTP)", "Gofpdf (SHA-256 Receipt)"],
+      infra: ["PostgreSQL 15+ (Supabase)", "Supabase Storage", "Redis 7", "RabbitMQ 3.13", "Midtrans Snap & Core API", "Google Gemini AI", "Fonnte WhatsApp", "Docker Compose"]
+    },
+    highlights: {
+      id: [
+        "Dual Payment Flow Midtrans Snap (VA, QRIS, E-Wallet) + Webhook SHA-512",
+        "Isolasi Multi-Properti, Transfer Kamar, Checkout & QR Visitor Pass",
+        "Triase Komplain Gemini AI, Pengingat WhatsApp Fonnte & Kwitansi SHA-256"
+      ],
+      en: [
+        "Dual Payment Flow via Midtrans Snap (VA, QRIS, E-Wallet) & SHA-512 Webhooks",
+        "Multi-Property Isolation, Room Transfers, Checkout & QR Visitor Passes",
+        "Gemini AI Complaint Triage, Fonnte WhatsApp Alerts & SHA-256 PDF Receipts"
+      ]
+    },
     link: "https://lapor-kos.vercel.app/",
     githubLink: "https://github.com/Yosua13/lapor-kos",
-    previewTone: "from-emerald-500 via-teal-500 to-cyan-600",
+    previewTone: "from-emerald-500 via-teal-500 to-cyan-500",
     screens: laporKosScreens
   },
   {
     id: "flowak",
     title: "Flowak",
-    category: "Fullstack",
-    location: "2026 | IT PROJECT WORKFLOW",
-    role: "PRODUCT / FULLSTACK DEVELOPER",
-    headline: "AI-POWERED BUSINESS PROCESS MODELER AND TECHNICAL SYSTEM ARCHITECT",
-    description: "A collaborative graph-based platform for modeling business workflows and visual system architecture with AI-generated flow diagrams, endpoint specs, and role task breakdowns.",
-    fullDescription: "Flowak transforms business requirements into technical workflow diagrams using Google Gemini AI. It enables product teams (PMs, UI/UX, Frontend, and Backend engineers) to visualize system flow, generate AI flow audits, auto-create mock JSON request/response payloads, and assign role-specific tasks per workflow node.",
-    problem: "Development teams lose context when business workflows, technical specs, API endpoint schemas, JSON payloads, and task assignments are scattered across separate chat and document tools.",
-    contribution: "Designed the graph canvas architecture, multi-tenant SaaS schema, Express standalone proxy, Go Gin backend API, Zustand state manager, and Gemini AI flow generation, mock payload, and audit handlers.",
-    impact: "Aligns cross-functional engineering teams, reduces API integration friction, and accelerates software design velocity.",
+    filterGroup: "saas",
+    category: { id: "Bisnis & SaaS", en: "Business & SaaS" },
+    role: { id: "Product / Fullstack", en: "Product / Fullstack" },
+    headline: {
+      id: "Pemodelan Alur Bisnis, Spesifikasi Lintas Peran & API Runner",
+      en: "Traceability-Native Workflow Modeler & API Contract Runner"
+    },
+    description: {
+      id: "Saat diagram alur terpisah dari spesifikasi API dan papan tugas, proyek IT cepat kehilangan arah. Flowak menyatukan ide bisnis hingga uji cURL endpoint dalam satu kanvas hidup yang selalu sinkron lintas tim.",
+      en: "When flowcharts drift apart from API specs and task boards, software projects lose momentum. Flowak fuses business logic, cross-role specs, and live cURL API testing into one synchronized command canvas."
+    },
+    problem: {
+      id: "Tim engineering kehilangan ketertelusuran ketika diagram alur, dokumen SLA, kontrak API, dan Kanban terpisah di banyak aplikasi.",
+      en: "Engineering teams lose traceability when flowcharts, SLA specs, API contracts, and Kanban boards live in disconnected tools."
+    },
+    contribution: {
+      id: "Merancang arsitektur Go 1.26 (1 File = 1 Fungsi), RabbitMQ worker daemon + sync fallback, Redis Redlock, SSE hub, dan React 19 + Zustand 5.",
+      en: "Architected the Go 1.26 (1 File = 1 Function) backend, RabbitMQ worker daemon, Redis Redlock, live SSE hub, and React 19 + Zustand 5 UI."
+    },
+    impact: {
+      id: "Menyatukan analisis bisnis hingga eksekusi API tanpa konflik edit lewat optimistic locking dan validasi kontrak otomatis.",
+      en: "Synchronized business design to API execution with optimistic locking and instant contract validation."
+    },
     image: "/assets/projects/flowak/screenshots/02-landing-page.png",
     video: "/assets/projects/flowak/videos/demo.mp4",
-    tags: ["Task Flow", "Project IT", "Kanban", "AI Architect", "Graph Modeler"],
-    techStack: ["React 19", "TypeScript", "Vite", "Tailwind CSS v4", "Zustand", "Go (Gin)", "PostgreSQL", "GORM", "JWT", "Express.js", "Google Gemini AI"],
+    hasVideoFile: true,
+    techStack: [
+      "React 19", "Go (Gin)", "RabbitMQ", "Redis 9", "PostgreSQL", "TypeScript",
+      "Vite 6", "Tailwind CSS v4", "Zustand 5", "TanStack Query v5", "SSE", "Google Gemini AI", "Docker"
+    ],
+    stackGroups: {
+      frontend: ["React 19", "Vite 6", "TypeScript", "Tailwind CSS v4", "Zustand 5", "TanStack React Query v5", "Motion"],
+      backend: ["Go 1.26 (Gin)", "Clean Arch (1 File = 1 Func)", "lib/pq", "JWT & Bcrypt", "Server-Sent Events (SSE)"],
+      infra: ["PostgreSQL", "Redis 9 (Redlock & Cache)", "RabbitMQ (Worker Daemon)", "Google Gemini AI", "Docker"]
+    },
+    highlights: {
+      id: [
+        "Clean Architecture Go (1 File = 1 Fungsi) + Standalone RabbitMQ Worker",
+        "Inspector Node Lintas Peran (Bisnis/SLA, UI/UX, FE, BE) & cURL API Runner",
+        "Real-Time SSE Kanban Broadcast, Redis Redlock & Optimistic Versioning"
+      ],
+      en: [
+        "Go Clean Architecture (1 File = 1 Function) + Standalone RabbitMQ Worker",
+        "Multi-Discipline Node Inspector (Business, UI/UX, FE, BE) & cURL API Runner",
+        "Real-Time SSE Kanban Broadcast, Redis Redlock & Optimistic Row Versioning"
+      ]
+    },
     githubLink: "https://github.com/Yosua13/flowak",
-    previewTone: "from-indigo-500 via-sky-500 to-emerald-500",
+    previewTone: "from-indigo-500 via-sky-500 to-cyan-400",
     screens: flowakScreens
   },
   {
     id: "sion-ministry",
-    title: "Sion Ministry",
-    category: "Fullstack",
-    location: "2026 | SPIRITUAL COMMUNITY OPERATIONS",
-    role: "FULLSTACK DEVELOPER",
-    headline: "OFFLINE-FIRST DISCIPLESHIP TRACKING AND SPIRITUAL COMMUNITY PORTAL",
-    description: "An offline-first web platform for spiritual communities and field workers to manage discipleship progress, worship schedules, PA journals, prayer channels, and community activities.",
-    fullDescription: "Sion Ministry (Sion Academy) provides a discipleship tracking system built with an offline-first architecture. Field workers can log member progress, PA journals, service activity reports, and mission donations offline in remote areas, with automatic background synchronization upon re-establishing internet connection. Includes an AI Assistant powered by Google Gemini.",
-    problem: "Ministry workers operating in remote regions frequently lack reliable internet access, hindering real-time reporting of fellowship activities, discipleship journaling, and member care.",
-    contribution: "Engineered the local-first storage layer (SionDatabase LocalStorage Cache), Sync Manager queue, Go Fiber API backend, PostgreSQL database, Framer Motion animations, and Gemini-powered theological AI Assistant.",
-    impact: "Enables uninterrupted field operation reporting in offline environments and automates sync to centralized database metrics.",
+    title: "Sion Ministry v2",
+    filterGroup: "platform",
+    category: { id: "Komunitas & Sistem", en: "Platforms" },
+    role: { id: "Fullstack Developer", en: "Fullstack Developer" },
+    headline: {
+      id: "Platform Pemuridan Offline-First, Modul Medium-Style & Peta Nasional",
+      en: "Offline-First Discipleship LMS & Interactive Indonesia Map"
+    },
+    description: {
+      id: "Jarak dan sinyal yang terputus di pelosok tak lagi menghentikan catatan pelayanan. Dirancang offline-first, Sion Ministry v2 menghubungkan pemuridan, modul baca bergaya Medium, dan peta pertumbuhan lintas kota di seluruh Indonesia.",
+      en: "Remote terrain and dropped signals should never silence field ministry. Built offline-first, Sion Ministry v2 connects discipleship journals, Medium-style modules, and live nationwide analytics across Indonesia."
+    },
+    problem: {
+      id: "Pekerja lapangan di daerah minim sinyal kesulitan melapor kegiatan secara real-time sekaligus membaca kurikulum secara nyaman.",
+      en: "Remote field workers lacked reliable connectivity for reporting while needing a modern reading and analytics platform."
+    },
+    contribution: {
+      id: "Mengembangkan Sync Engine offline-first React 19, Modul Belajar Medium-style, Peta Indonesia, dan backend Go Fiber v2 + Supabase S3 + Sentry.",
+      en: "Engineered the React 19 offline-first sync engine, Medium-style LMS, Indonesia Map, and Go Fiber v2 backend with Supabase S3 & Sentry."
+    },
+    impact: {
+      id: "Menjaga pelaporan lapangan tetap berjalan tanpa internet sekaligus memetakan pertumbuhan komunitas lintas kota & kampus.",
+      en: "Enabled uninterrupted offline field reporting while providing centralized nationwide city and campus analytics."
+    },
     image: "/assets/projects/sion-ministry/screenshots/02-dashboard.png",
     video: "/assets/projects/sion-ministry/videos/demo.mp4",
-    tags: ["Ministry Platform", "Offline-First", "Discipleship", "Spiritual Portal", "AI Assistant"],
-    techStack: ["React 19", "Vite 6", "TypeScript", "Tailwind CSS v4", "Framer Motion", "LocalStorage Offline Sync", "Go (Fiber v2)", "GORM", "PostgreSQL", "Google Gemini AI"],
+    hasVideoFile: true,
+    techStack: [
+      "React 19", "Go (Fiber v2)", "PostgreSQL 16", "Supabase S3", "Vite 6",
+      "TypeScript", "Tailwind CSS v4", "Recharts 3", "Anime.js v4", "Google OAuth2",
+      "Sentry", "Google Gemini AI", "Docker"
+    ],
+    stackGroups: {
+      frontend: ["React 19", "Vite 6", "TypeScript", "Tailwind CSS v4", "Motion", "Anime.js v4", "Recharts 3", "Offline-First LocalStorage Sync"],
+      backend: ["Go 1.25 (Fiber v2)", "GORM & Go Embed SQL", "3-Role RBAC & Audit Log", "Google OAuth2 (Sheets)", "SMTP Mailer"],
+      infra: ["PostgreSQL 16", "Supabase Storage (AWS S3 SDK v2)", "Sentry Go", "Google Gemini AI", "Docker Compose"]
+    },
+    highlights: {
+      id: [
+        "Offline-First Sync Engine + Lazy Per-Route Fetching & Eliminasi N+1 Query",
+        "Modul Belajar Full-Width Bergaya Medium (Authoring & Multi-Quote Parser)",
+        "Peta Interaktif Persebaran Kota/Kampus Indonesia & Supabase S3 Storage"
+      ],
+      en: [
+        "Offline-First Sync Engine + Lazy Per-Route Fetching & N+1 Query Removal",
+        "Full-Width Medium-Style Learning Modules with Authoring Suite",
+        "Interactive Indonesia City/Campus Map & Supabase S3 Object Storage"
+      ]
+    },
+    link: "https://portal.sionministry.org/",
     githubLink: "https://github.com/Yosua13/sion-ministry",
-    previewTone: "from-violet-600 via-indigo-600 to-amber-500",
+    previewTone: "from-violet-500 via-fuchsia-500 to-amber-400",
     screens: sionMinistryScreens
+  },
+  {
+    id: "ministry-scheduling",
+    title: "Ministry Scheduling",
+    filterGroup: "platform",
+    category: { id: "Komunitas & Sistem", en: "Platforms" },
+    role: { id: "Fullstack Developer", en: "Fullstack Developer" },
+    headline: {
+      id: "Self-Scheduling Denah Interaktif SVG & Pertukaran Jadwal Peer-to-Peer",
+      en: "Interactive SVG Floorplan Self-Scheduling & Peer Shift Swaps"
+    },
+    description: {
+      id: "Berhari-hari menyusun jadwal relawan lewat grup chat hanya untuk berakhir dengan bentrok dan posisi kosong di hari H. Kini pelayan cukup klik titik tugasnya di denah interaktif Main Hall—tervalidasi otomatis dan bebas tukar shift.",
+      en: "Days lost juggling volunteer rosters in chat groups—only to face double-bookings and empty posts on Sunday. Now volunteers claim stations right on an interactive Main Hall floorplan with rule-checked P2P shift swaps."
+    },
+    problem: {
+      id: "Penyusunan jadwal ratusan relawan secara manual lewat chat memakan waktu berhari-hari dan rawan bentrok serta posisi kosong.",
+      en: "Manual chat-based volunteer scheduling took days every month and caused overlapping shifts and unstaffed stations."
+    },
+    contribution: {
+      id: "Merancang Denah Interaktif SVG Main Hall di React 19 serta backend Clean Architecture NestJS 11 + Fastify, Prisma v6, Google SSO, & Nodemailer.",
+      en: "Designed the interactive SVG floorplan in React 19 and built the Clean Architecture NestJS 11 + Fastify, Prisma v6, and Google SSO backend."
+    },
+    impact: {
+      id: "Memangkas waktu koordinasi jadwal bulanan secara drastis dan menjamin seluruh titik tugas terisi sesuai batas kuota.",
+      en: "Cut monthly scheduling overhead dramatically while enforcing shift quota limits and transparent swap approvals."
+    },
+    video: "/assets/projects/ministry-scheduling/videos/demo.mp4",
+    hasVideoFile: false,
+    techStack: [
+      "React 19", "NestJS 11", "Fastify", "Prisma & PostgreSQL 16", "Vite 6",
+      "TypeScript", "Tailwind CSS v4", "Google OAuth2", "Nodemailer", "Docker"
+    ],
+    stackGroups: {
+      frontend: ["React 19", "Vite 6", "TypeScript", "Tailwind CSS v4", "Motion", "Canvas Confetti"],
+      backend: ["NestJS 11 (Clean Arch)", "Fastify Adapter", "JWT & Google OAuth2 SSO", "Nodemailer (SMTP)", "Helmet & Throttler"],
+      infra: ["PostgreSQL 16", "Prisma ORM v6", "Jest & Prettier", "Docker Compose"]
+    },
+    highlights: {
+      id: [
+        "Denah Visual Interaktif SVG Main Hall + Selector Greeter & OM 1–4",
+        "Validasi Kuota Bulanan Otomatis & Peer-to-Peer Shift Swap via Email",
+        "Backend NestJS 11 + Fastify Clean Architecture, Prisma & Ekspor CSV/Cetak"
+      ],
+      en: [
+        "Interactive SVG Main Hall Floorplan + Greeter Gate & OM 1–4 Selectors",
+        "Automated Monthly Quota Invariants & Peer-to-Peer Shift Swaps via Email",
+        "NestJS 11 + Fastify Clean Architecture, Prisma ORM & CSV/Print Export"
+      ]
+    },
+    githubLink: "https://github.com/Yosua13/ministry-schedule",
+    previewTone: "from-cyan-500 via-blue-500 to-indigo-500",
+    screens: ministrySchedulingScreens
   },
   {
     id: "logia-log",
     title: "Logia Log",
-    category: "Backend",
-    location: "2026 | SERVER OBSERVABILITY",
-    role: "BACKEND / TOOLING DEVELOPER",
-    headline: "REAL-TIME SERVER LOG DIAGNOSTICS AND AI-ASSISTED OBSERVABILITY TOOL",
-    description: "A diagnostic observability tool for ingesting server and VM logs, clustering error stack traces, classifying severity, and generating AI-assisted root cause analysis.",
-    fullDescription: "Logia Log is a server observability application designed to read live log streams from VMs and application servers. It clusters error stack traces, tags incident severity, leverages Google Gemini AI for automated root cause diagnosis, and generates actionable command checklists for rapid remediation.",
-    problem: "When production servers fail, engineers waste critical time manually scanning massive log files before identifying the exact failure source and remediation steps.",
-    contribution: "Designing the Java Spring Boot backend architecture, Spring WebSocket log streaming, RabbitMQ async processing queue, PostgreSQL schema, and Gemini AI root-cause diagnosis pipeline.",
-    impact: "Shortens incident Mean Time to Resolution (MTTR) by converting raw log dumps into structured diagnostic insights.",
-    tags: ["Log Analyzer", "VM Observability", "Root Cause AI", "Spring Boot", "RabbitMQ"],
-    techStack: ["React 19", "TypeScript", "Vite", "Tailwind CSS v4", "Java 21", "Spring Boot", "Spring Security", "Spring Data JPA", "Spring WebSocket", "RabbitMQ", "PostgreSQL", "Google Gemini AI"],
+    filterGroup: "enterprise",
+    category: { id: "Enterprise Tools", en: "Enterprise Tools" },
+    role: { id: "Fullstack Developer", en: "Fullstack Developer" },
+    headline: {
+      id: "Observabilitas Real-Time, API Testing Studio & Diagnostik AI 7-Lapis",
+      en: "Real-Time Observability, API Studio & 7-Layer GitHub AI Audit"
+    },
+    description: {
+      id: "Tengah malam, server produksi jatuh dan jutaan baris log terus mengalir. Logia Log menyatukan observabilitas sekelas Grafana, studio uji API sekelas Postman, dan audit AI 7-lapis ke kode GitHub agar akar masalah ditemukan dalam hitungan detik.",
+      en: "Midnight hits, production goes dark, and raw logs flood the screen. Logia Log unites Grafana-grade live streams, a Postman-style API studio, and 7-layer GitHub AI diagnostics to expose root causes in seconds."
+    },
+    problem: {
+      id: "Engineer membuang waktu berpindah antar alat log, klien API, skema database, dan repo GitHub saat menyelidiki insiden produksi.",
+      en: "Engineers waste critical incident response time jumping across log dashboards, API clients, database schemas, and GitHub repos."
+    },
+    contribution: {
+      id: "Membangun backend Java 25 LTS (Virtual Threads) & Spring Boot 4.1.2, partisi PostgreSQL 18.4, RabbitMQ 4.x DLQ, Upstash Redis TLS, & FSD UI.",
+      en: "Engineered the Java 25 LTS (Virtual Threads) + Spring Boot 4.1.2 backend, PostgreSQL 18.4 partitions, RabbitMQ 4.x DLQ, Upstash Redis TLS, and FSD UI."
+    },
+    impact: {
+      id: "Memusatkan log real-time, uji API, inspeksi DDL read-only, dan analisis akar masalah kode sumber dalam satu platform taktis.",
+      en: "Unified live logs, API testing, read-only DB DDL inspection, and AI source-code root-cause auditing into one tactical console."
+    },
+    video: "/assets/projects/logia-log/videos/demo.mp4",
+    hasVideoFile: false,
+    techStack: [
+      "Java 25 LTS", "Spring Boot 4.1", "RabbitMQ 4", "PostgreSQL 18.4", "Upstash Redis",
+      "React 19", "TypeScript 6", "Vite 8", "Tailwind CSS v4", "SSE", "Google Gemini AI", "Docker"
+    ],
+    stackGroups: {
+      frontend: ["React 19", "Vite 8", "TypeScript 6", "Tailwind CSS v4", "Feature-Sliced Design (FSD)"],
+      backend: ["Java 25 LTS (Virtual Threads)", "Spring Boot 4.1.2 (Spring 7)", "Spring Security & Data JPA", "Spring WebSocket / SSE", "Hexagonal Architecture"],
+      infra: ["PostgreSQL 18.4 (UUIDv7 & Flyway 12)", "RabbitMQ 4.x (DLX/DLQ)", "Upstash Serverless Redis (TLS)", "GitHub REST/GraphQL", "Google Gemini AI", "Docker Compose"]
+    },
+    highlights: {
+      id: [
+        "Java 25 Virtual Threads + Spring Boot 4.1.2 & PostgreSQL 18.4 (UUIDv7)",
+        "MOD-01 Grafana Log Explorer (SSE + RabbitMQ DLQ) & MOD-02 Postman API Studio",
+        "MOD-03/04 7-Layer GitHub AI Audit + Dynamic Read-Only DB DDL Inspector"
+      ],
+      en: [
+        "Java 25 Virtual Threads + Spring Boot 4.1.2 & PostgreSQL 18.4 (UUIDv7)",
+        "MOD-01 Grafana Log Explorer (SSE + RabbitMQ DLQ) & MOD-02 Postman API Studio",
+        "MOD-03/04 7-Layer GitHub AI Audit + Dynamic Read-Only DB DDL Inspector"
+      ]
+    },
     githubLink: "https://github.com/Yosua13/logia-log",
-    previewTone: "from-rose-500 via-red-500 to-amber-500",
-    isWip: true,
-    screens: []
+    previewTone: "from-amber-400 via-orange-500 to-rose-500",
+    screens: logiaLogScreens
   }
 ];
 
-export type ProjectData = typeof projectsData[number];
-
-interface ProjectsSectionProps {
-  setSelectedProject: (project: ProjectData) => void;
+export function getProjectsData(language: Language): ProjectData[] {
+  return rawProjectsData.map((p) => ({
+    id: p.id,
+    title: p.title,
+    filterGroup: p.filterGroup,
+    category: p.category[language],
+    role: p.role[language],
+    headline: p.headline[language],
+    description: p.description[language],
+    problem: p.problem[language],
+    contribution: p.contribution[language],
+    impact: p.impact[language],
+    image: p.image,
+    video: p.video,
+    hasVideoFile: p.hasVideoFile,
+    techStack: p.techStack,
+    stackGroups: p.stackGroups,
+    highlights: p.highlights[language],
+    link: p.link,
+    githubLink: p.githubLink,
+    previewTone: p.previewTone,
+    screens: p.screens.map((s) => ({
+      title: s.title[language],
+      caption: s.caption[language],
+      image: s.image,
+      aspectRatio: s.aspectRatio,
+      moduleTag: s.moduleTag
+    }))
+  }));
 }
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
-};
+function ProjectArchitecturePreview({
+  project,
+  language
+}: {
+  project: ProjectData;
+  language: Language;
+}) {
+  return (
+    <div className="relative h-full w-full overflow-hidden bg-[#111113] p-4 sm:p-5 flex flex-col justify-between text-left select-none">
+      <div className="absolute inset-0 bg-[radial-gradient(rgba(244,241,234,0.05)_1px,transparent_1px)] [background-size:18px_18px] pointer-events-none" />
 
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.12
-    }
-  }
-};
+      <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-2.5 pt-6 sm:pt-0">
+        <span className="text-[10px] font-mono font-medium uppercase tracking-[0.16em] text-neutral-400">
+          {project.id} / architecture
+        </span>
+        <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/12 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-emerald-300">
+          <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+          {language === "id" ? "Rilis" : "Released"}
+        </span>
+      </div>
 
-function ProjectPreviewVideo({
+      <div className="relative z-10 my-auto space-y-2 py-2">
+        {project.highlights.map((item, idx) => (
+          <div
+            key={idx}
+            className="flex items-start gap-2.5 rounded-lg border border-white/10 bg-white/[0.025] px-3 py-1.5 text-[11px] font-medium text-neutral-200 leading-snug"
+          >
+            <span className="mt-0.5 font-mono text-[10px] font-semibold text-[#ff7a45] shrink-0">
+              {String(idx + 1).padStart(2, "0")}
+            </span>
+            <span className="line-clamp-1">{item}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="relative z-10 flex items-center justify-between border-t border-white/10 pt-2 font-mono text-[9px] font-medium uppercase tracking-wider text-neutral-300">
+        <span className="inline-flex items-center gap-1.5">
+          <Layers className="h-3 w-3 text-[#ff7a45]" />
+          {language === "id" ? "Blueprint Sistem" : "System Blueprint"}
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <Sparkles className="h-3 w-3 text-[#ff7a45]" />
+          {language === "id" ? `${project.screens.length} Modul` : `${project.screens.length} Modules`}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function ProjectCardMedia({
   project,
   videoRef,
-  isPreviewPlaying
+  isPreviewPlaying,
+  language
 }: {
   project: ProjectData;
   videoRef: RefObject<HTMLVideoElement | null>;
   isPreviewPlaying: boolean;
+  language: Language;
 }) {
-  if (project.isWip || !project.video) return null;
+  const [videoError, setVideoError] = useState(false);
+
+  if (!project.hasVideoFile || !project.video || videoError) {
+    return <ProjectArchitecturePreview project={project} language={language} />;
+  }
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-slate-950">
+    <div className="relative h-full w-full overflow-hidden bg-[#0e0e10]">
       <video
         ref={videoRef}
         src={project.video}
-        className="absolute inset-0 h-full w-full object-cover transition-all duration-700 group-hover:scale-105"
+        onError={() => setVideoError(true)}
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
         muted
         loop
         playsInline
         preload="metadata"
       />
 
-      <div className={`pointer-events-none absolute bottom-9 left-0 right-0 flex justify-center transition-opacity duration-500 ${isPreviewPlaying ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}>
-        <div className="project-preview-badge flex items-center gap-2 rounded-full border border-white/20 bg-black/55 px-3.5 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-white shadow-2xl backdrop-blur-md">
-          <Play className="h-3.5 w-3.5 fill-white" />
-          {isPreviewPlaying ? "Playing Demo" : "Hover to Play"}
-        </div>
-      </div>
-
-      <div className="absolute bottom-5 left-5 right-5 h-1.5 overflow-hidden rounded-full bg-white/15">
-        <div className="h-full w-1/3 rounded-full bg-white transition-transform duration-1000 group-hover:translate-x-[200%]" />
+      <div
+        className={`pointer-events-none absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/70 px-2.5 py-1 font-mono text-[9px] font-semibold uppercase tracking-widest text-white backdrop-blur-md transition-opacity duration-300 ${
+          isPreviewPlaying ? "opacity-100" : "opacity-80 group-hover:opacity-100"
+        }`}
+      >
+        <Play className="h-2.5 w-2.5 fill-white" />
+        {isPreviewPlaying
+          ? language === "id" ? "Diputar" : "Playing"
+          : language === "id" ? "Hover Demo" : "Hover Demo"}
       </div>
     </div>
   );
 }
 
-function ProjectCard({
+function ProjectBentoCard({
   project,
   index,
-  setSelectedProject
+  featured,
+  onSelectProject,
+  language
 }: {
   project: ProjectData;
   index: number;
-  setSelectedProject: (project: ProjectData) => void;
+  featured: boolean;
+  onSelectProject: (project: ProjectData) => void;
+  language: Language;
 }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
 
   const playPreview = () => {
-    if (project.isWip) return;
-    const video = videoRef.current;
-
-    if (!video) return;
-
+    if (!project.hasVideoFile || !videoRef.current) return;
     setIsPreviewPlaying(true);
-    void video.play().catch(() => setIsPreviewPlaying(false));
+    void videoRef.current.play().catch(() => setIsPreviewPlaying(false));
   };
 
   const stopPreview = () => {
-    if (project.isWip) return;
-    const video = videoRef.current;
-
-    if (!video) return;
-
-    video.pause();
-    video.currentTime = 0;
+    if (!project.hasVideoFile || !videoRef.current) return;
+    videoRef.current.pause();
+    videoRef.current.currentTime = 0;
     setIsPreviewPlaying(false);
   };
 
-  const handleBlur = (event: FocusEvent<HTMLElement>) => {
+  const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
     if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
       stopPreview();
     }
   };
 
+  const visibleTech = project.techStack.slice(0, 4);
+  const remainingTechCount = Math.max(0, project.techStack.length - 4);
+  const issueNumber = String(index + 1).padStart(2, "0");
+
   return (
-    <motion.article
-      variants={fadeInUp}
-      data-project-card
-      tabIndex={0}
-      onMouseEnter={playPreview}
-      onMouseLeave={stopPreview}
-      onFocus={playPreview}
-      onBlur={handleBlur}
-      className="group relative overflow-hidden rounded-[24px] border border-white/10 bg-[#0d0f18]/45 transition-all duration-500 hover:-translate-y-1 hover:border-indigo-500/35 hover:bg-[#0d0f18]/70 focus:outline-none focus-visible:border-indigo-400 focus-visible:ring-2 focus-visible:ring-indigo-300/40"
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.35 }}
+      className={featured ? "lg:col-span-2" : ""}
     >
-      <div className="absolute inset-0 z-0">
-        {project.image && !project.isWip && (
-          <Image
-            src={project.image}
-            alt=""
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover opacity-15 blur-[3px] transition-transform duration-700 ease-out group-hover:scale-105"
-          />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-black/30" />
-      </div>
-
-      <div className={`relative z-10 grid min-h-[540px] grid-cols-1 md:grid-cols-2 ${index % 2 === 1 ? "md:[&>*:first-child]:order-2" : ""}`}>
-        <div className="flex flex-col justify-between gap-8 p-6 sm:p-8 md:p-12">
-          <div className="space-y-5">
-            <div className="space-y-2">
-              <span className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-indigo-300">
-                {project.category}
-              </span>
-              <div className="flex items-center gap-3">
-                <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight uppercase font-sans">
-                  {project.title}
-                </h3>
-                <div className="flex items-center gap-2">
-                  {project.githubLink && (
-                    <a
-                      href={project.githubLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title="View GitHub Repository"
-                      aria-label={`${project.title} GitHub repository`}
-                      className="text-slate-400 transition-colors hover:text-white"
-                    >
-                      <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24">
-                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-                      </svg>
-                    </a>
-                  )}
-                  {project.link && (
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title="Visit Live Website"
-                      aria-label={`${project.title} live website`}
-                      className="text-slate-400 transition-colors hover:text-white"
-                    >
-                      <ExternalLink className="h-5 w-5 shrink-0" />
-                    </a>
-                  )}
-                </div>
-              </div>
-              <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
-                {project.location}
-              </span>
-            </div>
-
-            <span className="inline-block text-[10px] font-bold text-indigo-300 border border-indigo-500/30 px-2.5 py-1 uppercase tracking-[0.2em] bg-indigo-500/5">
-              {project.role}
-            </span>
-
-            <h4 className="text-xl md:text-2xl font-extrabold text-white tracking-tight uppercase leading-snug font-sans">
-              {project.headline}
-            </h4>
-
-            <p className="max-w-xl text-sm text-slate-300 font-light leading-relaxed">
-              {project.description}
-            </p>
-          </div>
-
-          <div className="space-y-6">
-            <div className="flex flex-wrap gap-2">
-              {project.tags.map((tag) => (
-                <span key={tag} className="px-3 py-1 bg-white/5 border border-white/5 text-[10px] font-bold uppercase tracking-wider text-slate-300">
-                  {tag}
-                </span>
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setSelectedProject(project)}
-              className="project-details-button inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-white transition-all duration-300 hover:border-white hover:bg-white hover:text-black"
-            >
-              View Details
-            </button>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-center p-5 sm:p-8 md:p-10">
-          {project.isWip ? (
-            <div className="relative w-full max-w-xl overflow-hidden rounded-[22px] border border-amber-500/30 bg-slate-950/90 shadow-2xl shadow-black/80 aspect-[16/10] flex flex-col items-center justify-center p-6 text-center group-hover:border-amber-400/50 transition-colors">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(245,158,11,0.12),transparent_60%)] pointer-events-none" />
-              <div className="relative z-10 flex flex-col items-center gap-3">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-amber-500/30 bg-amber-500/15 text-amber-400 shadow-inner">
-                  <Clock className="h-7 w-7 animate-pulse" />
-                </div>
-                <div className="space-y-1.5">
-                  <span className="inline-block rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-amber-300">
-                    Work in Progress
-                  </span>
-                  <h5 className="text-lg font-extrabold text-white tracking-tight uppercase font-sans">
-                    Under Active Development
-                  </h5>
-                  <p className="max-w-xs text-xs text-slate-400 font-light leading-relaxed">
-                    Media preview and full demonstration will be available upon feature release.
-                  </p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="relative w-full max-w-xl overflow-hidden rounded-[22px] border border-white/10 bg-slate-950 shadow-2xl shadow-black/80 aspect-[16/10] transition-transform duration-500 ease-out group-hover:scale-[1.02]">
-              <ProjectPreviewVideo
+      <SpotlightCard
+        tabIndex={0}
+        onMouseEnter={playPreview}
+        onMouseLeave={stopPreview}
+        onFocus={playPreview}
+        onBlur={handleBlur}
+        className="h-full"
+      >
+        <div
+          className={
+            featured
+              ? "grid grid-cols-1 lg:grid-cols-[1.18fr_0.82fr] h-full"
+              : "flex flex-col h-full"
+          }
+        >
+          {/* Media Preview Area */}
+          <div className={featured ? "p-3 sm:p-4 flex items-center" : "p-3 sm:p-4 pb-0"}>
+            <div className="relative w-full aspect-[16/10] overflow-hidden rounded-xl border border-[var(--border)] bg-[#0e0e10]">
+              {project.image && !project.hasVideoFile && (
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover opacity-30"
+                />
+              )}
+              <ProjectCardMedia
                 project={project}
                 videoRef={videoRef}
                 isPreviewPlaying={isPreviewPlaying}
+                language={language}
               />
+
+              {/* Top-left Category Badge */}
+              <div className="absolute top-3 left-3 z-20">
+                <span className="inline-flex items-center rounded-full border border-white/20 bg-black/75 px-2.5 py-0.5 font-mono text-[9px] font-medium uppercase tracking-wider text-white backdrop-blur-md">
+                  {project.category}
+                </span>
+              </div>
+
+              {/* Top-right Quick Links */}
+              <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5">
+                {project.githubLink && (
+                  <a
+                    href={project.githubLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${project.title} GitHub`}
+                    title="GitHub"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-black/75 text-neutral-200 transition-colors hover:border-white/55 hover:text-white backdrop-blur-md"
+                  >
+                    <FaGithub className="h-3.5 w-3.5" />
+                  </a>
+                )}
+                {project.link && (
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${project.title} Live Website`}
+                    title="Live Demo"
+                    className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-black/75 text-neutral-200 transition-colors hover:border-white/55 hover:text-white backdrop-blur-md"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
+              </div>
             </div>
-          )}
+          </div>
+
+          {/* Story-Driven Editorial Body */}
+          <div className="flex flex-1 flex-col justify-between gap-5 p-5 sm:p-6 text-left">
+            <div className="space-y-2.5">
+              <div className="flex items-baseline justify-between gap-3">
+                <div className="flex items-baseline gap-2.5">
+                  <span className="font-editorial italic text-2xl sm:text-3xl leading-none text-[var(--muted-foreground)]/60 group-hover:text-[var(--accent-text)] transition-colors">
+                    {issueNumber}
+                  </span>
+                  <h3 className="text-xl sm:text-2xl font-semibold tracking-[-0.02em] text-[var(--foreground)]">
+                    {project.title}
+                  </h3>
+                </div>
+                <span className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--accent-text)] shrink-0">
+                  {project.role}
+                </span>
+              </div>
+
+              <p className="text-sm font-medium text-[var(--foreground)]/90 leading-snug">
+                {project.headline}
+              </p>
+
+              <p className="text-xs sm:text-sm text-[var(--muted-foreground)] leading-relaxed line-clamp-3">
+                {project.description}
+              </p>
+            </div>
+
+            <div className="space-y-4 pt-1">
+              <div className="flex flex-wrap items-center gap-1.5">
+                {visibleTech.map((tech) => (
+                  <Badge key={tech} variant="muted" className="text-[10px] py-1">
+                    <TechIcon name={tech} className="h-3 w-3" />
+                    {tech}
+                  </Badge>
+                ))}
+                {remainingTechCount > 0 && (
+                  <Badge variant="outline" className="text-[10px] py-1">
+                    +{remainingTechCount}
+                  </Badge>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between gap-3 border-t border-[var(--border)] pt-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onSelectProject(project)}
+                >
+                  {language === "id" ? "Lihat Detail" : "Case Study"}
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </Button>
+
+                <span className="font-mono text-[10px] uppercase tracking-wider text-[var(--muted-foreground)]">
+                  {project.screens.length} {language === "id" ? "Tampilan" : "Screens"}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </motion.article>
+      </SpotlightCard>
+    </motion.div>
   );
 }
 
-export default function ProjectsSection({ setSelectedProject }: ProjectsSectionProps) {
-  return (
-    <motion.section
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
-      variants={staggerContainer}
-      id="projects"
-      className="space-y-10 scroll-mt-32"
-    >
-      <motion.div variants={fadeInUp}>
-        <SectionHeader
-          topText="Featured Works"
-          mainText="Projects"
-          subText="Overview"
-          bottomText="Dummy media previews for featured portfolio"
-          watermark="YOSUA"
-        />
-      </motion.div>
+interface ProjectsSectionProps {
+  onSelectProject: (project: ProjectData) => void;
+}
 
-      <div className="flex flex-col gap-12">
-        {projectsData.map((project, index) => (
-          <ProjectCard
+export default function ProjectsSection({ onSelectProject }: ProjectsSectionProps) {
+  const { language } = useLanguage();
+  const [filter, setFilter] = useState<"all" | "saas" | "platform" | "enterprise">("all");
+  const allProjects = getProjectsData(language);
+
+  const filteredProjects =
+    filter === "all"
+      ? allProjects
+      : allProjects.filter((project) => project.filterGroup === filter);
+
+  return (
+    <section id="projects" className="space-y-8 scroll-mt-28">
+      <SectionHeader
+        index="01"
+        eyebrow={language === "id" ? "Karya Pilihan" : "Selected Works"}
+        title={language === "id" ? "Proyek" : "Selected"}
+        titleItalic={language === "id" ? "Unggulan" : "Projects"}
+        subtitle={
+          language === "id"
+            ? "5 sistem perangkat lunak yang lahir dari masalah nyata — dirancang untuk dampak bisnis."
+            : "5 production software systems born from real-world challenges — built for measurable impact."
+        }
+        action={
+          <Tabs
+            value={filter}
+            onValueChange={(value) => setFilter(value as typeof filter)}
+          >
+            <TabsList>
+              <TabsTrigger value="all">
+                {language === "id" ? "Semua (5)" : "All (5)"}
+              </TabsTrigger>
+              <TabsTrigger value="saas">
+                {language === "id" ? "Bisnis & SaaS" : "Business & SaaS"}
+              </TabsTrigger>
+              <TabsTrigger value="platform">
+                {language === "id" ? "Komunitas" : "Platforms"}
+              </TabsTrigger>
+              <TabsTrigger value="enterprise">
+                Enterprise
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        }
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {filteredProjects.map((project, index) => (
+          <ProjectBentoCard
             key={project.id}
             project={project}
             index={index}
-            setSelectedProject={setSelectedProject}
+            featured={filter === "all" && index === 0}
+            onSelectProject={onSelectProject}
+            language={language}
           />
         ))}
       </div>
-    </motion.section>
+    </section>
   );
 }
