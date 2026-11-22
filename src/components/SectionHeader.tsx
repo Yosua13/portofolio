@@ -1,42 +1,65 @@
 "use client";
 
+import * as React from "react";
+import { cn } from "@/lib/utils";
+
 interface SectionHeaderProps {
-  topText: string;
-  mainText: string;
-  subText: string;
-  bottomText: string;
-  watermark?: string;
+  index?: string;
+  eyebrow: string;
+  title: string;
+  titleItalic?: string;
+  subtitle?: string;
+  action?: React.ReactNode;
+  className?: string;
 }
 
 export default function SectionHeader({
-  topText,
-  mainText,
-  subText,
-  bottomText,
-  watermark = "YOSUA",
+  index,
+  eyebrow,
+  title,
+  titleItalic,
+  subtitle,
+  action,
+  className,
 }: SectionHeaderProps) {
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-2 mb-6 relative pt-8 md:pt-12 pb-5 md:pb-6 overflow-hidden">
-      {/* Watermark in background */}
-      <div className="absolute text-[16vw] md:text-[18vw] font-black text-white/[0.018] select-none pointer-events-none uppercase tracking-[0.1em] z-0 top-1/2 -translate-y-1/2 font-sans filter blur-[6px] w-full text-center">
-        {watermark}
+    <div
+      className={cn(
+        "flex flex-col gap-5 md:flex-row md:items-end md:justify-between border-b border-[var(--border)] pb-7",
+        className
+      )}
+    >
+      <div className="space-y-3 text-left max-w-2xl">
+        <div className="inline-flex items-center gap-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
+          {index && (
+            <span className="font-semibold text-[var(--accent-text)]">
+              {index}
+            </span>
+          )}
+          {index && <span className="h-px w-4 bg-[var(--border-strong)]" />}
+          <span>{eyebrow}</span>
+        </div>
+
+        <h2 className="text-3xl sm:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] text-[var(--foreground)]">
+          {title}
+          {titleItalic && (
+            <>
+              {" "}
+              <span className="font-editorial italic font-normal text-[var(--accent-text)] tracking-normal">
+                {titleItalic}
+              </span>
+            </>
+          )}
+        </h2>
+
+        {subtitle && (
+          <p className="max-w-xl text-sm leading-relaxed text-[var(--muted-foreground)]">
+            {subtitle}
+          </p>
+        )}
       </div>
-      
-      <span className="text-xs sm:text-sm font-bold text-slate-500 uppercase tracking-[0.25em] z-10 font-sans">
-        {topText}
-      </span>
-      
-      <h2 className="text-5xl sm:text-7xl md:text-8xl lg:text-[8.5rem] font-extrabold text-white uppercase tracking-tight leading-none z-10 font-sans">
-        {mainText}
-      </h2>
-      
-      <span className="text-sm sm:text-base font-bold text-indigo-400 uppercase tracking-[0.3em] z-10 font-sans pt-3">
-        {subText}
-      </span>
-      
-      <span className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-[0.2em] z-10 font-sans">
-        {bottomText}
-      </span>
+
+      {action && <div className="shrink-0">{action}</div>}
     </div>
   );
 }

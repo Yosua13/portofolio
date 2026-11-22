@@ -1,166 +1,103 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:wght@900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:wght@900&display=swap');
 @import "tailwindcss";
 @import "../components/HeroSection.css";
 
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html, body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --bg: #0b0b0c;
+  --bg-ambient: radial-gradient(ellipse 75% 45% at 12% -5%, rgba(255, 90, 31, 0.055), transparent 60%),
+                radial-gradient(ellipse 65% 45% at 88% 18%, rgba(244, 241, 234, 0.03), transparent 55%);
+  --surface: rgba(18, 18, 20, 0.90);
+  --surface-solid: #121214;
+  --surface-elevated: rgba(244, 241, 234, 0.035);
+  --border: rgba(244, 241, 234, 0.11);
+  --border-strong: rgba(244, 241, 234, 0.24);
+  --foreground: #f4f1ea;
+  --muted-foreground: #9b9994;
+  --accent: #ff5a1f;
+  --accent-text: #ff7a45;
+  --accent-soft: rgba(255, 90, 31, 0.13);
+  --cyan-text: #38bdf8;
+  --cyan-soft: rgba(56, 189, 248, 0.11);
+  --emerald-text: #34d399;
+  --emerald-soft: rgba(16, 185, 129, 0.12);
+  --amber-text: #fbbf24;
+  --amber-soft: rgba(245, 158, 11, 0.12);
+  --rose-text: #fb7185;
+  --rose-soft: rgba(244, 63, 94, 0.12);
+  --violet-text: #c4b5fd;
+  --violet-soft: rgba(167, 139, 250, 0.11);
+  --spotlight: rgba(255, 90, 31, 0.09);
+  --card-shadow: 0 18px 42px -20px rgba(0, 0, 0, 0.65);
+  --background: var(--bg);
 }
 
 html.light {
-  --background: #f6f8fb;
-  --foreground: #172033;
+  --bg: #f4f1ea;
+  --bg-ambient: radial-gradient(ellipse 75% 45% at 12% 0%, rgba(217, 72, 15, 0.05), transparent 60%),
+                radial-gradient(ellipse 65% 45% at 88% 12%, rgba(20, 20, 19, 0.028), transparent 55%);
+  --surface: rgba(251, 249, 245, 0.94);
+  --surface-solid: #fbf9f5;
+  --surface-elevated: rgba(20, 20, 19, 0.035);
+  --border: rgba(20, 20, 19, 0.12);
+  --border-strong: rgba(20, 20, 19, 0.28);
+  --foreground: #141413;
+  --muted-foreground: #5c5953;
+  --accent: #d9480f;
+  --accent-text: #c2410c;
+  --accent-soft: rgba(217, 72, 15, 0.10);
+  --cyan-text: #0369a1;
+  --cyan-soft: rgba(3, 105, 161, 0.09);
+  --emerald-text: #047857;
+  --emerald-soft: rgba(4, 120, 87, 0.10);
+  --amber-text: #b45309;
+  --amber-soft: rgba(180, 83, 9, 0.10);
+  --rose-text: #be123c;
+  --rose-soft: rgba(190, 18, 60, 0.09);
+  --violet-text: #6d28d9;
+  --violet-soft: rgba(109, 40, 217, 0.09);
+  --spotlight: rgba(217, 72, 15, 0.08);
+  --card-shadow: 0 14px 34px -16px rgba(20, 20, 19, 0.09);
+  --background: var(--bg);
 }
 
-html.light body {
-  background: #f6f8fb;
-  color: #172033;
+html {
+  background-color: var(--bg);
 }
 
-html.light .bg-\[\#050508\],
-html.light .bg-\[\#030305\],
-html.light .bg-\[\#070709\],
-html.light .bg-\[\#0a0a0a\],
-html.light .mesh-grid-bg,
-html.light .hero-root {
-  background-color: #f6f8fb !important;
+body {
+  position: relative;
+  background-color: var(--bg);
+  background-image: var(--bg-ambient);
+  background-attachment: fixed;
+  color: var(--foreground);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-html.light .bg-\[\#0d0f18\]\/45,
-html.light .bg-\[\#0d0f18\],
-html.light .bg-\[\#080a12\]\/95,
-html.light .bg-\[\#090b16\]\/90,
-html.light .bg-slate-950,
-html.light .bg-slate-950\/70,
-html.light .bg-slate-950\/80,
-html.light .bg-white\/\[0\.02\],
-html.light .bg-white\/\[0\.03\],
-html.light .bg-white\/\[0\.05\],
-html.light .bg-white\/\[0\.08\] {
-  background-color: rgba(255, 255, 255, 0.88) !important;
+/* Tactile fine paper grain overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
 }
 
-html.light .text-white,
-html.light .text-slate-100,
-html.light .text-slate-200 {
-  color: #0f172a !important;
+.font-editorial {
+  font-family: 'Instrument Serif', Georgia, serif;
 }
 
-html.light .text-slate-300,
-html.light .text-slate-400,
-html.light .text-slate-500 {
-  color: #334155 !important;
-}
-
-html.light .text-slate-600 {
-  color: #475569 !important;
-}
-
-html.light .text-indigo-300,
-html.light .text-indigo-400,
-html.light .text-cyan-300,
-html.light .text-cyan-400,
-html.light .text-emerald-300,
-html.light .text-emerald-400 {
-  color: #3730a3 !important;
-}
-
-html.light .border-white\/5,
-html.light .border-white\/10,
-html.light .border-white\/15,
-html.light .border-white\/20 {
-  border-color: rgba(15, 23, 42, 0.18) !important;
-}
-
-html.light .bg-black\/25,
-html.light .bg-black\/30,
-html.light .bg-black\/35,
-html.light .bg-black\/40,
-html.light .bg-black\/45,
-html.light .bg-black\/85,
-html.light .bg-black\/90 {
-  background-color: rgba(255, 255, 255, 0.76) !important;
-}
-
-html.light .from-black,
-html.light .via-black\/85,
-html.light .via-black\/90,
-html.light .to-black\/30 {
-  --tw-gradient-from: rgba(255, 255, 255, 0.96) var(--tw-gradient-from-position) !important;
-  --tw-gradient-via: rgba(255, 255, 255, 0.88) var(--tw-gradient-via-position) !important;
-  --tw-gradient-to: rgba(226, 232, 240, 0.58) var(--tw-gradient-to-position) !important;
-}
-
-html.light .bg-indigo-500\/15,
-html.light .bg-indigo-500\/20,
-html.light .bg-indigo-500\/5 {
-  background-color: rgba(79, 70, 229, 0.14) !important;
-}
-
-html.light .bg-emerald-500\/5,
-html.light .bg-emerald-500\/10 {
-  background-color: rgba(5, 150, 105, 0.12) !important;
-}
-
-html.light input,
-html.light textarea {
-  background-color: rgba(255, 255, 255, 0.94) !important;
-  border-color: rgba(15, 23, 42, 0.18) !important;
-  color: #0f172a !important;
-}
-
-html.light input::placeholder,
-html.light textarea::placeholder {
-  color: #64748b !important;
-}
-
-html.light .shadow-black\/80 {
-  --tw-shadow-color: rgba(15, 23, 42, 0.22) !important;
-}
-
-.project-modal-backdrop,
-html.light .project-modal-backdrop {
-  background-color: rgba(2, 6, 23, 0.82) !important;
-}
-
-/* Hide scrollbar for all elements, including root */
-html, body, * {
+/* Hide scrollbars cleanly */
+html,
+body,
+* {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
 }
 
-html, body, * {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-}
-
-::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-}
-
+::-webkit-scrollbar,
 html::-webkit-scrollbar,
 body::-webkit-scrollbar,
 *::-webkit-scrollbar {
@@ -169,262 +106,100 @@ body::-webkit-scrollbar,
   height: 0 !important;
 }
 
-/* Custom Tooltip styling to support light/dark modes correctly */
-.custom-tooltip {
-  background-color: #0f172a !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+/* Studio Hero & Navigation compatibility */
+.mesh-grid-bg,
+.hero-root {
+  background-color: var(--bg) !important;
+  background-image: var(--bg-ambient) !important;
 }
 
-html.light .custom-tooltip {
-  background-color: #ffffff !important;
-  color: #0f172a !important;
-  border: 1px solid rgba(15, 23, 42, 0.15) !important;
+html.light .mesh-grid-pattern {
+  background-image: radial-gradient(rgba(20, 20, 19, 0.06) 1px, transparent 1px);
 }
 
-/* Theme-aware surfaces for high contrast in both modes */
 .app-brand-lockup {
-  background: rgba(3, 7, 18, 0.48);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.24);
-}
-
-.app-brand-mark {
-  color: #ffffff !important;
-  text-shadow: 0 2px 18px rgba(15, 23, 42, 0.55);
-}
-
-.app-brand-name {
-  color: #a5b4fc !important;
-}
-
-.app-brand-role {
-  color: #cbd5e1 !important;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--card-shadow);
 }
 
 .floating-nav-shell,
 .social-actions-shell,
 .mobile-nav-shell {
-  background: rgba(8, 10, 18, 0.76) !important;
-  border-color: rgba(255, 255, 255, 0.12) !important;
-  color: #e2e8f0 !important;
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--foreground);
+  box-shadow: var(--card-shadow);
 }
 
-.theme-icon-button {
-  color: #cbd5e1 !important;
-}
-
-.theme-icon-button:hover {
-  color: #ffffff !important;
-}
-
-.service-card,
-.journey-card,
-.project-modal-surface,
-.screenshot-carousel-shell {
-  background: rgba(13, 15, 24, 0.72) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-  color: #e2e8f0 !important;
-}
-
-.service-card-title,
-.journey-card-title,
-.modal-strong-text,
-.carousel-title {
-  color: #f8fafc !important;
-}
-
-.service-card-body,
-.journey-description,
-.journey-achievement,
-.modal-body-text,
-.carousel-caption {
-  color: #cbd5e1 !important;
-}
-
-.journey-description,
-.modal-soft-panel {
-  background: rgba(15, 23, 42, 0.78) !important;
-  border-color: rgba(148, 163, 184, 0.18) !important;
-}
-
-.journey-logo-frame {
-  background: #05080f !important;
-  border-color: rgba(255, 255, 255, 0.14) !important;
-}
-
-.project-preview-badge,
-.modal-icon-button,
-.carousel-control,
-.modal-secondary-action {
-  background: rgba(2, 6, 23, 0.82) !important;
-  color: #ffffff !important;
-  border-color: rgba(255, 255, 255, 0.18) !important;
-}
-
-.project-preview-badge svg,
-.carousel-control svg,
-.modal-icon-button svg {
-  color: currentColor;
-}
-
-.project-details-button,
-.modal-primary-action {
-  background: #ffffff !important;
-  color: #020617 !important;
-  border-color: rgba(255, 255, 255, 0.76) !important;
-}
-
-.modal-chip {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-  color: #cbd5e1 !important;
-}
-
-html.light .app-brand-lockup {
-  background: rgba(255, 255, 255, 0.9) !important;
-  border-color: rgba(15, 23, 42, 0.12) !important;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.1);
-}
-
-html.light .app-brand-mark {
-  color: #020617 !important;
-  text-shadow: none;
-}
-
-html.light .app-brand-name {
-  color: #3730a3 !important;
-}
-
-html.light .app-brand-role {
-  color: #475569 !important;
-}
-
-html.light .floating-nav-shell,
-html.light .social-actions-shell,
-html.light .mobile-nav-shell {
-  background: rgba(255, 255, 255, 0.92) !important;
-  border-color: rgba(15, 23, 42, 0.14) !important;
-  color: #0f172a !important;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.1);
-}
-
-html.light .theme-icon-button {
-  color: #334155 !important;
-}
-
-html.light .theme-icon-button:hover {
-  color: #111827 !important;
-}
-
-html.light .service-card,
-html.light .journey-card,
-html.light .project-modal-surface,
-html.light .screenshot-carousel-shell {
-  background: rgba(255, 255, 255, 0.94) !important;
-  border-color: rgba(15, 23, 42, 0.14) !important;
-  color: #0f172a !important;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
-}
-
-html.light .service-card-title,
-html.light .journey-card-title,
-html.light .modal-strong-text,
-html.light .carousel-title {
-  color: #0f172a !important;
-}
-
-html.light .service-card-body,
-html.light .journey-description,
-html.light .journey-achievement,
-html.light .modal-body-text,
-html.light .carousel-caption {
-  color: #334155 !important;
-}
-
-html.light .journey-description,
-html.light .modal-soft-panel {
-  background: rgba(248, 250, 252, 0.96) !important;
-  border-color: rgba(15, 23, 42, 0.14) !important;
-}
-
-html.light .journey-logo-frame {
-  background: #ffffff !important;
-  border-color: rgba(15, 23, 42, 0.12) !important;
-}
-
-html.light .project-preview-badge,
-html.light .modal-icon-button,
-html.light .carousel-control,
-html.light .modal-secondary-action {
-  background: rgba(255, 255, 255, 0.94) !important;
-  color: #0f172a !important;
-  border-color: rgba(15, 23, 42, 0.16) !important;
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14);
-}
-
-html.light .project-details-button,
-html.light .modal-primary-action {
-  background: #111827 !important;
-  color: #ffffff !important;
-  border-color: #111827 !important;
-}
-
-html.light .modal-chip {
-  background: rgba(15, 23, 42, 0.06) !important;
-  border-color: rgba(15, 23, 42, 0.12) !important;
-  color: #334155 !important;
-}
-
-/* Light mode overrides for Controls button and Controls Guide modal */
-html.light .game-controls-btn {
-  background-color: rgba(255, 255, 255, 0.92) !important;
-  border-color: rgba(15, 23, 42, 0.14) !important;
-  color: #3730a3 !important;
-}
-
-html.light .game-controls-btn:hover {
-  background-color: #ffffff !important;
-  color: #4f46e5 !important;
-  border-color: rgba(15, 23, 42, 0.22) !important;
-}
-
-html.light .game-modal {
-  background-color: rgba(255, 255, 255, 0.94) !important;
-  border-color: rgba(15, 23, 42, 0.14) !important;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.16) !important;
-}
-
-html.light .game-modal div.w-7.h-7,
-html.light .game-modal div.w-16 {
-  background-color: #e2e8f0 !important;
-  border-color: rgba(15, 23, 42, 0.18) !important;
-  color: #0f172a !important;
-}
-
-html.light .game-modal button.w-full {
-  background-color: #0f172a !important;
-  color: #ffffff !important;
-}
-
-html.light .game-modal button.w-full:hover {
-  background-color: #1e293b !important;
-}
-
-/* Light mode overrides for gamepad console toggle button */
 html.light .console-toggle-btn {
-  background-color: rgba(255, 255, 255, 0.92) !important;
-  border-color: rgba(15, 23, 42, 0.14) !important;
-  color: #3730a3 !important;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08) !important;
+  background-color: rgba(251, 249, 245, 0.94) !important;
+  border-color: var(--border) !important;
+  color: var(--accent-text) !important;
+  box-shadow: 0 4px 12px rgba(20, 20, 19, 0.08) !important;
 }
 
-html.light .console-toggle-btn:hover {
-  background-color: #ffffff !important;
-  color: #4f46e5 !important;
-  border-color: rgba(15, 23, 42, 0.22) !important;
+html.light .game-controls-btn {
+  background-color: rgba(251, 249, 245, 0.94) !important;
+  border-color: var(--border) !important;
+  color: var(--accent-text) !important;
 }
 
+/* Radix Accordion & Dialog Animations */
+@keyframes accordion-down {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+}
 
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
 
+@keyframes dialog-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-content-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.radix-accordion-content[data-state="open"] {
+  animation: accordion-down 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.radix-accordion-content[data-state="closed"] {
+  animation: accordion-up 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.radix-dialog-overlay[data-state="open"] {
+  animation: dialog-overlay-in 180ms ease-out;
+}
+
+.radix-dialog-content[data-state="open"] {
+  animation: dialog-content-in 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}

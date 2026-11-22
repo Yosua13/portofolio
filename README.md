@@ -27,12 +27,13 @@ Aplikasi web ini dibangun dengan **Next.js 16**, **React 19**, **TypeScript**, *
 
 ---
 
-### 3. 🏛️ [Sion Ministry v2 (Sion Academy)](https://github.com/sionministry/sionministry-v2)
+### 3. 🏛️ [Sion Ministry v2 (Sion Academy)](https://portal.sionministry.org/)
 * **Kategori**: Fullstack Platform (Offline-First Discipleship Tracking, Medium-Style LMS & Indonesia Map Analytics)
 * **Peran**: Fullstack Developer (2026)
 * **Deskripsi**: Platform manajemen pemuridan berpendekatan **offline-first** untuk pekerja pelayanan lintas kota dan kampus di Indonesia. Dilengkapi Peta Interaktif Persebaran Pelayanan Indonesia, Modul Belajar dengan halaman baca & editor bergaya Medium (*Medium-style reader & authoring*), Jurnal PA, Berita Acara dengan kompresi gambar & penyimpanan S3 Supabase Storage, Crowdfunding Misi, Papan Karier Pelayanan, RBAC 3-peran (Admin, Pekerja, Jemaat) dengan persetujuan registrasi publik, dan pemantauan Sentry.
-* **Tech Stack**: React 19, Vite 6, TypeScript, Tailwind CSS v4, Motion, Anime.js v4, Recharts 3, LocalStorage Offline Cache (`SionDatabase`), Go 1.25.4 (Fiber v2), GORM, Go Embed SQL Migrations, PostgreSQL 15+, Supabase Storage (AWS S3 SDK v2), Google OAuth2, Sentry Go, Google Gemini AI.
-* **Repository**: [github.com/sionministry/sionministry-v2](https://github.com/sionministry/sionministry-v2)
+* **Tech Stack**: React 19, Vite 6, TypeScript, Tailwind CSS v4, Motion, Anime.js v4, Recharts 3, LocalStorage Offline Cache (`SionDatabase`), Go 1.25.4 (Fiber v2), GORM, Go Embed SQL Migrations, PostgreSQL 16, Supabase Storage (AWS S3 SDK v2), Google OAuth2, Sentry Go, Google Gemini AI.
+* **Repository**: [github.com/Yosua13/sion-ministry](https://github.com/Yosua13/sion-ministry)
+* **Live Web**: [https://portal.sionministry.org/](https://portal.sionministry.org/)
 
 ---
 
@@ -47,7 +48,7 @@ Aplikasi web ini dibangun dengan **Next.js 16**, **React 19**, **TypeScript**, *
 
 ### 5. 🛠️ [Logia Log (Target-Agnostic Enterprise Edition)](https://github.com/Yosua13/logia-log)
 * **Kategori**: Enterprise Observability & Developer Platform
-* **Peran**: Backend / Platform Engineer (2026)
+* **Peran**: Fullstack Developer (2026)
 * **Deskripsi**: Platform observabilitas real-time target-agnostik yang menyatukan **MOD-01 Grafana-Style Live Log Explorer** (SSE streaming, RabbitMQ spike absorber + DLX/DLQ, Upstash Redis SHA-256 deduplication, PostgreSQL 18.4 UUIDv7 range-partitioned storage), **MOD-02 Postman-Style Interactive API Testing Studio** (HTTP Proxy Engine), dan **MOD-03/04 7-Layer Deep GitHub AI Diagnostic Platform** (korelasi stack trace error, inspeksi skema DDL database target secara *read-only*, dan *source code* GitHub REST/GraphQL) dalam antarmuka taktis *60-30-10 Obsidian Black & Royal Gold*.
 * **Tech Stack**: Java 25 LTS (Project Loom Virtual Threads), Spring Boot 4.1.2 (Spring Framework 7 / Jakarta EE 11 - Hexagonal Architecture), PostgreSQL 18.4 (`uuidv7()` & Range Partitioning), Flyway 12, RabbitMQ 4.x (DLX/DLQ), Upstash Serverless Redis (TLS Lettuce Pool), Server-Sent Events (SSE), React 19, TypeScript 6, Vite 8, Tailwind CSS v4, Feature-Sliced Design (FSD), GitHub REST/GraphQL API, Google Gemini AI.
 * **Repository**: [github.com/Yosua13/logia-log](https://github.com/Yosua13/logia-log)
@@ -72,14 +73,3 @@ Section **Solutions (`WhatIDoSection.tsx`)** dirancang untuk melayani kebutuhan 
 - 🌓 **Theme Switching (Dark / Light Mode)**: Mode gelap cybernetic dan mode terang berkonotasi bersih.
 - 🕹️ **WASD Flight Control (Play Mode)**: Mini-game pesawat 3D Three.js interaktif di halaman utama.
 - 🎬 **Video Demo & Interactive Module/Screenshot Carousel**: Pratinjau video demo saat kartu proyek di-hover serta carousel screenshot & blueprint modul di modal detail.
-
----
-
-## 💻 Cara Menjalankan Secara Lokal
-
-```bash
-npm install
-npm run dev
-```
-
-Akses di `http://localhost:3000`.

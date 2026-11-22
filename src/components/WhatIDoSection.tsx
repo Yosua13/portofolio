@@ -1,259 +1,411 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import type { ReactNode } from "react";
+import { ArrowUpRight, CheckCircle2 } from "lucide-react";
 import {
-  Globe,
-  ShoppingBag,
-  Receipt,
-  Layers,
-  Bot,
-  Building2,
-  CheckCircle2,
-  MessageCircle,
-  ArrowRight
-} from "lucide-react";
+  RiBuilding2Fill,
+  RiGlobalLine,
+  RiRobot2Fill,
+  RiStore3Fill
+} from "react-icons/ri";
+import { MdPointOfSale } from "react-icons/md";
+import {
+  FaHandshake,
+  FaServer,
+  FaTicket,
+  FaWhatsapp
+} from "react-icons/fa6";
+import { TbApi } from "react-icons/tb";
 import SectionHeader from "./SectionHeader";
 import { useLanguage } from "@/context/LanguageContext";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
-const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 25 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
-};
-
-const staggerContainer: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
+interface ServiceItem {
+  num: string;
+  eyebrow: string;
+  icon: ReactNode;
+  title: string;
+  description: string;
+  deliverables: string[];
+  tags: string[];
+  hasTicketTag?: boolean;
+}
 
 export default function WhatIDoSection() {
   const { language } = useLanguage();
 
-  const services = [
+  const umkmServices: ServiceItem[] = [
     {
-      icon: <Globe className="w-8 h-8 text-cyan-400" />,
-      badge: language === "id" ? "Branding & Kredibilitas" : "Branding & Credibility",
+      num: "01",
+      eyebrow: language === "id" ? "BRANDING & KREDIBILITAS" : "BRANDING & TRUST",
+      icon: <RiGlobalLine className="h-5 w-5" />,
       title:
         language === "id"
-          ? "Website Company Profile & Landing Page"
+          ? "Company Profile & Landing Page"
           : "Company Profile & Landing Pages",
       description:
         language === "id"
-          ? "Pembuatan website profil usaha, katalog layanan, dan landing page promosi yang cepat, modern, responsif di semua perangkat, serta teroptimasi SEO untuk meningkatkan kepercayaan pelanggan terhadap bisnis UMKM maupun perusahaan Anda."
-          : "Crafting fast, modern, mobile-responsive, and SEO-optimized company profile websites and promotional landing pages that elevate brand credibility for SMEs (UMKM) and corporate businesses.",
+          ? "Website profil usaha yang tampil meyakinkan, kencang di perangkat seluler, dan dirancang agar mudah ditemukan calon klien di Google."
+          : "Editorial-grade business websites engineered for fast mobile loading, Google visibility, and qualified lead conversion.",
       deliverables:
         language === "id"
-          ? ["Company Profile", "Landing Page Promosi", "Optimasi SEO & Kecepatan", "Desain Mobile-Friendly"]
-          : ["Company Profile", "Promo Landing Page", "SEO & Speed Optimization", "Mobile-Responsive UI"]
+          ? [
+              "Desain kustom responsif selaras identitas brand usaha Anda",
+              "Integrasi tombol WhatsApp & formulir penawaran instan",
+              "Struktur SEO-ready untuk menjangkau pencarian lokal maupun nasional"
+            ]
+          : [
+              "Custom responsive architecture tailored to your brand identity",
+              "Direct WhatsApp routing & structured inquiry lead capture",
+              "SEO-ready semantic hierarchy built for search discovery"
+            ],
+      tags: ["Company Profile", "Landing Page", "SEO Ready"]
     },
     {
-      icon: <ShoppingBag className="w-8 h-8 text-indigo-400" />,
-      badge: language === "id" ? "Penjualan Online 24/7" : "24/7 Online Sales",
+      num: "02",
+      eyebrow: language === "id" ? "PENJUALAN MANDIRI" : "DIRECT COMMERCE",
+      icon: <RiStore3Fill className="h-5 w-5" />,
       title:
         language === "id"
-          ? "E-Commerce & Toko Online Mandiri"
-          : "E-Commerce & Custom Online Stores",
+          ? "E-Commerce & Toko Online"
+          : "E-Commerce & Online Stores",
       description:
         language === "id"
-          ? "Pengembangan website toko online dan katalog produk mandiri tanpa potongan komisi marketplace. Dilengkapi keranjang belanja, manajemen pesanan, serta integrasi Payment Gateway otomatis (QRIS, Virtual Account Bank, E-Wallet)."
-          : "Building independent online stores and digital catalogs free from marketplace commission cuts. Complete with shopping cart, order management, and automated Payment Gateway checkout (QRIS, Bank Virtual Accounts, E-Wallets).",
+          ? "Etalase digital milik sendiri tanpa potongan komisi marketplace — lengkap dengan katalog produk, keranjang, dan pembayaran QRIS / Virtual Account."
+          : "Commission-free digital storefronts owned end-to-end with searchable catalogs, cart flows, and automated local checkouts.",
       deliverables:
         language === "id"
-          ? ["Katalog & Keranjang Belanja", "Payment Gateway (QRIS / VA)", "Manajemen Order & Pelanggan", "Dashboard Penjualan"]
-          : ["Catalog & Shopping Cart", "Payment Gateway (QRIS / VA)", "Order & Customer Management", "Sales Dashboard"]
+          ? [
+              "Katalog produk bervarian, promo harga & perhitungan ongkos kirim",
+              "Pembayaran otomatis via QRIS, Virtual Account & Midtrans",
+              "Dashboard admin terpusat untuk verifikasi pesanan real-time"
+            ]
+          : [
+              "Variant product catalogs, pricing tiers & shipping calculators",
+              "Automated QRIS, Virtual Account & Midtrans settlement",
+              "Real-time fulfillment dashboard for incoming customer orders"
+            ],
+      tags:
+        language === "id"
+          ? ["Katalog & Cart", "QRIS / Midtrans", "Tanpa Komisi"]
+          : ["Catalog & Cart", "QRIS / Midtrans", "Zero Commission"]
     },
     {
-      icon: <Receipt className="w-8 h-8 text-emerald-400" />,
-      badge: language === "id" ? "Retail, F&B & Jasa" : "Retail, F&B & Services",
+      num: "03",
+      eyebrow: language === "id" ? "RETAIL, F&B & STOK" : "RETAIL, F&B & STOCK",
+      icon: <MdPointOfSale className="h-5 w-5" />,
       title:
         language === "id"
-          ? "Sistem Kasir (POS) & Inventori Stok"
-          : "Point of Sale (POS) & Inventory Systems",
+          ? "Sistem Kasir (POS) & Inventori"
+          : "Point of Sale (POS) & Inventory",
       description:
         language === "id"
-          ? "Aplikasi Point of Sale (POS) kasir digital dan manajemen stok gudang yang disesuaikan dengan alur bisnis UMKM Anda—mencakup pencatatan transaksi kasir real-time, cetak struk/kwitansi digital, pantauan stok barang, hingga laporan laba-rugi otomatis."
-          : "Custom Point of Sale (POS) cashier and inventory management software tailored to your business workflow—featuring real-time transaction logging, digital/printed receipts, stock alerts, and automated financial reports.",
+          ? "Perangkat lunak kasir harian untuk kedai, toko retail, dan cabang usaha dengan kontrol stok gudang dan rekap laba-rugi yang rapi."
+          : "Reliable cashier and warehouse tooling for retail & F&B operators with automated inventory tracking and daily profit clarity.",
       deliverables:
         language === "id"
-          ? ["Kasir Digital (POS)", "Manajemen Stok & Gudang", "Cetak Struk / Kwitansi PDF", "Laporan Keuangan Otomatis"]
-          : ["Digital Cashier (POS)", "Stock & Warehouse Tracking", "Receipt & PDF Invoicing", "Automated Financial Reports"]
+          ? [
+              "Transaksi kasir cepat + cetak struk thermal & invoice PDF",
+              "Pemotongan stok bahan/produk otomatis & peringatan stok menipis",
+              "Rekap omzet, kas masuk-keluar & laporan keuangan harian"
+            ]
+          : [
+              "Rapid checkout supporting thermal receipt & PDF invoices",
+              "Automatic stock deduction with proactive low-stock alerts",
+              "Consolidated daily revenue, cashflow & margin reports"
+            ],
+      tags:
+        language === "id"
+          ? ["Kasir Digital", "Stok Otomatis", "Laporan Keuangan"]
+          : ["Digital POS", "Stock Control", "Profit Reports"]
     },
     {
-      icon: <Layers className="w-8 h-8 text-pink-400" />,
-      badge: language === "id" ? "Digitalisasi UMKM" : "SME Digital Transformation",
+      num: "04",
+      eyebrow:
+        language === "id"
+          ? "CUSTOM, TIKETING & OTOMATISASI"
+          : "CUSTOM, TICKETING & AUTOMATION",
+      icon: <RiRobot2Fill className="h-5 w-5" />,
+      hasTicketTag: true,
       title:
         language === "id"
-          ? "Sistem Operasional & Digitalisasi Bisnis"
-          : "Business Digitization & Custom Web/Mobile Apps",
+          ? "Sistem Custom, Tiketing & Otomatisasi WA/AI"
+          : "Custom Systems, Ticketing & WA/AI Automation",
       description:
         language === "id"
-          ? "Transformasi pembukuan dan operasional manual (kertas/Excel) menjadi aplikasi perangkat lunak terpusat berbasis Web maupun Mobile—seperti sistem manajemen kos/properti, sistem booking & penjadwalan, CRM pelanggan, dan portal admin operasional."
-          : "Transforming manual paper or Excel operations into centralized Web and Mobile applications—such as property/boarding management, booking & scheduling systems, customer CRM, and internal operational dashboards.",
+          ? "Gantikan pencatatan spreadsheet manual dengan aplikasi web/mobile khusus mulai dari sistem tiketing digital, manajemen kos, hingga notifikasi WhatsApp & AI."
+          : "Replace scattered spreadsheets with bespoke platforms covering digital ticketing, bookings, rentals, WhatsApp workflows, and grounded AI.",
       deliverables:
         language === "id"
-          ? ["Sistem Booking & Penjadwalan", "Manajemen Properti / Kos", "Dashboard Admin & CRM", "Aplikasi Web & Mobile"]
-          : ["Booking & Scheduling Systems", "Property / Rental Management", "Admin Dashboards & CRM", "Web & Mobile Applications"]
-    },
-    {
-      icon: <Bot className="w-8 h-8 text-amber-400" />,
-      badge: language === "id" ? "Efisiensi & AI" : "Automation & AI",
-      title:
+          ? [
+              "Sistem Tiketing Digital (e-ticket event QR check-in & support ticket SLA)",
+              "Aplikasi manajemen kos, jadwal booking & portal layanan internal",
+              "Pengingat tagihan WhatsApp otomatis & asisten AI berbasis data usaha"
+            ]
+          : [
+              "Digital Ticketing System (QR event check-in & SLA support queue)",
+              "Rental/kos billing portals, scheduling & internal operations",
+              "Automated WhatsApp reminders & business-grounded AI assistants"
+            ],
+      tags:
         language === "id"
-          ? "Otomatisasi Bisnis, WhatsApp & Integrasi AI"
-          : "Workflow Automation, WhatsApp & AI Integration",
-      description:
-        language === "id"
-          ? "Mengurangi pekerjaan administratif berulang melalui penjadwalan tagihan otomatis, penerbitan invoice PDF instan, pengiriman pengingat & notifikasi pesanan langsung ke WhatsApp pelanggan, serta asisten AI cerdas untuk bisnis Anda."
-          : "Eliminating repetitive admin tasks with automated billing schedulers, instant PDF invoice generation, direct WhatsApp customer notifications, and intelligent AI assistants integrated into your business workflow.",
-      deliverables:
-        language === "id"
-          ? ["Notifikasi WhatsApp Otomatis", "Auto-Billing & Invoice PDF", "Integrasi AI (Google Gemini)", "Webhook & Sinkronisasi Data"]
-          : ["Automated WhatsApp Alerts", "Auto-Billing & PDF Invoices", "AI Integration (Gemini)", "Webhooks & Data Sync"]
-    },
-    {
-      icon: <Building2 className="w-8 h-8 text-orange-400" />,
-      badge: language === "id" ? "Kemitraan B2B & Korporasi" : "B2B & Corporate Partnership",
-      title:
-        language === "id"
-          ? "Kerjasama Perusahaan & Enterprise Software"
-          : "Corporate Partnership & Enterprise Engineering",
-      description:
-        language === "id"
-          ? "Terbuka untuk bekerjasama dengan perusahaan, agensi digital, maupun startup—baik secara project-based, kontrak freelance, maupun dedicated engineer. Berpengalaman membangun arsitektur backend (Java Spring Boot, Golang, NestJS), REST API, dan modernisasi sistem."
-          : "Open to partnering with companies, agencies, and startups for project-based, freelance contract, or dedicated engineering roles. Experienced in scalable backend architectures (Java Spring Boot, Golang, NestJS), REST APIs, and system modernization.",
-      deliverables:
-        language === "id"
-          ? ["Kerjasama B2B / Kontrak", "Java Spring Boot & Golang", "Next.js / React / TypeScript", "Integrasi API & Microservices"]
-          : ["B2B & Contract Ready", "Java Spring Boot & Golang", "Next.js / React / TypeScript", "API & Microservices Architecture"]
+          ? ["Sistem Tiketing", "Booking & Kos", "WA & AI Automation"]
+          : ["Ticketing System", "Booking & Rental", "WA & AI Automation"]
     }
   ];
 
-  return (
-    <motion.section
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
-      variants={staggerContainer}
-      id="what-i-do"
-      className="space-y-10 scroll-mt-32"
+  const b2bServices: ServiceItem[] = [
+    {
+      num: "01",
+      eyebrow: "ENTERPRISE ENGINEERING",
+      icon: <FaServer className="h-4 w-4" />,
+      title: "Backend & Fullstack Engineering",
+      description:
+        language === "id"
+          ? "Pengembangan layanan backend dan aplikasi web korporasi yang stabil, teruji, dan mudah dipelihara jangka panjang."
+          : "End-to-end engineering of resilient, maintainable enterprise applications built to production standards.",
+      deliverables:
+        language === "id"
+          ? [
+              "Arsitektur microservices & hexagonal memakai Java Spring Boot & Golang",
+              "Frontend SPA modern menggunakan Angular, React & Next.js",
+              "Container Docker, orchestrator Kubernetes & pipeline GitLab CI/CD"
+            ]
+          : [
+              "Microservice & hexagonal backends with Java Spring Boot & Golang",
+              "Structured enterprise UIs built with Angular, React & Next.js",
+              "Containerized Docker, Kubernetes & GitLab CI/CD delivery pipelines"
+            ],
+      tags: ["Java Spring Boot", "Golang", "Angular", "React / Next.js"]
+    },
+    {
+      num: "02",
+      eyebrow: language === "id" ? "INTEGRASI & PERFORMA" : "INTEGRATION & SCALE",
+      icon: <TbApi className="h-5 w-5" />,
+      title:
+        language === "id"
+          ? "API Integration & System Modernization"
+          : "API Integration & Modernization",
+      description:
+        language === "id"
+          ? "Jembatan API lintas sistem, antrean pesan asinkron, integrasi payment gateway, dan penyetelan performa database beban tinggi."
+          : "Cross-system API bridges, async message brokers, payment gateways, and high-throughput SQL optimization.",
+      deliverables:
+        language === "id"
+          ? [
+              "Alur event-driven dengan RabbitMQ, Redis & verifikasi Webhook",
+              "Optimasi query SQL & connection pooling Oracle maupun PostgreSQL",
+              "Integrasi payment gateway, SSO & pelaporan dokumen/Jasper"
+            ]
+          : [
+              "Event-driven workflows via RabbitMQ, Redis & signed Webhooks",
+              "Oracle & PostgreSQL query tuning and pool management",
+              "Payment gateways, role-based SSO & enterprise PDF pipelines"
+            ],
+      tags: ["REST API & SSE", "RabbitMQ & Redis", "Oracle & PostgreSQL"]
+    },
+    {
+      num: "03",
+      eyebrow: language === "id" ? "KOLABORASI TIM" : "TEAM PARTNERSHIP",
+      icon: <FaHandshake className="h-5 w-5" />,
+      title:
+        language === "id"
+          ? "Project-Based / Full-Time Engineer"
+          : "Project-Based / Full-Time Partner",
+      description:
+        language === "id"
+          ? "Terbuka untuk kontrak pengerjaan proyek terukur maupun bergabung penuh waktu sebagai Software Engineer dalam tim produk Anda."
+          : "Available for milestone-based freelance engagements as well as full-time Software Engineering roles.",
+      deliverables:
+        language === "id"
+          ? [
+              "Komunikasi teknis terstruktur mulai dari PRD hingga handover produksi",
+              "Codebase bersih, tervalidasi API (Postman/Test) & terdokumentasi rapi",
+              "Fleksibel untuk kebutuhan proyek UMKM, agensi, atau posisi kerja tetap"
+            ]
+          : [
+              "Structured engineering delivery from PRD through rollout",
+              "Clean, API-validated & maintainable production codebases",
+              "Flexible engagement for freelance builds or full-time teams"
+            ],
+      tags:
+        language === "id"
+          ? ["Freelance & Full-Time", "Clean Architecture", "Production Ready"]
+          : ["Freelance & Full-Time", "Clean Architecture", "Production Ready"]
+    }
+  ];
+
+  const renderEditorialRow = (service: ServiceItem) => (
+    <div
+      key={service.title}
+      className="group grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start py-7 sm:py-9 px-3 sm:px-4 -mx-3 sm:-mx-4 rounded-2xl transition-colors duration-200 hover:bg-[var(--surface)]/75 text-left"
     >
-      <motion.div variants={fadeInUp}>
-        <SectionHeader
-          topText={language === "id" ? "Layanan Digitalisasi & Rekayasa Sistem" : "Services & Digitalization Expertise"}
-          mainText={language === "id" ? "What I Do" : "What I Do"}
-          subText="Solutions"
-          bottomText={
-            language === "id"
-              ? "Solusi pembuatan produk, digitalisasi UMKM, & kemitraan pengembangan software perusahaan"
-              : "How I can help build, digitalize, and scale your business or enterprise systems"
-          }
-          watermark="SOLUTIONS"
-        />
-      </motion.div>
+      {/* Col 1: Large Editorial Index + Architectural Icon Tile */}
+      <div className="lg:col-span-2 flex items-center lg:flex-col lg:items-start gap-4">
+        <span className="font-editorial italic text-4xl sm:text-5xl leading-none text-[var(--muted-foreground)]/45 group-hover:text-[var(--accent-text)] transition-colors select-none">
+          {service.num}
+        </span>
 
-      <motion.div
-        variants={staggerContainer}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-      >
-        {services.map((service, index) => (
-          <motion.div
-            key={index}
-            variants={fadeInUp}
-            className="service-card group relative bg-[#0d0f18]/40 border border-white/5 hover:border-indigo-500/30 rounded-3xl p-6 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-indigo-500/5 overflow-hidden flex flex-col justify-between gap-5 text-left"
-          >
-            {/* Background Hover Glow */}
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-            {/* Top Corner Bracket */}
-            <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white/0 group-hover:border-white/10 group-hover:w-3 group-hover:h-3 transition-all duration-300" />
-
-            <div className="space-y-4">
-              {/* Top Row: Icon & Category Badge */}
-              <div className="flex items-center justify-between gap-3">
-                <div className="p-3 bg-white/5 border border-white/5 rounded-2xl group-hover:scale-110 transition-transform duration-500 shadow-inner">
-                  {service.icon}
-                </div>
-                <span className="rounded-full border border-indigo-500/25 bg-indigo-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-indigo-300">
-                  {service.badge}
-                </span>
-              </div>
-
-              {/* Content */}
-              <div className="space-y-2.5">
-                <h3 className="service-card-title text-lg font-bold text-white group-hover:text-indigo-400 transition-colors tracking-wide">
-                  {service.title}
-                </h3>
-                <p className="service-card-body text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
-                  {service.description}
-                </p>
-              </div>
-            </div>
-
-            {/* Deliverables Chips */}
-            <div className="pt-3 border-t border-white/5 flex flex-wrap gap-1.5">
-              {service.deliverables.map((item) => (
-                <span
-                  key={item}
-                  className="inline-flex items-center gap-1 rounded-lg border border-white/5 bg-white/[0.03] px-2.5 py-1 text-[10px] font-semibold text-slate-300"
-                >
-                  <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
-                  {item}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {/* Bottom UMKM & Corporate Collaboration Banner */}
-      <motion.div
-        variants={fadeInUp}
-        className="service-card relative overflow-hidden rounded-3xl border border-indigo-500/25 bg-gradient-to-r from-[#0d0f18]/90 via-indigo-950/25 to-[#0d0f18]/90 p-6 sm:p-8 md:p-10 shadow-2xl"
-      >
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 text-left">
-          <div className="space-y-2.5 max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              {language === "id"
-                ? "Terbuka untuk Proyek UMKM & Kemitraan Perusahaan"
-                : "Open for SME Projects & Corporate Partnerships"}
-            </span>
-            <h3 className="service-card-title text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-              {language === "id"
-                ? "Ingin Membuat Produk Digital untuk UMKM atau Butuh Partner Software Engineer untuk Perusahaan?"
-                : "Looking to Build a Digital Product for Your Business or Need a Software Engineering Partner?"}
-            </h3>
-            <p className="service-card-body text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
-              {language === "id"
-                ? "Mulai dari pembuatan Company Profile, E-Commerce, Sistem Kasir (POS), hingga aplikasi operasional custom dan kerjasama pengembangan sistem berskala perusahaan—saya siap membantu dari tahap perancangan hingga sistem siap digunakan."
-                : "From Company Profiles, E-Commerce stores, and Point of Sale (POS) systems to custom operational software and B2B enterprise engineering partnerships—I handle end-to-end delivery from architecture design to production deployment."}
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3 shrink-0">
-            <a
-              href="https://wa.me/6282251396690"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-5 py-3.5 text-xs font-extrabold uppercase tracking-wider text-slate-950 transition-all hover:-translate-y-0.5 shadow-lg shadow-emerald-500/20"
-            >
-              <MessageCircle className="w-4 h-4" />
-              {language === "id" ? "Konsultasi via WhatsApp" : "Consult via WhatsApp"}
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 px-5 py-3.5 text-xs font-bold uppercase tracking-wider text-white transition-all hover:-translate-y-0.5"
-            >
-              {language === "id" ? "Hubungi Saya" : "Contact Me"}
-              <ArrowRight className="w-4 h-4" />
-            </a>
-          </div>
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--foreground)] transition-colors duration-200 group-hover:border-[var(--foreground)] group-hover:bg-[var(--foreground)] group-hover:text-[var(--bg)]">
+          {service.icon}
         </div>
-      </motion.div>
-    </motion.section>
+      </div>
+
+      {/* Col 2: Eyebrow, Title, Narrative & Tags */}
+      <div className="lg:col-span-5 space-y-2.5">
+        <span className="inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--accent-text)]">
+          {service.hasTicketTag && <FaTicket className="h-3 w-3" />}
+          {service.eyebrow}
+        </span>
+
+        <h3 className="text-xl sm:text-2xl font-semibold tracking-[-0.02em] text-[var(--foreground)] leading-snug">
+          {service.title}
+        </h3>
+
+        <p className="text-xs sm:text-sm leading-relaxed text-[var(--muted-foreground)]">
+          {service.description}
+        </p>
+
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          {service.tags.map((tag) => (
+            <Badge
+              key={tag}
+              variant={
+                tag === "Sistem Tiketing" || tag === "Ticketing System"
+                  ? "accent"
+                  : "outline"
+              }
+              className="text-[10px]"
+            >
+              {tag}
+            </Badge>
+          ))}
+        </div>
+      </div>
+
+      {/* Col 3: Direct Deliverable List & Editorial Link */}
+      <div className="lg:col-span-5 space-y-4">
+        <ul className="space-y-2.5">
+          {service.deliverables.map((item) => (
+            <li
+              key={item}
+              className="flex items-start gap-2.5 text-xs sm:text-sm leading-relaxed text-[var(--foreground)]/90"
+            >
+              <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5 text-[var(--accent-text)]" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="pt-1">
+          <a
+            href="#contact"
+            className="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-wider text-[var(--foreground)] underline decoration-[var(--border-strong)] underline-offset-4 transition-colors hover:text-[var(--accent-text)] hover:decoration-[var(--accent-text)]"
+          >
+            {language === "id" ? "Konsultasi Layanan Ini" : "Discuss This Service"}
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <section id="what-i-do" className="space-y-8 scroll-mt-28">
+      <Tabs defaultValue="umkm" className="space-y-2">
+        <SectionHeader
+          index="02"
+          eyebrow={language === "id" ? "Solusi Digital" : "Solutions"}
+          title={language === "id" ? "Layanan &" : "Digital"}
+          titleItalic={language === "id" ? "Kolaborasi" : "Solutions"}
+          subtitle={
+            language === "id"
+              ? "Solusi software siap pakai untuk digitalisasi UMKM hingga rekayasa sistem skala enterprise."
+              : "Actionable software systems built for growing SMEs and scalable corporate engineering teams."
+          }
+          action={
+            <TabsList>
+              <TabsTrigger value="umkm">
+                <RiStore3Fill className="h-3.5 w-3.5" />
+                {language === "id" ? "UMKM & Bisnis" : "SME & Business"}
+              </TabsTrigger>
+              <TabsTrigger value="b2b">
+                <RiBuilding2Fill className="h-3.5 w-3.5" />
+                {language === "id" ? "Perusahaan (B2B)" : "Corporate (B2B)"}
+              </TabsTrigger>
+            </TabsList>
+          }
+        />
+
+        <TabsContent value="umkm" className="mt-0">
+          <div className="divide-y divide-[var(--border)] border-b border-[var(--border)]">
+            {umkmServices.map(renderEditorialRow)}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="b2b" className="mt-0">
+          <div className="divide-y divide-[var(--border)] border-b border-[var(--border)]">
+            {b2bServices.map(renderEditorialRow)}
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      {/* Studio Callout Strip — Harmonized Surface */}
+      <div className="relative overflow-hidden rounded-2xl border border-[var(--border-strong)] bg-[var(--surface)] text-[var(--foreground)] p-6 sm:p-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 text-left shadow-[var(--card-shadow)]">
+        <div
+          aria-hidden="true"
+          className="absolute inset-y-0 left-0 w-1 bg-[var(--accent)]"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[var(--accent-soft)] via-transparent to-transparent opacity-60"
+        />
+
+        <div className="relative z-10 space-y-2 max-w-2xl">
+          <span className="inline-flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--emerald-text)]">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            {language === "id"
+              ? "Siap Mulai Proyek UMKM atau Kolaborasi Tim"
+              : "Ready for SME Builds, Contracts & Full-Time Teams"}
+          </span>
+          <p className="text-xl sm:text-2xl font-semibold tracking-tight leading-snug">
+            {language === "id" ? (
+              <>
+                Butuh website, toko online, kasir POS, sistem{" "}
+                <span className="font-editorial italic font-normal text-[var(--accent-text)]">
+                  tiketing
+                </span>
+                , atau engineer siap pakai?
+              </>
+            ) : (
+              <>
+                Need a company website, online store, POS,{" "}
+                <span className="font-editorial italic font-normal text-[var(--accent-text)]">
+                  ticketing
+                </span>{" "}
+                system, or full-stack engineer?
+              </>
+            )}
+          </p>
+        </div>
+
+        <div className="relative z-10 flex flex-wrap items-center gap-3 shrink-0">
+          <Button variant="emerald" size="md" asChild>
+            <a href="https://wa.me/6282251396690" target="_blank" rel="noopener noreferrer">
+              <FaWhatsapp className="h-4 w-4" />
+              WhatsApp
+            </a>
+          </Button>
+          <Button variant="accent" size="md" asChild>
+            <a href="#contact">
+              {language === "id" ? "Diskusi Proyek" : "Discuss Project"}
+              <ArrowUpRight className="h-4 w-4" />
+            </a>
+          </Button>
+        </div>
+      </div>
+    </section>
   );
 }
