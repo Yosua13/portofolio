@@ -20,7 +20,6 @@ import SectionHeader from "./SectionHeader";
 import { useLanguage } from "@/context/LanguageContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
 interface ServiceItem {
   num: string;
@@ -352,58 +351,95 @@ export default function WhatIDoSection() {
         </TabsContent>
       </Tabs>
 
-      {/* Studio Callout Strip — Harmonized Surface */}
-      <div className="relative overflow-hidden rounded-2xl border border-[var(--border-strong)] bg-[var(--surface)] text-[var(--foreground)] p-6 sm:p-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 text-left shadow-[var(--card-shadow)]">
-        <div
-          aria-hidden="true"
-          className="absolute inset-y-0 left-0 w-1 bg-[var(--accent)]"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[var(--accent-soft)] via-transparent to-transparent opacity-60"
-        />
-
-        <div className="relative z-10 space-y-2 max-w-2xl">
-          <span className="inline-flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--emerald-text)]">
+      {/* Open Editorial Collaboration Spread (No Boxy Card / No Slop) */}
+      <div className="pt-4 pb-10 sm:py-12 border-b border-[var(--border)] text-left">
+        <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--muted-foreground)] mb-6">
+          <span>
+            {language === "id"
+              ? "02.5 — MULAI KOLABORASI"
+              : "02.5 — START A COLLABORATION"}
+          </span>
+          <span className="inline-flex items-center gap-2 text-[var(--emerald-text)]">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
             {language === "id"
-              ? "Siap Mulai Proyek UMKM atau Kolaborasi Tim"
-              : "Ready for SME Builds, Contracts & Full-Time Teams"}
+              ? "Tersedia · Bandung (WIB)"
+              : "Available · Bandung (UTC+7)"}
           </span>
-          <p className="text-xl sm:text-2xl font-semibold tracking-tight leading-snug">
-            {language === "id" ? (
-              <>
-                Butuh website, toko online, kasir POS, sistem{" "}
-                <span className="font-editorial italic font-normal text-[var(--accent-text)]">
-                  tiketing
-                </span>
-                , atau engineer siap pakai?
-              </>
-            ) : (
-              <>
-                Need a company website, online store, POS,{" "}
-                <span className="font-editorial italic font-normal text-[var(--accent-text)]">
-                  ticketing
-                </span>{" "}
-                system, or full-stack engineer?
-              </>
-            )}
-          </p>
         </div>
 
-        <div className="relative z-10 flex flex-wrap items-center gap-3 shrink-0">
-          <Button variant="emerald" size="md" asChild>
-            <a href="https://wa.me/6282251396690" target="_blank" rel="noopener noreferrer">
-              <FaWhatsapp className="h-4 w-4" />
-              WhatsApp
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
+          <div className="lg:col-span-7">
+            <p className="text-2xl sm:text-4xl font-semibold tracking-[-0.03em] leading-[1.12] text-[var(--foreground)]">
+              {language === "id" ? (
+                <>
+                  Punya rencana website, toko online, kasir POS, sistem{" "}
+                  <span className="font-editorial italic font-normal text-[var(--accent-text)]">
+                    tiketing
+                  </span>
+                  , atau butuh engineer{" "}
+                  <span className="font-editorial italic font-normal text-[var(--accent-text)]">
+                    siap pakai?
+                  </span>
+                </>
+              ) : (
+                <>
+                  Planning a website, online store, POS,{" "}
+                  <span className="font-editorial italic font-normal text-[var(--accent-text)]">
+                    ticketing
+                  </span>{" "}
+                  system, or hiring a{" "}
+                  <span className="font-editorial italic font-normal text-[var(--accent-text)]">
+                    full-stack engineer?
+                  </span>
+                </>
+              )}
+            </p>
+          </div>
+
+          <div className="lg:col-span-5 border-t border-[var(--border)] divide-y divide-[var(--border)]">
+            <a
+              href="https://wa.me/6282251396690"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center justify-between gap-4 py-4 transition-colors"
+            >
+              <div className="min-w-0 space-y-0.5">
+                <span className="inline-flex items-center gap-2 text-sm sm:text-base font-semibold tracking-tight text-[var(--foreground)] group-hover:text-[var(--emerald-text)] transition-colors">
+                  <FaWhatsapp className="h-4 w-4 text-[var(--emerald-text)] shrink-0" />
+                  Chat via WhatsApp
+                </span>
+                <span className="block font-mono text-[11px] text-[var(--muted-foreground)]">
+                  {language === "id"
+                    ? "+62 822 5139 6690 · Balas < 2 Jam"
+                    : "+62 822 5139 6690 · Reply < 2 hrs"}
+                </span>
+              </div>
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--border-strong)] text-[var(--foreground)] transition-all duration-200 group-hover:border-[var(--foreground)] group-hover:bg-[var(--foreground)] group-hover:text-[var(--bg)]">
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </span>
             </a>
-          </Button>
-          <Button variant="accent" size="md" asChild>
-            <a href="#contact">
-              {language === "id" ? "Diskusi Proyek" : "Discuss Project"}
-              <ArrowUpRight className="h-4 w-4" />
+
+            <a
+              href="#contact"
+              className="group flex items-center justify-between gap-4 py-4 border-b border-[var(--border)] transition-colors"
+            >
+              <div className="min-w-0 space-y-0.5">
+                <span className="block text-sm sm:text-base font-semibold tracking-tight text-[var(--foreground)] group-hover:text-[var(--accent-text)] transition-colors">
+                  {language === "id"
+                    ? "Kirim Brief Proyek atau Rekrutmen"
+                    : "Send Project or Hiring Brief"}
+                </span>
+                <span className="block font-mono text-[11px] text-[var(--muted-foreground)]">
+                  {language === "id"
+                    ? "Formulir singkat 30 detik · Konsultasi gratis"
+                    : "30-second inquiry builder · Free discovery"}
+                </span>
+              </div>
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--border-strong)] text-[var(--foreground)] transition-all duration-200 group-hover:border-[var(--accent)] group-hover:bg-[var(--accent)] group-hover:text-white">
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </span>
             </a>
-          </Button>
+          </div>
         </div>
       </div>
     </section>
