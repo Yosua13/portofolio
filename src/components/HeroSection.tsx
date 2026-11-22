@@ -5,6 +5,7 @@ import * as THREE from "three";
 import Image from "next/image";
 import { X, Flame } from "lucide-react";
 import MusicPlayer from "./MusicPlayer";
+import { useLanguage } from "@/context/LanguageContext";
 
 /* ───────────────────────────────────────────
    Star‑field canvas with mouse parallax
@@ -870,44 +871,59 @@ function StarCanvas({
 /* ───────────────────────────────────────────
    Main Hero Component
    ─────────────────────────────────────────── */
-const HERO_STATS = [
-  { value: "5+", label: "Projects Delivered" },
-  { value: "3yr", label: "Experience" },
-  { value: "10+", label: "APIs Built" },
-];
+const HERO_STATS = {
+  id: [
+    { value: "5+", label: "Proyek Dirilis" },
+    { value: "2+ Thn", label: "Pengalaman" },
+    { value: "15+", label: "Sistem & API" },
+  ],
+  en: [
+    { value: "5+", label: "Projects Delivered" },
+    { value: "2+ Yr", label: "Experience" },
+    { value: "15+", label: "Systems & APIs" },
+  ],
+};
 
 const TESTIMONIALS = [
   {
     name: "Gina Sausan Solihah",
-    role: "Project Manager",
-    relation: "Worked with Yosua on the same team",
+    role: { id: "Project Manager", en: "Project Manager" },
+    relation: { id: "Rekan satu tim dengan Yosua", en: "Worked with Yosua on the same team" },
     accent: "from-rose-500 to-orange-400",
-    quote:
-      "I've had the pleasure of working with Yosua in our team, and he has been an excellent developer. Proactive, reliable, and always ready to solve problems with clean and efficient code. A great asset to any tech team!"
+    quote: {
+      id: "Saya senang bekerja bersama Yosua di tim kami, dan ia merupakan developer yang sangat handal. Proaktif, dapat diandalkan, dan selalu siap menyelesaikan masalah dengan kode yang bersih dan efisien. Aset luar biasa bagi tim teknologi manapun!",
+      en: "I've had the pleasure of working with Yosua in our team, and he has been an excellent developer. Proactive, reliable, and always ready to solve problems with clean and efficient code. A great asset to any tech team!"
+    }
   },
   {
     name: "Farah Nadia Putri",
-    role: "UI/UX Designer at PT Tabel Data Informatika",
-    relation: "Worked with Yosua on the same team",
+    role: { id: "UI/UX Designer di PT Tabel Data Informatika", en: "UI/UX Designer at PT Tabel Data Informatika" },
+    relation: { id: "Rekan satu tim dengan Yosua", en: "Worked with Yosua on the same team" },
     accent: "from-amber-200 to-pink-300",
-    quote:
-      "I had the pleasure of working with Yosua on several mobile app projects, and I can confidently say that he was very responsible, conscientious and dedicated to his work as mobile developer with a strong command of both Android and iOS platforms. What sets Yosua apart is not just technical skills, but also his ability to communicate clearly, collaborate effectively, and solve problems creatively."
+    quote: {
+      id: "Saya berkesempatan bekerja bersama Yosua di beberapa proyek aplikasi mobile, dan saya dapat mengatakan dengan yakin bahwa ia sangat bertanggung jawab, teliti, dan berdedikasi tinggi dengan penguasaan platform Android maupun iOS yang kuat. Keunggulan Yosua bukan hanya kemampuan teknis, tetapi juga komunikasi yang jelas, kolaborasi efektif, dan penyelesaian masalah yang kreatif.",
+      en: "I had the pleasure of working with Yosua on several mobile app projects, and I can confidently say that he was very responsible, conscientious and dedicated to his work as mobile developer with a strong command of both Android and iOS platforms. What sets Yosua apart is not just technical skills, but also his ability to communicate clearly, collaborate effectively, and solve problems creatively."
+    }
   },
   {
     name: "Fahmi Fazlurrahman",
-    role: "Lecturer and collaborator",
-    relation: "Managed Yosua directly",
+    role: { id: "Dosen & Kolaborator", en: "Lecturer and collaborator" },
+    relation: { id: "Membimbing Yosua secara langsung", en: "Managed Yosua directly" },
     accent: "from-sky-500 to-cyan-300",
-    quote:
-      "I had the privilege of teaching and working alongside Yosua during his time at Tabel Data Informatika. He quickly distinguished himself through his eagerness to learn, technical proficiency, and dedication to his work. Yosua was proactive in taking on responsibilities beyond his role. I believe Yosua has great potential and will continue to grow and contribute significantly in his future endeavors."
+    quote: {
+      id: "Saya memiliki kehormatan mengajar sekaligus bekerja bersama Yosua selama di Tabel Data Informatika. Ia menonjol melalui semangat belajarnya yang tinggi, kecakapan teknis, dan dedikasinya. Yosua selalu proaktif mengambil tanggung jawab melebihi ekspektasi perannya.",
+      en: "I had the privilege of teaching and working alongside Yosua during his time at Tabel Data Informatika. He quickly distinguished himself through his eagerness to learn, technical proficiency, and dedication to his work. Yosua was proactive in taking on responsibilities beyond his role. I believe Yosua has great potential and will continue to grow and contribute significantly in his future endeavors."
+    }
   },
   {
     name: "Mochamad Salman Ramadhan",
-    role: "Senior Data Platform Engineer",
-    relation: "Managed Yosua directly",
+    role: { id: "Senior Data Platform Engineer", en: "Senior Data Platform Engineer" },
+    relation: { id: "Membimbing Yosua secara langsung", en: "Managed Yosua directly" },
     accent: "from-emerald-500 to-lime-300",
-    quote:
-      "He is a highly adaptable professional who consistently meets tight deadlines and demonstrates a strong sense of responsibility. I have been particularly impressed by his critical thinking abilities and the confident manner in which he approaches and manages tasks."
+    quote: {
+      id: "Ia adalah profesional yang sangat adaptif, konsisten memenuhi tenggat waktu yang ketat, dan menunjukkan rasa tanggung jawab yang kuat. Saya sangat terkesan dengan kemampuan berpikir kritis serta ketenangannya dalam menangani setiap tugas.",
+      en: "He is a highly adaptable professional who consistently meets tight deadlines and demonstrates a strong sense of responsibility. I have been particularly impressed by his critical thinking abilities and the confident manner in which he approaches and manages tasks."
+    }
   }
 ];
 
@@ -920,6 +936,7 @@ export default function HeroSection({
   setPlayMode: (val: boolean) => void;
   playMusicOnStart?: boolean;
 }) {
+  const { language } = useLanguage();
   const [showGreeting, setShowGreeting] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
@@ -975,7 +992,7 @@ export default function HeroSection({
     setIsGameOver(false);
   };
 
-  const stats = HERO_STATS;
+  const stats = HERO_STATS[language];
   const testimonials = TESTIMONIALS;
 
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -1152,7 +1169,7 @@ export default function HeroSection({
                 <>
 
                   {/* Monospace label */}
-                  <p className="label-mono">{"Hi, I'm"}</p>
+                  <p className="label-mono">{language === "id" ? "Halo, saya" : "Hi, I'm"}</p>
 
                   {/* Name with video mask background following jesky.dev */}
                   <div className="relative w-full max-w-2xl select-none mb-4 overflow-visible">
@@ -1196,7 +1213,9 @@ export default function HeroSection({
                       Fullstack Software Engineer
                     </h2>
                     <p className="text-slate-400 font-light leading-relaxed max-w-lg text-sm sm:text-base">
-                      I build scalable backend systems and modern web applications using Java, Spring Boot, Golang, Next.js, and TypeScript. Experienced in developing business applications, database workflows, and clean user interfaces.
+                      {language === "id"
+                        ? "Saya membangun sistem backend berskala enterprise dan solusi digital bisnis (Company Profile, E-Commerce, POS, aplikasi operasional custom) menggunakan Java Spring Boot, Golang, NestJS, React, dan Next.js. Siap membantu digitalisasi UMKM maupun berkolaborasi dengan perusahaan."
+                        : "I build scalable enterprise backend systems and modern business applications (Company Profile, E-Commerce, POS, custom operational software) using Java Spring Boot, Golang, NestJS, React, and Next.js. Open to SME digitalization and corporate partnerships."}
                     </p>
                   </div>
 
@@ -1206,7 +1225,7 @@ export default function HeroSection({
                       href="#projects"
                       className="inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg shadow-indigo-500/15 hover:shadow-indigo-500/25 active:scale-95 duration-300"
                     >
-                      View Projects
+                      {language === "id" ? "Lihat Proyek" : "View Projects"}
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
                     </a>
                     <a
@@ -1214,14 +1233,14 @@ export default function HeroSection({
                       download
                       className="inline-flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg active:scale-95 duration-300"
                     >
-                      Download CV
+                      {language === "id" ? "Unduh CV" : "Download CV"}
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
                     </a>
                     <a
                       href="#contact"
                       className="inline-flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer shadow-lg active:scale-95 duration-300"
                     >
-                      Hire Me
+                      {language === "id" ? "Hubungi Saya" : "Hire Me"}
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg>
                     </a>
                   </div>
@@ -1236,10 +1255,12 @@ export default function HeroSection({
                       <div className="mb-4 flex items-start justify-between gap-4">
                         <div>
                           <span className="text-[9px] font-mono font-bold text-indigo-400 uppercase tracking-widest block">
-                            LinkedIn Recommendations
+                            {language === "id" ? "Rekomendasi LinkedIn" : "LinkedIn Recommendations"}
                           </span>
                           <span className="mt-1 block text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                            {activeTestimonial + 1} of {testimonials.length} received reviews
+                            {language === "id"
+                              ? `${activeTestimonial + 1} dari ${testimonials.length} ulasan rekan kerja`
+                              : `${activeTestimonial + 1} of ${testimonials.length} received reviews`}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -1268,15 +1289,15 @@ export default function HeroSection({
                             {currentTestimonial.name}
                           </span>
                           <span className="mt-0.5 block truncate text-[10px] font-medium text-slate-400">
-                            {currentTestimonial.role}
+                            {currentTestimonial.role[language]}
                           </span>
                           <span className="mt-1 inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-300">
-                            {currentTestimonial.relation}
+                            {currentTestimonial.relation[language]}
                           </span>
                         </div>
 
                         <p className="mt-4 text-[12px] sm:text-xs text-slate-300 leading-relaxed font-light">
-                          &ldquo;{currentTestimonial.quote}&rdquo;
+                          &ldquo;{currentTestimonial.quote[language]}&rdquo;
                         </p>
                       </div>
 
@@ -1424,7 +1445,9 @@ export default function HeroSection({
                     {/* Status badge embedded inside the picture corner */}
                     <div className="absolute top-3 left-3 bg-black/45 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 flex items-center gap-1.5 select-none">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="text-[9px] font-mono font-bold text-slate-300 uppercase tracking-widest">Active Status</span>
+                      <span className="text-[9px] font-mono font-bold text-slate-300 uppercase tracking-widest">
+                        {language === "id" ? "Siap Berkolaborasi" : "Active Status"}
+                      </span>
                     </div>
                   </div>
 
@@ -1446,10 +1469,10 @@ export default function HeroSection({
                     <span className="text-[8px] text-slate-500 font-mono font-bold uppercase tracking-widest block">Tech Stack</span>
                     <div className="flex flex-col gap-2.5 font-sans text-[11px] text-slate-400">
                       {[
-                        { category: "Frontend", items: ["Next.js", "Angular", "TypeScript", "Tailwind CSS"] },
-                        { category: "Backend", items: ["Java", "Spring Boot", "Golang"] },
-                        { category: "Database & Cloud", items: ["SQL Server", "PostgreSQL", "MySQL"] },
-                        { category: "Tools", items: ["Git", "Docker", "REST API", "Postman"] }
+                        { category: "Frontend", items: ["React 19", "Next.js", "TypeScript", "Tailwind CSS"] },
+                        { category: "Backend", items: ["Java Spring Boot", "Golang", "NestJS"] },
+                        { category: "Database & Queue", items: ["PostgreSQL", "Redis", "RabbitMQ"] },
+                        { category: "Tools", items: ["Docker", "Midtrans API", "Git", "Gemini AI"] }
                       ].map((group, idx) => (
                         <div key={idx} className="space-y-1">
                           <span className="text-[8px] font-bold text-slate-500 uppercase tracking-wider block">{group.category}</span>
@@ -1483,7 +1506,11 @@ export default function HeroSection({
           <div className="hero-footer flex items-center justify-between w-full pointer-events-auto">
             <div className="flex items-center gap-2">
               <span className="footer-dot" />
-              <span className="text-slate-400 text-xs font-light">Open to freelance &amp; full-time opportunities | Bandung, ID</span>
+              <span className="text-slate-400 text-xs font-light">
+                {language === "id"
+                  ? "Terbuka untuk digitalisasi UMKM, freelance & kerjasama perusahaan | Bandung, ID"
+                  : "Open to SME digitalization, freelance & full-time opportunities | Bandung, ID"}
+              </span>
             </div>
             <div className="flex items-center gap-3 shrink-0">
               <a
@@ -1491,7 +1518,7 @@ export default function HeroSection({
                 className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/35 hover:border-indigo-500/50 rounded-full text-[10px] font-mono font-bold text-indigo-400 hover:text-indigo-300 transition-all uppercase tracking-wider"
               >
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" /></svg>
-                Email Me
+                {language === "id" ? "Kirim Email" : "Email Me"}
               </a>
               <MusicPlayer playOnStart={playMusicOnStart} playMode={playMode} setPlayMode={setPlayMode} inline={true} />
             </div>

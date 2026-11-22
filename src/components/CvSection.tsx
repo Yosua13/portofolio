@@ -2,6 +2,7 @@
 
 import { motion, Variants } from "framer-motion";
 import { Download, ExternalLink } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -19,6 +20,8 @@ const staggerContainer: Variants = {
 };
 
 export default function CvSection() {
+  const { language } = useLanguage();
+
   return (
     <motion.section
       initial="hidden"
@@ -29,7 +32,6 @@ export default function CvSection() {
       className="pt-16 pb-20 scroll-mt-32 border-t border-white/5"
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
-
         {/* LEFT COLUMN: Title & Actions */}
         <motion.div
           variants={fadeInUp}
@@ -42,7 +44,9 @@ export default function CvSection() {
 
           {/* Description */}
           <p className="text-sm sm:text-base text-slate-300 font-light leading-relaxed max-w-xl">
-            The complete printable curriculum vitae — formal education, technical stack, professional history, and project ledger. Document formatted to professional engineering standards.
+            {language === "id"
+              ? "Dokumen Curriculum Vitae lengkap yang siap dicetak — memuat riwayat pendidikan formal, daftar keahlian teknologi, pengalaman kerja profesional, serta portofolio proyek perangkat lunak."
+              : "The complete printable curriculum vitae — formal education, technical stack, professional history, and project ledger. Document formatted to professional engineering standards."}
           </p>
 
           {/* Action Buttons */}
@@ -54,7 +58,7 @@ export default function CvSection() {
               className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-indigo-600/20 hover:shadow-indigo-600/35 hover:-translate-y-0.5 cursor-pointer"
             >
               <Download className="w-4 h-4" />
-              Download CV (PDF)
+              {language === "id" ? "Unduh CV (PDF)" : "Download CV (PDF)"}
             </a>
 
             {/* Open In New Tab Button */}
@@ -65,7 +69,7 @@ export default function CvSection() {
               className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-transparent hover:bg-white/5 border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all hover:-translate-y-0.5 cursor-pointer"
             >
               <ExternalLink className="w-4 h-4 text-cyan-400" />
-              Open in New Tab
+              {language === "id" ? "Buka di Tab Baru" : "Open in New Tab"}
             </a>
           </div>
         </motion.div>
@@ -97,7 +101,7 @@ export default function CvSection() {
                 rel="noopener noreferrer"
                 className="font-mono text-[9px] sm:text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider flex items-center gap-1 cursor-pointer"
               >
-                OPEN <span className="text-[9px] font-sans">↗</span>
+                {language === "id" ? "BUKA" : "OPEN"} <span className="text-[9px] font-sans">↗</span>
               </a>
             </div>
 
@@ -111,7 +115,6 @@ export default function CvSection() {
             </div>
           </div>
         </motion.div>
-
       </div>
     </motion.section>
   );

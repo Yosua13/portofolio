@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Globe, Layers, Smartphone, AppWindow, Terminal, Database, Cloud, Cpu, Server, PenTool, GitBranch, Box } from "lucide-react";
 import SectionHeader from "./SectionHeader";
+import { useLanguage } from "@/context/LanguageContext";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -12,7 +13,22 @@ const fadeInUp = {
 };
 
 export default function SkillsSection() {
+  const { language } = useLanguage();
   const [activeCategory, setActiveCategory] = useState("All");
+
+  const categoryLabels: Record<string, string> = {
+    All: language === "id" ? "Semua" : "All",
+    Frontend: "Frontend",
+    Backend: "Backend",
+    Database: "Database",
+    Tools: "Tools"
+  };
+
+  const levelLabels: Record<string, string> = {
+    Expert: language === "id" ? "Mahir" : "Expert",
+    Proficient: language === "id" ? "Kompeten" : "Proficient",
+    Intermediate: language === "id" ? "Menengah" : "Intermediate"
+  };
 
   return (
     <motion.section
@@ -25,10 +41,14 @@ export default function SkillsSection() {
     >
       <div className="space-y-10">
         <SectionHeader
-          topText="Abilities"
+          topText={language === "id" ? "Kapabilitas Teknis" : "Abilities"}
           mainText="Skills"
-          subText="Skill Set"
-          bottomText="Technologies and tools I specialize in"
+          subText={language === "id" ? "Keahlian Teknologi" : "Skill Set"}
+          bottomText={
+            language === "id"
+              ? "Teknologi dan perangkat pengembangan yang saya kuasai"
+              : "Technologies and tools I specialize in"
+          }
           watermark="SKILLS"
         />
 
@@ -38,12 +58,13 @@ export default function SkillsSection() {
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
-              className={`relative px-6 py-2.5 rounded-full text-sm font-medium transition-colors duration-300 overflow-hidden border border-white/5 cursor-pointer ${activeCategory === category
-                ? "text-[#0a0a0a] shadow-lg shadow-cyan-500/25"
-                : "bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
-                }`}
+              className={`relative px-6 py-2.5 rounded-full text-sm font-medium transition-colors duration-300 overflow-hidden border border-white/5 cursor-pointer ${
+                activeCategory === category
+                  ? "text-[#0a0a0a] shadow-lg shadow-cyan-500/25"
+                  : "bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
+              }`}
             >
-              <span className="relative z-10">{category}</span>
+              <span className="relative z-10">{categoryLabels[category]}</span>
               {activeCategory === category && (
                 <motion.div
                   layoutId="active-skill-tab"
@@ -63,16 +84,20 @@ export default function SkillsSection() {
           className="text-slate-300 font-light"
         >
           {activeCategory === "All"
-            ? "23 skills across 4 categories."
-            : `${activeCategory === 'Frontend' ? 7 : activeCategory === 'Backend' ? 4 : activeCategory === 'Database' ? 5 : 7} skills in ${activeCategory}.`}
+            ? language === "id"
+              ? "26 keahlian di 4 kategori utama."
+              : "26 skills across 4 categories."
+            : language === "id"
+            ? `${activeCategory === "Frontend" ? 7 : activeCategory === "Backend" ? 5 : activeCategory === "Database" ? 6 : 8} keahlian pada kategori ${activeCategory}.`
+            : `${activeCategory === "Frontend" ? 7 : activeCategory === "Backend" ? 5 : activeCategory === "Database" ? 6 : 8} skills in ${activeCategory}.`}
         </motion.div>
 
         {/* Skills Grid */}
         <motion.div layout className="flex flex-col gap-8">
           <AnimatePresence mode="popLayout">
             {["Frontend", "Backend", "Database", "Tools"]
-              .filter(cat => activeCategory === "All" || activeCategory === cat)
-              .map(category => (
+              .filter((cat) => activeCategory === "All" || activeCategory === cat)
+              .map((category) => (
                 <motion.div
                   key={category}
                   layout
@@ -89,33 +114,37 @@ export default function SkillsSection() {
 
                   <div className="flex flex-wrap gap-3 md:gap-4">
                     {[
-                      { name: "React", cat: "Frontend", icon: <Globe className="w-4 h-4" />, level: "Proficient" },
+                      { name: "React 19", cat: "Frontend", icon: <Globe className="w-4 h-4" />, level: "Expert" },
                       { name: "Next.js", cat: "Frontend", icon: <Layers className="w-4 h-4" />, level: "Proficient" },
                       { name: "TypeScript", cat: "Frontend", icon: <Globe className="w-4 h-4" />, level: "Expert" },
-                      { name: "Tailwind CSS", cat: "Frontend", icon: <Layers className="w-4 h-4" />, level: "Expert" },
+                      { name: "Tailwind CSS v4", cat: "Frontend", icon: <Layers className="w-4 h-4" />, level: "Expert" },
                       { name: "Flutter", cat: "Frontend", icon: <Smartphone className="w-4 h-4" />, level: "Proficient" },
                       { name: "KMP", cat: "Frontend", icon: <Smartphone className="w-4 h-4" />, level: "Intermediate" },
                       { name: "Angular", cat: "Frontend", icon: <AppWindow className="w-4 h-4" />, level: "Intermediate" },
-                      
-                      { name: "Java", cat: "Backend", icon: <Cpu className="w-4 h-4" />, level: "Expert" },
+
+                      { name: "Java (21 / 25 LTS)", cat: "Backend", icon: <Cpu className="w-4 h-4" />, level: "Expert" },
                       { name: "Spring Boot", cat: "Backend", icon: <Server className="w-4 h-4" />, level: "Expert" },
-                      { name: "Golang", cat: "Backend", icon: <Server className="w-4 h-4" />, level: "Expert" },
+                      { name: "Golang (Gin / Fiber)", cat: "Backend", icon: <Server className="w-4 h-4" />, level: "Expert" },
+                      { name: "NestJS & Fastify", cat: "Backend", icon: <Server className="w-4 h-4" />, level: "Proficient" },
                       { name: "Node.js", cat: "Backend", icon: <Terminal className="w-4 h-4" />, level: "Proficient" },
-                      
-                      { name: "SQL Server", cat: "Database", icon: <Database className="w-4 h-4" />, level: "Expert" },
+
                       { name: "PostgreSQL", cat: "Database", icon: <Database className="w-4 h-4" />, level: "Expert" },
+                      { name: "SQL Server", cat: "Database", icon: <Database className="w-4 h-4" />, level: "Expert" },
                       { name: "MySQL", cat: "Database", icon: <Database className="w-4 h-4" />, level: "Proficient" },
-                      { name: "Firebase", cat: "Database", icon: <Cloud className="w-4 h-4" />, level: "Proficient" },
+                      { name: "Redis / Upstash", cat: "Database", icon: <Database className="w-4 h-4" />, level: "Proficient" },
                       { name: "Supabase", cat: "Database", icon: <Cloud className="w-4 h-4" />, level: "Expert" },
-                      
-                      { name: "Git", cat: "Tools", icon: <GitBranch className="w-4 h-4" />, level: "Expert" },
+                      { name: "Firebase", cat: "Database", icon: <Cloud className="w-4 h-4" />, level: "Proficient" },
+
+                      { name: "RabbitMQ", cat: "Tools", icon: <Box className="w-4 h-4" />, level: "Proficient" },
                       { name: "Docker", cat: "Tools", icon: <Box className="w-4 h-4" />, level: "Proficient" },
-                      { name: "REST API", cat: "Tools", icon: <Terminal className="w-4 h-4" />, level: "Expert" },
+                      { name: "Midtrans & API Gateway", cat: "Tools", icon: <Terminal className="w-4 h-4" />, level: "Expert" },
+                      { name: "Git", cat: "Tools", icon: <GitBranch className="w-4 h-4" />, level: "Expert" },
+                      { name: "REST API & SSE", cat: "Tools", icon: <Terminal className="w-4 h-4" />, level: "Expert" },
                       { name: "Postman", cat: "Tools", icon: <Box className="w-4 h-4" />, level: "Expert" },
-                      { name: "GitHub", cat: "Tools", icon: <GitBranch className="w-4 h-4" />, level: "Expert" },
-                      { name: "GitLab", cat: "Tools", icon: <GitBranch className="w-4 h-4" />, level: "Proficient" },
+                      { name: "GitHub / GitLab", cat: "Tools", icon: <GitBranch className="w-4 h-4" />, level: "Expert" },
                       { name: "Figma", cat: "Tools", icon: <PenTool className="w-4 h-4" />, level: "Intermediate" }
-                    ].filter(skill => skill.cat === category)
+                    ]
+                      .filter((skill) => skill.cat === category)
                       .map((skill) => (
                         <motion.div
                           key={skill.name}
@@ -127,7 +156,7 @@ export default function SkillsSection() {
                             <span className="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">{skill.name}</span>
                           </div>
                           <span className="text-[8px] px-1.5 py-0.5 bg-white/5 text-slate-500 rounded group-hover:bg-cyan-500/20 group-hover:text-cyan-300 transition-colors uppercase tracking-wider font-bold shrink-0">
-                            {skill.level}
+                            {levelLabels[skill.level] ?? skill.level}
                           </span>
                         </motion.div>
                       ))}
@@ -141,7 +170,9 @@ export default function SkillsSection() {
       {/* Mastered Technologies */}
       <div className="space-y-10 pt-10">
         <motion.div variants={fadeInUp} className="flex items-center gap-6">
-          <h2 className="text-2xl font-bold text-white tracking-tight">Top Expertise</h2>
+          <h2 className="text-2xl font-bold text-white tracking-tight">
+            {language === "id" ? "Keahlian Utama" : "Top Expertise"}
+          </h2>
           <div className="h-px bg-white/10 flex-1"></div>
         </motion.div>
 
@@ -156,9 +187,17 @@ export default function SkillsSection() {
           </div>
 
           <div className="space-y-4 text-center md:text-left">
-            <h3 className="text-2xl font-bold text-white">Java & TypeScript</h3>
+            <h3 className="text-2xl font-bold text-white">Java, Golang &amp; TypeScript</h3>
             <p className="text-slate-400 text-lg font-light leading-relaxed">
-              I am proficient in <span className="text-cyan-400 font-medium">TypeScript</span> / <span className="text-cyan-400 font-medium">Java</span>. I use these languages extensively for my day-to-day work, building scalable backend services and dynamic frontend architectures.
+              {language === "id" ? (
+                <>
+                  Saya sangat mahir menggunakan <span className="text-cyan-400 font-medium">TypeScript</span>, <span className="text-cyan-400 font-medium">Java (Spring Boot)</span>, dan <span className="text-cyan-400 font-medium">Golang</span>. Kombinasi teknologi ini saya gunakan sehari-hari untuk membangun layanan backend berkinerja tinggi serta antarmuka frontend yang modern dan mudah dipelihara.
+                </>
+              ) : (
+                <>
+                  I am highly proficient in <span className="text-cyan-400 font-medium">TypeScript</span>, <span className="text-cyan-400 font-medium">Java (Spring Boot)</span>, and <span className="text-cyan-400 font-medium">Golang</span>. I use these languages extensively in my day-to-day engineering to build high-concurrency backend services and dynamic frontend architectures.
+                </>
+              )}
             </p>
           </div>
         </div>

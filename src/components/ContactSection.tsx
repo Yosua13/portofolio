@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, MessageSquare, Send } from "lucide-react";
 import SectionHeader from "./SectionHeader";
+import { useLanguage } from "@/context/LanguageContext";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -11,6 +12,7 @@ const fadeInUp = {
 };
 
 export default function ContactSection() {
+  const { language } = useLanguage();
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "opened" | "error">("idle");
@@ -25,7 +27,11 @@ export default function ContactSection() {
     setIsSubmitting(true);
 
     try {
-      const subject = encodeURIComponent(`Portfolio inquiry from ${formData.name}`);
+      const subject = encodeURIComponent(
+        language === "id"
+          ? `Diskusi Proyek / Kerjasama dari ${formData.name}`
+          : `Portfolio inquiry from ${formData.name}`
+      );
       const body = encodeURIComponent(
         `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
       );
@@ -49,10 +55,14 @@ export default function ContactSection() {
       className="scroll-mt-32 border-t border-white/5 pt-16 space-y-12"
     >
       <SectionHeader
-        topText="Get In Touch"
+        topText={language === "id" ? "Mari Terhubung" : "Get In Touch"}
         mainText="Contact"
-        subText="Say Hello"
-        bottomText="Interested in working together? Let's build something reliable and useful."
+        subText={language === "id" ? "Diskusi & Kolaborasi" : "Say Hello"}
+        bottomText={
+          language === "id"
+            ? "Ingin membuat website/sistem UMKM atau bekerjasama dalam proyek perusahaan? Mari berdiskusi."
+            : "Interested in working together? Let's build something reliable and useful."
+        }
         watermark="CONNECT"
       />
 
@@ -61,10 +71,14 @@ export default function ContactSection() {
         <div className="lg:col-span-5 flex flex-col justify-between gap-6">
           <div className="space-y-6">
             <h3 className="text-xl font-bold text-white font-sans tracking-wide">
-              Let&apos;s build something great
+              {language === "id"
+                ? "Mari wujudkan produk & sistem bisnis Anda"
+                : "Let's build something great"}
             </h3>
             <p className="text-slate-300 text-sm font-light leading-relaxed">
-              I am always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Feel free to reach out via email, phone, or any of my social channels.
+              {language === "id"
+                ? "Saya selalu terbuka untuk mendiskusikan kebutuhan digitalisasi UMKM (Company Profile, E-Commerce, POS, Sistem Operasional Custom) maupun kemitraan pengembangan perangkat lunak dengan perusahaan. Hubungi saya melalui WhatsApp, email, atau kanal sosial di bawah ini."
+                : "I am always open to discussing SME digitalization projects (Company Profile, E-Commerce, POS, Custom Systems) as well as software engineering partnerships with companies. Feel free to reach out via WhatsApp, email, or social channels."}
             </p>
           </div>
 
@@ -88,7 +102,9 @@ export default function ContactSection() {
                 <Phone className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold block mb-0.5">WhatsApp / Phone</span>
+                <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold block mb-0.5">
+                  {language === "id" ? "WhatsApp / Telepon" : "WhatsApp / Phone"}
+                </span>
                 <a href="https://wa.me/6282251396690" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-white hover:text-emerald-400 transition-colors">
                   +62 822 5139 6690
                 </a>
@@ -101,7 +117,9 @@ export default function ContactSection() {
                 <MessageSquare className="w-5 h-5" />
               </div>
               <div className="space-y-1.5 flex-1">
-                <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold block">Social Channels</span>
+                <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold block">
+                  {language === "id" ? "Kanal Sosial" : "Social Channels"}
+                </span>
                 <div className="flex items-center gap-4">
                   <a href="https://github.com/Yosua13" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-white transition-colors text-xs font-semibold uppercase tracking-wider">
                     GitHub
@@ -122,7 +140,9 @@ export default function ContactSection() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Name field */}
               <div className="space-y-2">
-                <label htmlFor="form-name" className="text-xs font-bold text-slate-300 uppercase tracking-wider">Your Name</label>
+                <label htmlFor="form-name" className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                  {language === "id" ? "Nama Anda / Perusahaan" : "Your Name / Company"}
+                </label>
                 <input
                   id="form-name"
                   type="text"
@@ -130,14 +150,16 @@ export default function ContactSection() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  placeholder="John Doe"
+                  placeholder={language === "id" ? "Budi Santoso / PT Maju Jaya" : "John Doe / Acme Corp"}
                   className="w-full px-4 py-3 bg-[#050508] border border-white/5 focus:border-indigo-500/40 rounded-xl text-sm text-slate-200 outline-none transition-colors"
                 />
               </div>
-              
+
               {/* Email field */}
               <div className="space-y-2">
-                <label htmlFor="form-email" className="text-xs font-bold text-slate-300 uppercase tracking-wider">Your Email</label>
+                <label htmlFor="form-email" className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                  {language === "id" ? "Email Anda" : "Your Email"}
+                </label>
                 <input
                   id="form-email"
                   type="email"
@@ -145,7 +167,7 @@ export default function ContactSection() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  placeholder="john@example.com"
+                  placeholder="name@company.com"
                   className="w-full px-4 py-3 bg-[#050508] border border-white/5 focus:border-indigo-500/40 rounded-xl text-sm text-slate-200 outline-none transition-colors"
                 />
               </div>
@@ -153,7 +175,9 @@ export default function ContactSection() {
 
             {/* Message field */}
             <div className="space-y-2">
-              <label htmlFor="form-message" className="text-xs font-bold text-slate-300 uppercase tracking-wider">Your Message</label>
+              <label htmlFor="form-message" className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                {language === "id" ? "Rincian Kebutuhan / Pesan" : "Project Details / Message"}
+              </label>
               <textarea
                 id="form-message"
                 name="message"
@@ -161,7 +185,11 @@ export default function ContactSection() {
                 onChange={handleChange}
                 required
                 rows={4}
-                placeholder="Let's build something amazing together..."
+                placeholder={
+                  language === "id"
+                    ? "Ceritakan kebutuhan website, sistem POS/E-Commerce UMKM, atau kerjasama proyek perusahaan Anda..."
+                    : "Tell me about your website, POS/E-Commerce system, or enterprise engineering needs..."
+                }
                 className="w-full px-4 py-3 bg-[#050508] border border-white/5 focus:border-indigo-500/40 rounded-xl text-sm text-slate-200 outline-none transition-colors resize-none"
               />
             </div>
@@ -171,32 +199,42 @@ export default function ContactSection() {
               type="submit"
               disabled={isSubmitting}
               className={`w-full py-4 rounded-xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 cursor-pointer transition-all duration-300 ${
-                isSubmitting 
-                  ? "bg-slate-800 text-slate-400 cursor-not-allowed" 
+                isSubmitting
+                  ? "bg-slate-800 text-slate-400 cursor-not-allowed"
                   : "bg-white text-[#0a0a0a] hover:bg-slate-200 shadow-lg shadow-white/5"
               }`}
             >
-              {isSubmitting ? "Preparing..." : "Open Email Draft"}
+              {isSubmitting
+                ? language === "id"
+                  ? "Menyiapkan..."
+                  : "Preparing..."
+                : language === "id"
+                ? "Buka Draf Email"
+                : "Open Email Draft"}
               <Send className="w-3.5 h-3.5" />
             </button>
 
             {/* Submit Toast Status */}
             {submitStatus === "opened" && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }} 
-                animate={{ opacity: 1, y: 0 }} 
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
                 className="text-emerald-400 text-xs font-bold text-center uppercase tracking-wider mt-2"
               >
-                Email draft opened. Please press send in your mail app.
+                {language === "id"
+                  ? "Draf email telah dibuka. Silakan tekan kirim di aplikasi email Anda."
+                  : "Email draft opened. Please press send in your mail app."}
               </motion.div>
             )}
             {submitStatus === "error" && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }} 
-                animate={{ opacity: 1, y: 0 }} 
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
                 className="text-red-400 text-xs font-bold text-center uppercase tracking-wider mt-2"
               >
-                Failed to send message. Please try again.
+                {language === "id"
+                  ? "Gagal membuka draf pesan. Silakan coba lagi."
+                  : "Failed to open message draft. Please try again."}
               </motion.div>
             )}
           </form>

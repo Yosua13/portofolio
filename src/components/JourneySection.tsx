@@ -5,60 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { Briefcase, Calendar, GraduationCap, MapPin, Trophy } from "lucide-react";
 import SectionHeader from "./SectionHeader";
-
-const journeyData = [
-  {
-    type: "career",
-    title: "Full Stack Developer",
-    company: "PT Tabel Data Informatika",
-    location: "Bandung, Indonesia",
-    status: "Current Role",
-    isActive: true,
-    date: "Oct 2025 - Present",
-    image: "/assets/images/companies/tabel-data.png",
-    description:
-      "Resolved production issues and delivered end-to-end business application features using Angular, React JS, Java Spring Boot, Golang, and supporting operational tooling.",
-    achievements: [
-      "Resolved and maintained bugs across production and development environments, improving stability and reducing downtime.",
-      "Delivered full-stack features for high-impact internal projects using Angular/React frontends and Java Spring Boot/Golang backends.",
-      "Used Kubernetes and supporting developer tools to improve deployment and environment management workflows."
-    ]
-  },
-  {
-    type: "career",
-    title: "Mobile Developer",
-    company: "PT Tabel Data Informatika",
-    location: "Bandung, Indonesia",
-    status: "Professional Role",
-    isActive: false,
-    date: "Aug 2024 - Jun 2025",
-    image: "/assets/images/companies/tabel-data.png",
-    description:
-      "Developed and maintained Flutter applications for Android and iOS, working across delivery, state management, deployment preparation, and cross-platform compatibility.",
-    achievements: [
-      "Developed and maintained six Flutter applications with attention to performance and user experience.",
-      "Completed sprint tasks consistently while documenting version changes and deployment history.",
-      "Implemented modular state management and refactored Flutter projects across framework version upgrades."
-    ]
-  },
-  {
-    type: "education",
-    title: "D3 Application Software Engineering",
-    company: "Telkom University",
-    location: "Bandung, Indonesia",
-    status: "GPA 3.87/4.00",
-    isActive: false,
-    date: "Sep 2022 - Jul 2025",
-    image: "/assets/images/companies/telkom-university.png",
-    description:
-      "Studied application software engineering with practical focus on web development, project delivery, databases, and student community contribution.",
-    achievements: [
-      "Web-Based Programming practicum assistant, mentoring students in web development and supporting lab sessions.",
-      "Chairman of PMK TASS with increased member participation through engagement programs and initiatives.",
-      "Senior resident and community contributor, supporting dormitory administration and student development."
-    ]
-  }
-];
+import { useLanguage } from "@/context/LanguageContext";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -66,6 +13,92 @@ const fadeInUp = {
 };
 
 export default function JourneySection() {
+  const { language } = useLanguage();
+
+  const journeyData = [
+    {
+      type: "career",
+      title: "Full Stack Developer",
+      company: "PT Tabel Data Informatika",
+      location: "Bandung, Indonesia",
+      status: language === "id" ? "Peran Saat Ini" : "Current Role",
+      isActive: true,
+      date: language === "id" ? "Okt 2025 - Sekarang" : "Oct 2025 - Present",
+      image: "/assets/images/companies/tabel-data.png",
+      description:
+        language === "id"
+          ? "Menangani isu produksi dan mengembangkan fitur aplikasi bisnis end-to-end menggunakan Angular, React JS, Java Spring Boot, Golang, serta perangkat operasional pendukung."
+          : "Resolved production issues and delivered end-to-end business application features using Angular, React JS, Java Spring Boot, Golang, and supporting operational tooling.",
+      achievements:
+        language === "id"
+          ? [
+              "Menyelesaikan dan memelihara perbaikan bug di lingkungan produksi maupun development, meningkatkan stabilitas sistem dan menekan downtime.",
+              "Merilis fitur full-stack berdampak tinggi untuk proyek internal dan klien menggunakan frontend Angular/React serta backend Java Spring Boot/Golang.",
+              "Menggunakan Kubernetes dan developer tooling pendukung untuk meningkatkan efisiensi alur deployment dan manajemen environment."
+            ]
+          : [
+              "Resolved and maintained bugs across production and development environments, improving stability and reducing downtime.",
+              "Delivered full-stack features for high-impact internal projects using Angular/React frontends and Java Spring Boot/Golang backends.",
+              "Used Kubernetes and supporting developer tools to improve deployment and environment management workflows."
+            ]
+    },
+    {
+      type: "career",
+      title: "Mobile Developer",
+      company: "PT Tabel Data Informatika",
+      location: "Bandung, Indonesia",
+      status: language === "id" ? "Peran Profesional" : "Professional Role",
+      isActive: false,
+      date: language === "id" ? "Agu 2024 - Jun 2025" : "Aug 2024 - Jun 2025",
+      image: "/assets/images/companies/tabel-data.png",
+      description:
+        language === "id"
+          ? "Mengembangkan dan memelihara aplikasi mobile Flutter untuk Android dan iOS, mencakup delivery fitur, state management, persiapan rilis, dan kompatibilitas lintas platform."
+          : "Developed and maintained Flutter applications for Android and iOS, working across delivery, state management, deployment preparation, and cross-platform compatibility.",
+      achievements:
+        language === "id"
+          ? [
+              "Mengembangkan dan memelihara enam aplikasi Flutter dengan fokus pada performa tinggi dan pengalaman pengguna yang mulus.",
+              "Menyelesaikan target sprint secara konsisten sembari mendokumentasikan riwayat perubahan versi dan deployment.",
+              "Menerapkan state management modular serta melakukan refactoring proyek Flutter lintas pembaruan versi framework."
+            ]
+          : [
+              "Developed and maintained six Flutter applications with attention to performance and user experience.",
+              "Completed sprint tasks consistently while documenting version changes and deployment history.",
+              "Implemented modular state management and refactored Flutter projects across framework version upgrades."
+            ]
+    },
+    {
+      type: "education",
+      title:
+        language === "id"
+          ? "D3 Rekayasa Perangkat Lunak Aplikasi"
+          : "D3 Application Software Engineering",
+      company: "Telkom University",
+      location: "Bandung, Indonesia",
+      status: language === "id" ? "IPK 3.87/4.00" : "GPA 3.87/4.00",
+      isActive: false,
+      date: language === "id" ? "Sep 2022 - Jul 2025" : "Sep 2022 - Jul 2025",
+      image: "/assets/images/companies/telkom-university.png",
+      description:
+        language === "id"
+          ? "Menempuh pendidikan rekayasa perangkat lunak aplikasi dengan fokus praktis pada pengembangan web, manajemen basis data, pengerjaan proyek perangkat lunak, dan kontribusi organisasi mahasiswa."
+          : "Studied application software engineering with practical focus on web development, project delivery, databases, and student community contribution.",
+      achievements:
+        language === "id"
+          ? [
+              "Asisten Praktikum Pemrograman Berbasis Web, membimbing mahasiswa dalam pengembangan web dan mendampingi sesi laboratorium.",
+              "Ketua PMK TASS yang berhasil meningkatkan partisipasi anggota melalui berbagai program pembinaan dan inisiatif kolaboratif.",
+              "Senior Resident asrama mahasiswa yang berkontribusi dalam administrasi hunian dan pendampingan karakter mahasiswa baru."
+            ]
+          : [
+              "Web-Based Programming practicum assistant, mentoring students in web development and supporting lab sessions.",
+              "Chairman of PMK TASS with increased member participation through engagement programs and initiatives.",
+              "Senior resident and community contributor, supporting dormitory administration and student development."
+            ]
+    }
+  ];
+
   const timelineContainerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: timelineScrollY } = useScroll({
     target: timelineContainerRef,
@@ -94,7 +127,7 @@ export default function JourneySection() {
       clearTimeout(timer);
       window.removeEventListener("resize", measure);
     };
-  }, []);
+  }, [language]);
 
   return (
     <motion.section
@@ -106,10 +139,14 @@ export default function JourneySection() {
       className="space-y-12 pt-10 scroll-mt-32"
     >
       <SectionHeader
-        topText="Milestones"
+        topText={language === "id" ? "Jejak Langkah" : "Milestones"}
         mainText="Journey"
-        subText="Career & Education"
-        bottomText="Professional experience and education history"
+        subText={language === "id" ? "Karier & Pendidikan" : "Career & Education"}
+        bottomText={
+          language === "id"
+            ? "Pengalaman kerja profesional dan riwayat pendidikan"
+            : "Professional experience and education history"
+        }
         watermark="JOURNEY"
       />
 
@@ -136,7 +173,7 @@ export default function JourneySection() {
 
             return (
               <div
-                key={`${item.company}-${item.date}`}
+                key={`${item.company}-${index}`}
                 ref={isFirst ? firstItemRef : isLast ? lastItemRef : null}
                 className="relative flex items-center w-full"
               >
@@ -196,7 +233,15 @@ export default function JourneySection() {
                                 ) : (
                                   <Briefcase className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-600" />
                                 )}
-                                <span>{item.type === "education" ? "Education" : "Work"}</span>
+                                <span>
+                                  {item.type === "education"
+                                    ? language === "id"
+                                      ? "Pendidikan"
+                                      : "Education"
+                                    : language === "id"
+                                    ? "Karier"
+                                    : "Work"}
+                                </span>
                               </div>
 
                               <div className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] sm:text-[12px] font-bold flex items-center gap-1.5 whitespace-nowrap">
@@ -207,7 +252,7 @@ export default function JourneySection() {
                               {item.isActive && (
                                 <div className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] sm:text-[12px] font-bold flex items-center gap-1.5 whitespace-nowrap">
                                   <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                                  Active
+                                  {language === "id" ? "Aktif" : "Active"}
                                 </div>
                               )}
                             </div>
@@ -226,7 +271,7 @@ export default function JourneySection() {
                         <div className="mt-6 space-y-4 relative z-10">
                           <h4 className="flex items-center gap-2 text-[16px] font-bold text-purple-400">
                             <Trophy className="w-5 h-5" />
-                            Key Achievements
+                            {language === "id" ? "Pencapaian Utama" : "Key Achievements"}
                           </h4>
                           <ul className="space-y-3.5">
                             {item.achievements.map((achievement) => (
