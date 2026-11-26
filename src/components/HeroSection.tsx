@@ -1027,32 +1027,35 @@ export default function HeroSection({
       const el = heroRef.current;
       if (!el) return;
 
-      if (window.innerWidth <= 900) {
+      if (window.innerWidth < 1024) {
         el.style.filter = "blur(0px)";
         el.style.transform = "scale(1)";
         el.style.opacity = "1";
+        el.style.pointerEvents = "auto";
         return;
       }
 
       const triggerStart = window.innerHeight * 0.1;       /* 10vh */
-      const triggerEnd = window.innerHeight * 0.7;       /* full effect range */
+      const triggerEnd = window.innerHeight * 0.85;      /* full effect range */
       const scrollY = window.scrollY;
 
       if (scrollY <= triggerStart) {
         el.style.filter = "blur(0px)";
         el.style.transform = "scale(1)";
         el.style.opacity = "1";
+        el.style.pointerEvents = "auto";
         return;
       }
 
       const progress = Math.min((scrollY - triggerStart) / (triggerEnd - triggerStart), 1);
-      const blur = progress * 24;                        /* max 24px */
+      const blur = progress * 20;                        /* max 20px */
       const scale = 1 - progress * 0.04;                 /* min 0.96 */
       const opacity = 1 - progress * 1.0;                 /* min 0.0 */
 
       el.style.filter = `blur(${blur}px)`;
       el.style.transform = `scale(${scale})`;
       el.style.opacity = `${opacity}`;
+      el.style.pointerEvents = progress > 0.85 ? "none" : "auto";
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -1175,9 +1178,9 @@ export default function HeroSection({
                   {/* Monospace label */}
                   <p className="label-mono">{language === "id" ? "Halo, saya" : "Hi, I'm"}</p>
 
-                  {/* Name with video mask background following jesky.dev */}
-                  <div className="relative w-full max-w-2xl select-none mb-4 overflow-visible">
-                    <svg viewBox="0 0 600 150" width="100%" height="100%" className="overflow-visible">
+                  {/* Name with video mask background + solid SVG fallback */}
+                  <div className="relative w-full max-w-[300px] sm:max-w-[440px] lg:max-w-xl aspect-[4/1] select-none mb-3 sm:mb-4 overflow-visible">
+                    <svg viewBox="0 0 600 150" className="w-full h-full overflow-visible">
                       <defs>
                         <mask id="video-text-mask" x="0" y="0" width="100%" height="100%">
                           <rect x="0" y="0" width="100%" height="100%" fill="black" />
@@ -1196,8 +1199,22 @@ export default function HeroSection({
                           </text>
                         </mask>
                       </defs>
+                      <text
+                        x="0"
+                        y="50%"
+                        fill="currentColor"
+                        className="text-[var(--foreground)] opacity-90"
+                        fontFamily="Montserrat, sans-serif"
+                        fontWeight="900"
+                        fontSize="115"
+                        textAnchor="start"
+                        dominantBaseline="central"
+                        letterSpacing="-4"
+                      >
+                        YOSUA
+                      </text>
                       <g mask="url(#video-text-mask)">
-                        <foreignObject x="0" y="0" width="100%" height="100%">
+                        <foreignObject x="0" y="0" width="600" height="150">
                           <video
                             className="w-full h-full object-cover"
                             src="/assets/videos/landscape.mp4"
@@ -1212,8 +1229,8 @@ export default function HeroSection({
                   </div>
 
                   {/* Role Badge & Punchy 2-Line Description */}
-                  <div className="text-left space-y-3">
-                    <Badge variant="accent" className="text-[11px] px-3 py-1">
+                  <div className="text-left space-y-2.5 sm:space-y-3">
+                    <Badge variant="accent" className="text-[10px] sm:text-[11px] px-3 py-1">
                       Fullstack Software Engineer
                     </Badge>
                     <p className="text-[var(--muted-foreground)] font-normal leading-relaxed max-w-lg text-sm sm:text-base">
@@ -1223,20 +1240,20 @@ export default function HeroSection({
                     </p>
                   </div>
 
-                  {/* 3 Clean CTAs */}
-                  <div className="flex flex-wrap gap-3 items-center mt-6">
-                    <Button variant="accent" size="lg" asChild>
+                  {/* 3 Clean CTAs (Responsive grid on mobile, inline flex on tablet/desktop) */}
+                  <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2.5 sm:gap-3 items-center mt-5 sm:mt-6 w-full sm:w-auto">
+                    <Button variant="accent" size="lg" className="w-full sm:w-auto" asChild>
                       <a href="#projects">
                         {language === "id" ? "Lihat Proyek" : "View Projects"}
                         <ArrowUpRight className="h-4 w-4" />
                       </a>
                     </Button>
-                    <Button variant="outline" size="lg" asChild>
+                    <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>
                       <a href="#what-i-do">
                         {language === "id" ? "Solusi Bisnis" : "Solutions"}
                       </a>
                     </Button>
-                    <Button variant="ghost" size="lg" asChild>
+                    <Button variant="ghost" size="lg" className="col-span-2 sm:col-span-1 w-full sm:w-auto border border-[var(--border)] sm:border-transparent" asChild>
                       <a href="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf" download>
                         <Download className="h-4 w-4" />
                         {language === "id" ? "Unduh CV" : "Download CV"}
@@ -1244,9 +1261,9 @@ export default function HeroSection({
                     </Button>
                   </div>
 
-                  {/* Compact Testimonial Bar */}
-                  <div className="hero-testimonial mt-5 hidden sm:block max-w-lg select-none text-left">
-                    <div className="relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 backdrop-blur-md">
+                  {/* Compact Testimonial Bar (Visible across Mobile, Tablet, and Desktop) */}
+                  <div className="hero-testimonial mt-5 w-full max-w-lg select-none text-left">
+                    <div className="relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3.5 sm:p-4 backdrop-blur-md">
                       <div className="mb-2.5 flex items-center justify-between gap-4">
                         <div className="flex items-center gap-2 min-w-0">
                           <span className="text-[10px] font-mono font-bold text-[var(--accent-text)] uppercase tracking-widest">
@@ -1414,21 +1431,21 @@ export default function HeroSection({
                   </div>
                 </div>
               ) : (
-                /* Sleek Compact Profile Card for Branding Mode */
-                <SpotlightCard className="w-full p-4">
-                  <div className="flex flex-col gap-3.5">
-                    <div className="relative aspect-[1/1] w-full overflow-hidden rounded-xl border border-[var(--border)] bg-slate-950/20">
+                /* Sleek Responsive Profile Card (Compact horizontal on mobile/tablet, vertical portrait on desktop) */
+                <SpotlightCard className="w-full p-3.5 sm:p-4">
+                  <div className="flex flex-row lg:flex-col items-center lg:items-stretch gap-3.5">
+                    <div className="relative h-20 w-20 sm:h-24 sm:w-24 lg:h-auto lg:w-full lg:aspect-[1/1] shrink-0 overflow-hidden rounded-xl border border-[var(--border)] bg-slate-950/20">
                       <Image
                         src="/assets/images/profile/yosua-profile.png"
                         alt="Yosua Reynaldi Manurun"
                         fill
-                        sizes="(max-width: 900px) 90vw, 300px"
+                        sizes="(max-width: 1023px) 96px, 300px"
                         priority
                         className="object-cover object-[center_15%] group-hover:scale-[1.03] transition-transform duration-700 ease-out"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                      <div className="hidden lg:block absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-                      <div className="absolute top-3 left-3 bg-black/55 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 flex items-center gap-1.5 select-none">
+                      <div className="hidden lg:flex absolute top-3 left-3 bg-black/55 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 items-center gap-1.5 select-none">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                         <span className="text-[9px] font-mono font-bold text-slate-200 uppercase tracking-widest">
                           {language === "id"
@@ -1438,15 +1455,23 @@ export default function HeroSection({
                       </div>
                     </div>
 
-                    <div className="text-left space-y-1">
-                      <h3 className="text-lg font-black text-[var(--foreground)] tracking-tight leading-none">
+                    <div className="text-left space-y-1 min-w-0 flex-1">
+                      <div className="inline-flex lg:hidden items-center gap-1.5 rounded-full border border-emerald-500/30 bg-[var(--emerald-soft)] px-2 py-0.5 mb-0.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="text-[8px] font-mono font-bold text-[var(--emerald-text)] uppercase tracking-wider">
+                          {language === "id"
+                            ? "Freelance · Siap Kerja Tetap"
+                            : "Freelance · Open Full-Time"}
+                        </span>
+                      </div>
+                      <h3 className="text-base sm:text-lg font-black text-[var(--foreground)] tracking-tight leading-tight truncate">
                         Yosua Reynaldi M.
                       </h3>
-                      <p className="text-xs font-bold text-[var(--accent-text)] tracking-wider uppercase font-mono">
+                      <p className="text-[11px] sm:text-xs font-bold text-[var(--accent-text)] tracking-wider uppercase font-mono truncate">
                         Fullstack Software Engineer
                       </p>
                       <span className="inline-flex items-center gap-1 text-[11px] text-[var(--muted-foreground)] pt-0.5">
-                        <MapPin className="h-3 w-3 text-[var(--accent-text)]" />
+                        <MapPin className="h-3 w-3 text-[var(--accent-text)] shrink-0" />
                         Bandung, ID
                       </span>
                     </div>
@@ -1455,7 +1480,7 @@ export default function HeroSection({
               )}
 
               {/* Compact Stats Strip */}
-              <div className="grid grid-cols-3 gap-2.5 w-full">
+              <div className="grid grid-cols-3 gap-2 sm:gap-2.5 w-full">
                 {stats.map((s) => (
                   <div
                     key={s.label}
@@ -1474,16 +1499,16 @@ export default function HeroSection({
           </div>
 
           {/* ── Footer strip ────────────────────────────── */}
-          <div className="hero-footer flex items-center justify-between w-full pointer-events-auto">
-            <div className="flex items-center gap-2">
-              <span className="footer-dot" />
-              <span className="text-[var(--muted-foreground)] text-xs font-normal">
+          <div className="hero-footer flex flex-col sm:flex-row items-start sm:items-center justify-between w-full pointer-events-auto">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="footer-dot shrink-0" />
+              <span className="text-[var(--muted-foreground)] text-[11px] sm:text-xs font-normal leading-snug">
                 {language === "id"
                   ? "Terbuka untuk proyek UMKM, freelance & peluang kerja tetap | Bandung, ID"
                   : "Open to SME projects, freelance & full-time opportunities | Bandung, ID"}
               </span>
             </div>
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0">
               <a
                 href="mailto:reyyosua29@gmail.com"
                 className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[var(--accent-soft)] hover:brightness-110 border border-[var(--accent)]/35 rounded-full text-[10px] font-mono font-bold text-[var(--accent-text)] transition-all uppercase tracking-wider"

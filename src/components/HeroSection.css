@@ -119,8 +119,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 100px 5vw 90px;
+  padding: 96px 5vw 84px;
   width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
   gap: 48px;
   position: relative;
   z-index: 2;
@@ -133,8 +135,8 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 20px;
-  transform: translateY(-40px);
+  gap: 16px;
+  transform: translateY(0);
 }
 
 /* ── Label mono ──────────────────────────────── */
@@ -430,47 +432,44 @@ html.light #hud-greeting-bubble > div:last-child {
   border-top-color: rgba(255, 255, 255, 0.94) !important;
 }
 
-/* ── Scroll spacer ───────────────────────────── */
+/* ── Scroll spacer (disabled so main content glides directly over sticky hero without a 100vh blank gap) ── */
 .hero-scroll-spacer {
-  height: 100vh;
-  position: relative;
-  z-index: 0;
-  pointer-events: none;
+  display: none;
 }
 
-/* ── Responsive adjustments for narrower laptop screens (13-inch to 15-inch) ── */
-@media (min-width: 901px) and (max-width: 1150px) {
+/* ── Responsive adjustments for narrower desktop screens (1024px to 1180px) ── */
+@media (min-width: 1024px) and (max-width: 1180px) {
   .hero-content {
-    padding: 80px 3vw 80px;
-    gap: 20px;
+    padding: 84px 4vw 76px;
+    gap: 28px;
   }
   .hero-left {
-    max-width: 50%;
+    max-width: 56%;
   }
   .hero-right {
-    max-width: 250px;
+    max-width: 265px;
   }
 }
 
 /* ── Height-based media queries for desktop to prevent clipping ── */
-@media (min-width: 901px) and (max-height: 950px) {
+@media (min-width: 1024px) and (max-height: 950px) {
   .hero-content {
-    padding: 70px 5vw 85px;
+    padding: 72px 5vw 78px;
     gap: 32px;
   }
   .hero-right {
-    transform: translateY(-20px);
+    transform: translateY(0);
   }
   .hero-testimonial {
-    margin-top: 16px;
+    margin-top: 14px;
   }
   .hero-testimonial-quote {
-    min-height: 140px;
+    min-height: 96px;
   }
 }
-@media (min-width: 901px) and (max-height: 850px) {
+@media (min-width: 1024px) and (max-height: 850px) {
   .hero-content {
-    padding: 60px 5vw 80px;
+    padding: 64px 5vw 72px;
     gap: 24px;
   }
   .hero-desc {
@@ -488,19 +487,19 @@ html.light #hud-greeting-bubble > div:last-child {
     font-size: clamp(36px, 4vw, 54px);
   }
   .hero-testimonial {
-    margin-top: 12px;
+    margin-top: 10px;
   }
   .hero-testimonial-quote {
-    min-height: 120px;
+    min-height: 84px;
   }
 }
-@media (min-width: 901px) and (max-height: 760px) {
+@media (min-width: 1024px) and (max-height: 760px) {
   .hero-content {
-    padding: 50px 5vw 75px;
+    padding: 54px 5vw 68px;
     gap: 16px;
   }
   .hero-right {
-    max-width: 230px;
+    max-width: 235px;
   }
   .hero-footer {
     padding: 10px 5vw;
@@ -512,14 +511,14 @@ html.light #hud-greeting-bubble > div:last-child {
     margin-top: 8px;
   }
   .hero-testimonial-quote {
-    min-height: 100px;
+    min-height: 76px;
   }
 }
 
 /* Defensive media queries for low-height viewports (extremely common on small laptops) */
-@media (min-width: 901px) and (max-height: 720px) {
+@media (min-width: 1024px) and (max-height: 700px) {
   .hero-content {
-    padding: 40px 5vw 70px;
+    padding: 44px 5vw 64px;
     gap: 12px;
   }
   .hero-right {
@@ -538,10 +537,7 @@ html.light #hud-greeting-bubble > div:last-child {
     margin-bottom: 16px;
   }
   .hero-testimonial {
-    margin-top: 6px;
-  }
-  .hero-testimonial-quote {
-    min-height: 80px;
+    display: none !important;
   }
   .hero-footer {
     padding: 8px 5vw;
@@ -549,35 +545,8 @@ html.light #hud-greeting-bubble > div:last-child {
   }
 }
 
-@media (min-width: 901px) and (max-height: 640px) {
-  .hero-content {
-    padding: 30px 5vw 60px;
-    gap: 10px;
-  }
-  .hero-right {
-    max-width: 190px;
-    gap: 10px;
-  }
-  .floating-letter {
-    font-size: clamp(22px, 2.5vw, 30px);
-  }
-  .hero-desc {
-    display: none !important; /* Hide description paragraph to guarantee spacing */
-  }
-  .tech-pills {
-    margin-bottom: 10px;
-  }
-  .hero-testimonial {
-    display: none !important; /* Hide testimonial to guarantee spacing */
-  }
-  .hero-footer {
-    padding: 6px 5vw;
-    font-size: 10px;
-  }
-}
-
-/* ── Responsive Mobile & Tablet Layout ──────────────── */
-@media (max-width: 900px) {
+/* ── Responsive Mobile & Tablet Layout (< 1024px) ──────────────── */
+@media (max-width: 1023px) {
   .hero-sticky-wrap {
     position: relative;
   }
@@ -585,12 +554,13 @@ html.light #hud-greeting-bubble > div:last-child {
     height: auto;
     min-height: 100svh;
     overflow: visible;
+    justify-content: space-between;
   }
   .hero-content {
     flex-direction: column;
     align-items: stretch;
-    padding: 96px 24px 32px;
-    gap: 28px;
+    padding: 88px 16px 24px;
+    gap: 24px;
     text-align: left;
     justify-content: flex-start;
   }
@@ -598,6 +568,7 @@ html.light #hud-greeting-bubble > div:last-child {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
   }
   .hero-desc {
     text-align: left;
@@ -632,15 +603,21 @@ html.light #hud-greeting-bubble > div:last-child {
     bottom: auto;
     left: auto;
     width: 100%;
-    background: transparent;
-    backdrop-filter: none;
-    justify-content: center;
+    background: var(--surface);
+    justify-content: space-between;
     flex-wrap: wrap;
-    padding: 14px 24px;
+    padding: 14px 16px;
     gap: 12px;
   }
-  .hero-scroll-spacer {
-    height: 0;
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .hero-content {
+    padding: 104px 32px 32px;
+    gap: 28px;
+  }
+  .hero-footer {
+    padding: 16px 32px;
   }
 }
 

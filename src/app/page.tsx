@@ -111,18 +111,20 @@ export default function Portfolio() {
       const target = e.target as HTMLElement;
       const anchor = target.closest("a");
       if (anchor && anchor.hash && anchor.hash.startsWith("#")) {
-        setIsMobileMenuOpen(false);
         const targetId = anchor.hash.substring(1);
-        if (targetId === "hero") {
+        const targetElement = targetId === "hero" ? document.body : document.getElementById(targetId);
+        if (targetId === "hero" || targetElement) {
           e.preventDefault();
-          window.scrollTo({ top: 0, behavior: "smooth" });
-          setActiveSection("hero");
-          return;
-        }
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-          e.preventDefault();
-          targetElement.scrollIntoView({ behavior: "smooth" });
+          document.body.style.overflow = "";
+          setIsMobileMenuOpen(false);
+          requestAnimationFrame(() => {
+            if (targetId === "hero") {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              setActiveSection("hero");
+            } else if (targetElement) {
+              targetElement.scrollIntoView({ behavior: "smooth" });
+            }
+          });
         }
       }
     };
@@ -173,30 +175,30 @@ export default function Portfolio() {
         />
 
         {/* Navigation */}
-        <nav className="fixed w-full z-50 top-5 px-5 md:px-10 lg:px-16 pointer-events-none">
-          <div className="w-full flex items-center justify-between">
+        <nav className="fixed w-full z-50 top-3.5 sm:top-5 px-4 sm:px-6 md:px-10 lg:px-16 pointer-events-none">
+          <div className="w-full flex items-center justify-between gap-3">
             {/* Left: Logo */}
-            <div className="pointer-events-auto flex items-center">
+            <div className="pointer-events-auto flex items-center shrink-0">
               <a
                 href="#hero"
-                className="app-brand-lockup flex items-center gap-2.5 rounded-full px-3.5 py-1.5 backdrop-blur-md transition-transform duration-300 group hover:-translate-y-0.5"
+                className="app-brand-lockup flex items-center gap-2 sm:gap-2.5 rounded-full px-3 sm:px-3.5 py-1.5 backdrop-blur-md transition-transform duration-300 group hover:-translate-y-0.5"
               >
-                <span className="font-editorial italic font-normal text-2xl text-[var(--foreground)] group-hover:text-[var(--accent-text)] transition-colors">
+                <span className="font-editorial italic font-normal text-xl sm:text-2xl text-[var(--foreground)] group-hover:text-[var(--accent-text)] transition-colors">
                   YRM
                 </span>
                 <div className="flex flex-col justify-center text-left">
-                  <span className="text-[var(--accent-text)] font-semibold tracking-tight text-sm leading-tight">
+                  <span className="text-[var(--accent-text)] font-semibold tracking-tight text-xs sm:text-sm leading-tight">
                     Yos&apos;z
                   </span>
-                  <span className="text-[var(--muted-foreground)] text-[10px] font-normal tracking-wide uppercase">
+                  <span className="text-[var(--muted-foreground)] text-[9px] sm:text-[10px] font-normal tracking-wide uppercase">
                     Software Engineer
                   </span>
                 </div>
               </a>
             </div>
 
-            {/* Center: Floating 5-Item Navigation */}
-            <div className="absolute left-1/2 -translate-x-1/2 pointer-events-auto hidden md:block">
+            {/* Center: Floating 5-Item Navigation (Desktop >= 1024px to prevent tablet overlap) */}
+            <div className="absolute left-1/2 -translate-x-1/2 pointer-events-auto hidden lg:block">
               <div className="floating-nav-shell flex items-center border rounded-full px-2 py-1 backdrop-blur-md">
                 {navItems.map((item) => (
                   <a
@@ -222,11 +224,21 @@ export default function Portfolio() {
               </div>
             </div>
 
-            {/* Mobile Controls */}
-            <div className="pointer-events-auto flex md:hidden items-center gap-2">
+            {/* Mobile & Tablet Controls (< 1024px) */}
+            <div className="pointer-events-auto flex lg:hidden items-center gap-1.5 sm:gap-2">
               <button
+                type="button"
+                onClick={toggleTheme}
+                className="social-actions-shell flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full border text-[var(--amber-text)] backdrop-blur-md cursor-pointer"
+                aria-label="Toggle Theme"
+              >
+                {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </button>
+
+              <button
+                type="button"
                 onClick={toggleLanguage}
-                className="social-actions-shell flex items-center justify-center gap-1 h-10 px-3 rounded-full border text-xs font-extrabold uppercase tracking-wider text-[var(--foreground)] backdrop-blur-md cursor-pointer"
+                className="social-actions-shell flex items-center justify-center gap-1 h-9 sm:h-10 px-2.5 sm:px-3 rounded-full border text-[11px] font-extrabold uppercase tracking-wider text-[var(--foreground)] backdrop-blur-md cursor-pointer"
                 aria-label="Toggle Language"
               >
                 <Globe className="w-3.5 h-3.5 text-[var(--accent-text)]" />
@@ -234,8 +246,9 @@ export default function Portfolio() {
               </button>
 
               <button
+                type="button"
                 onClick={() => setIsMobileMenuOpen((value) => !value)}
-                className="social-actions-shell flex items-center justify-center w-10 h-10 rounded-full border text-[var(--foreground)] backdrop-blur-md cursor-pointer"
+                className="social-actions-shell flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full border text-[var(--foreground)] backdrop-blur-md cursor-pointer"
                 aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
                 aria-expanded={isMobileMenuOpen}
               >
@@ -243,8 +256,8 @@ export default function Portfolio() {
               </button>
             </div>
 
-            {/* Right: Socials, Brightness Toggle & Language Switcher */}
-            <div className="social-actions-shell pointer-events-auto hidden md:flex items-center gap-1 rounded-full border px-2 py-1 backdrop-blur-md">
+            {/* Right: Socials, Brightness Toggle & Language Switcher (Desktop >= 1024px) */}
+            <div className="social-actions-shell pointer-events-auto hidden lg:flex items-center gap-1 rounded-full border px-2 py-1 backdrop-blur-md">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a
@@ -336,61 +349,72 @@ export default function Portfolio() {
           </div>
         </nav>
 
-        {/* Mobile Drawer */}
+        {/* Mobile & Tablet Drawer (< 1024px) */}
         <AnimatePresence>
           {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.2 }}
-              className="mobile-nav-shell fixed top-20 left-4 right-4 z-[70] md:hidden rounded-2xl border p-4 shadow-2xl backdrop-blur-xl"
-            >
-              <div className="grid grid-cols-2 gap-2">
-                {navItems.map((item) => (
-                  <a
-                    key={item.id}
-                    href={`#${item.id}`}
-                    className={`rounded-xl border px-3.5 py-2.5 text-xs font-bold transition-colors ${
-                      activeSection === item.id
-                        ? "border-[var(--accent)]/45 bg-[var(--accent-soft)] text-[var(--accent-text)]"
-                        : "border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--foreground)]"
-                    }`}
-                  >
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--border)] pt-3">
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" asChild>
-                    <a href="https://github.com/Yosua13" target="_blank" rel="noreferrer">
-                      <FaGithub className="h-3.5 w-3.5" />
-                      GitHub
-                    </a>
-                  </Button>
-                  <Button variant="outline" size="sm" asChild>
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.18 }}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="fixed inset-0 z-[65] bg-black/50 backdrop-blur-xs lg:hidden"
+                aria-hidden="true"
+              />
+              <motion.div
+                initial={{ opacity: 0, y: -12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.2 }}
+                className="mobile-nav-shell fixed top-16 sm:top-20 left-4 right-4 sm:left-auto sm:right-6 md:right-10 sm:w-80 z-[70] lg:hidden rounded-2xl border p-4 shadow-2xl backdrop-blur-xl"
+              >
+                <div className="grid grid-cols-2 gap-2">
+                  {navItems.map((item) => (
                     <a
-                      href="https://www.linkedin.com/in/yosua-reynaldi-manurun/"
-                      target="_blank"
-                      rel="noreferrer"
+                      key={item.id}
+                      href={`#${item.id}`}
+                      className={`rounded-xl border px-3.5 py-2.5 text-xs font-bold transition-colors ${
+                        activeSection === item.id
+                          ? "border-[var(--accent)]/45 bg-[var(--accent-soft)] text-[var(--accent-text)]"
+                          : "border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--foreground)]"
+                      }`}
                     >
-                      <FaLinkedin className="h-3.5 w-3.5 text-[#0A66C2]" />
-                      LinkedIn
+                      {item.label}
                     </a>
-                  </Button>
+                  ))}
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={toggleTheme}>
-                    {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-                  </Button>
-                  <Button variant="accent" size="sm" onClick={toggleLanguage}>
-                    {language.toUpperCase()}
-                  </Button>
+
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--border)] pt-3">
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" asChild>
+                      <a href="https://github.com/Yosua13" target="_blank" rel="noreferrer">
+                        <FaGithub className="h-3.5 w-3.5" />
+                        GitHub
+                      </a>
+                    </Button>
+                    <Button variant="outline" size="sm" asChild>
+                      <a
+                        href="https://www.linkedin.com/in/yosua-reynaldi-manurun/"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <FaLinkedin className="h-3.5 w-3.5 text-[#0A66C2]" />
+                        LinkedIn
+                      </a>
+                    </Button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" onClick={toggleTheme}>
+                      {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+                    </Button>
+                    <Button variant="accent" size="sm" onClick={toggleLanguage}>
+                      {language.toUpperCase()}
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
 
@@ -402,7 +426,7 @@ export default function Portfolio() {
         />
 
         {/* Streamlined Main Content */}
-        <main className="relative z-10 pb-20 px-6 md:px-12 max-w-[1240px] mx-auto space-y-24 md:space-y-28">
+        <main className="relative z-10 bg-[var(--bg)] pt-8 sm:pt-12 pb-16 sm:pb-20 px-4 sm:px-6 md:px-12 max-w-[1240px] mx-auto space-y-16 sm:space-y-24 md:space-y-28">
           <ProjectsSection onSelectProject={(project) => setSelectedProjectId(project.id)} />
           <WhatIDoSection />
           <AboutHubSection />
@@ -542,16 +566,16 @@ export default function Portfolio() {
           )}
         </AnimatePresence>
 
-        {/* Scroll Top Button */}
+        {/* Scroll Top Button (Bottom-Right Ergonomic Placement) */}
         <AnimatePresence>
           {showScrollTop && (
             <motion.button
-              initial={{ opacity: 0, y: -12 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
+              exit={{ opacity: 0, y: 12 }}
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               aria-label="Scroll to top"
-              className="fixed top-20 right-6 z-[60] flex items-center justify-center w-9 h-9 rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:border-[var(--accent)] backdrop-blur-md transition-colors cursor-pointer select-none shadow-lg"
+              className="fixed bottom-5 right-4 sm:bottom-7 sm:right-7 z-[60] flex items-center justify-center w-10 h-10 rounded-full border border-[var(--border-strong)] bg-[var(--surface)] text-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-[var(--bg)] backdrop-blur-md transition-colors cursor-pointer select-none shadow-lg"
             >
               <ArrowUp className="w-4 h-4" />
             </motion.button>

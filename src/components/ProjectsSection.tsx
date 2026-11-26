@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ExternalLink, Play, Layers, CheckCircle2, ArrowUpRight, Sparkles } from "lucide-react";
+import { ExternalLink, Play, Layers, CheckCircle2, ArrowUpRight } from "lucide-react";
 import { FaGithub } from "react-icons/fa6";
 import { useRef, useState, type FocusEvent, type RefObject } from "react";
 import SectionHeader from "./SectionHeader";
@@ -791,24 +791,14 @@ function ProjectArchitecturePreview({
   language: Language;
 }) {
   return (
-    <div className="relative h-full w-full overflow-hidden bg-[#111113] p-4 sm:p-5 flex flex-col justify-between text-left select-none">
+    <div className="relative h-full w-full overflow-hidden bg-[#111113] px-3.5 pb-3 pt-12 sm:px-5 sm:pb-4 sm:pt-12 flex flex-col justify-between text-left select-none">
       <div className="absolute inset-0 bg-[radial-gradient(rgba(244,241,234,0.05)_1px,transparent_1px)] [background-size:18px_18px] pointer-events-none" />
 
-      <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-2.5 pt-6 sm:pt-0">
-        <span className="text-[10px] font-mono font-medium uppercase tracking-[0.16em] text-neutral-400">
-          {project.id} / architecture
-        </span>
-        <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/12 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-emerald-300">
-          <CheckCircle2 className="h-3 w-3 text-emerald-400" />
-          {language === "id" ? "Rilis" : "Released"}
-        </span>
-      </div>
-
-      <div className="relative z-10 my-auto space-y-2 py-2">
+      <div className="relative z-10 my-auto space-y-1.5 sm:space-y-2 py-1">
         {project.highlights.map((item, idx) => (
           <div
             key={idx}
-            className="flex items-start gap-2.5 rounded-lg border border-white/10 bg-white/[0.025] px-3 py-1.5 text-[11px] font-medium text-neutral-200 leading-snug"
+            className="flex items-start gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-1.5 text-[10px] sm:text-[11px] font-medium text-neutral-200 leading-snug"
           >
             <span className="mt-0.5 font-mono text-[10px] font-semibold text-[#ff7a45] shrink-0">
               {String(idx + 1).padStart(2, "0")}
@@ -819,12 +809,12 @@ function ProjectArchitecturePreview({
       </div>
 
       <div className="relative z-10 flex items-center justify-between border-t border-white/10 pt-2 font-mono text-[9px] font-medium uppercase tracking-wider text-neutral-300">
-        <span className="inline-flex items-center gap-1.5">
-          <Layers className="h-3 w-3 text-[#ff7a45]" />
-          {language === "id" ? "Blueprint Sistem" : "System Blueprint"}
+        <span className="inline-flex items-center gap-1.5 truncate">
+          <Layers className="h-3 w-3 text-[#ff7a45] shrink-0" />
+          <span className="truncate">{project.id} / blueprint</span>
         </span>
-        <span className="inline-flex items-center gap-1">
-          <Sparkles className="h-3 w-3 text-[#ff7a45]" />
+        <span className="inline-flex items-center gap-1 shrink-0 text-emerald-300">
+          <CheckCircle2 className="h-3 w-3 text-emerald-400" />
           {language === "id" ? `${project.screens.length} Modul` : `${project.screens.length} Modules`}
         </span>
       </div>
@@ -941,7 +931,7 @@ function ProjectBentoCard({
         >
           {/* Media Preview Area */}
           <div className={featured ? "p-3 sm:p-4 flex items-center" : "p-3 sm:p-4 pb-0"}>
-            <div className="relative w-full aspect-[16/10] overflow-hidden rounded-xl border border-[var(--border)] bg-[#0e0e10]">
+            <div className="relative w-full aspect-[16/11] sm:aspect-[16/10] overflow-hidden rounded-xl border border-[var(--border)] bg-[#0e0e10]">
               {project.image && !project.hasVideoFile && (
                 <Image
                   src={project.image}
@@ -996,14 +986,14 @@ function ProjectBentoCard({
           </div>
 
           {/* Story-Driven Editorial Body */}
-          <div className="flex flex-1 flex-col justify-between gap-5 p-5 sm:p-6 text-left">
+          <div className="flex flex-1 flex-col justify-between gap-4 sm:gap-5 p-4 sm:p-6 text-left">
             <div className="space-y-2.5">
-              <div className="flex items-baseline justify-between gap-3">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
                 <div className="flex items-baseline gap-2.5">
                   <span className="font-editorial italic text-2xl sm:text-3xl leading-none text-[var(--muted-foreground)]/60 group-hover:text-[var(--accent-text)] transition-colors">
                     {issueNumber}
                   </span>
-                  <h3 className="text-xl sm:text-2xl font-semibold tracking-[-0.02em] text-[var(--foreground)]">
+                  <h3 className="text-lg sm:text-2xl font-semibold tracking-[-0.02em] text-[var(--foreground)]">
                     {project.title}
                   </h3>
                 </div>
@@ -1089,8 +1079,9 @@ export default function ProjectsSection({ onSelectProject }: ProjectsSectionProp
           <Tabs
             value={filter}
             onValueChange={(value) => setFilter(value as typeof filter)}
+            className="w-full md:w-auto"
           >
-            <TabsList>
+            <TabsList className="grid grid-cols-2 sm:inline-flex w-full md:w-auto">
               <TabsTrigger value="all">
                 {language === "id" ? "Semua (5)" : "All (5)"}
               </TabsTrigger>

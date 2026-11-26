@@ -464,7 +464,7 @@ export default function AboutHubSection() {
           </div>
         </SpotlightCard>
 
-        <SpotlightCard className="lg:col-span-7 p-6 sm:p-7">
+        <SpotlightCard className="lg:col-span-7 p-4 sm:p-7">
           <div className="flex flex-col justify-between gap-4 h-full text-left">
             <Tabs defaultValue="frontend" className="w-full">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -476,7 +476,7 @@ export default function AboutHubSection() {
                     {language === "id" ? "Keahlian & Perangkat Utama" : "Core Stack & Tooling"}
                   </h3>
                 </div>
-                <TabsList>
+                <TabsList className="grid grid-cols-2 sm:inline-flex w-full sm:w-auto">
                   {skillCategories.map((cat) => (
                     <TabsTrigger key={cat.id} value={cat.id} className="px-3 py-1 text-[10px]">
                       {cat.label}
@@ -550,20 +550,20 @@ export default function AboutHubSection() {
               </h3>
             </div>
 
-            <TabsList className="w-full lg:w-auto justify-start">
-              <TabsTrigger value="career" className="px-3.5 py-1.5 text-[10px]">
+            <TabsList className="grid grid-cols-2 sm:inline-flex w-full lg:w-auto justify-start">
+              <TabsTrigger value="career" className="px-3 sm:px-3.5 py-1.5 text-[10px]">
                 <Briefcase className="h-3.5 w-3.5" />
                 {language === "id" ? "Karier (3)" : "Career (3)"}
               </TabsTrigger>
-              <TabsTrigger value="organizations" className="px-3.5 py-1.5 text-[10px]">
+              <TabsTrigger value="organizations" className="px-3 sm:px-3.5 py-1.5 text-[10px]">
                 <Users className="h-3.5 w-3.5" />
                 {language === "id" ? "Organisasi (3)" : "Organizations (3)"}
               </TabsTrigger>
-              <TabsTrigger value="education" className="px-3.5 py-1.5 text-[10px]">
+              <TabsTrigger value="education" className="px-3 sm:px-3.5 py-1.5 text-[10px]">
                 <GraduationCap className="h-3.5 w-3.5" />
                 {language === "id" ? "Pendidikan (1)" : "Education (1)"}
               </TabsTrigger>
-              <TabsTrigger value="certifications" className="px-3.5 py-1.5 text-[10px]">
+              <TabsTrigger value="certifications" className="px-3 sm:px-3.5 py-1.5 text-[10px]">
                 <Award className="h-3.5 w-3.5" />
                 {language === "id" ? "Sertifikasi (1)" : "Certifications (1)"}
               </TabsTrigger>
@@ -576,10 +576,10 @@ export default function AboutHubSection() {
               {careerItems.map((job) => (
                 <div
                   key={job.id}
-                  className="grid grid-cols-1 lg:grid-cols-[270px_1fr] gap-6 py-8 transition-colors hover:bg-[var(--surface)]/45 px-2 sm:px-3 -mx-2 sm:-mx-3 rounded-xl"
+                  className="grid grid-cols-1 lg:grid-cols-[270px_1fr] gap-4 lg:gap-6 py-6 sm:py-8 transition-colors hover:bg-[var(--surface)]/45 px-0 sm:px-3 mx-0 sm:-mx-3 rounded-xl"
                 >
-                  {/* Left Architectural Rail */}
-                  <div className="space-y-3">
+                  {/* Left Architectural Rail (Compact horizontal bar on mobile/tablet, vertical rail on desktop) */}
+                  <div className="flex flex-wrap lg:flex-col items-center lg:items-start justify-between lg:justify-start gap-3">
                     <div className="flex items-center gap-3">
                       {job.logo ? (
                         <div
@@ -609,12 +609,12 @@ export default function AboutHubSection() {
                       </Badge>
                     </div>
 
-                    <div className="space-y-1 font-mono text-[11px] text-[var(--muted-foreground)]">
+                    <div className="flex flex-wrap lg:flex-col items-center lg:items-start gap-x-4 gap-y-1 font-mono text-[11px] text-[var(--muted-foreground)]">
                       <p className="inline-flex items-center gap-1.5 text-[var(--foreground)] font-medium">
                         <Calendar className="h-3.5 w-3.5 text-[var(--accent-text)] shrink-0" />
                         {job.period}
                       </p>
-                      <p className="flex items-center gap-1.5">
+                      <p className="inline-flex items-center gap-1.5">
                         <MapPin className="h-3.5 w-3.5 shrink-0" />
                         {job.location}
                       </p>
@@ -663,11 +663,11 @@ export default function AboutHubSection() {
 
           {/* Tab 2: 3-Column Editorial Hairline Ledger for Organizations */}
           <TabsContent value="organizations" className="mt-0">
-            <div className="grid grid-cols-1 md:grid-cols-3 border-y border-[var(--border)] md:divide-x divide-y md:divide-y-0 divide-[var(--border)]">
+            <div className="grid grid-cols-1 lg:grid-cols-3 border-y border-[var(--border)] lg:divide-x divide-y lg:divide-y-0 divide-[var(--border)]">
               {organizationItems.map((org) => (
                 <div
                   key={org.id}
-                  className="group flex flex-col justify-between gap-5 py-7 md:px-6 first:md:pl-0 last:md:pr-0"
+                  className="group flex flex-col justify-between gap-5 py-6 lg:py-7 lg:px-6 first:lg:pl-0 last:lg:pr-0"
                 >
                   <div className="space-y-4">
                     <div className="flex items-center justify-between gap-2">
@@ -877,26 +877,26 @@ export default function AboutHubSection() {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2.5 w-full sm:w-auto shrink-0">
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="accent" size="md">
+              <Button variant="accent" size="md" className="w-full sm:w-auto">
                 <Eye className="h-4 w-4" />
                 {language === "id" ? "Pratinjau CV" : "Preview CV"}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-4xl">
-              <DialogHeader className="border-b border-[var(--border)] p-4 sm:p-5 pr-14">
-                <div className="flex items-center justify-between gap-4">
+              <DialogHeader className="border-b border-[var(--border)] p-4 sm:p-5 pr-12 sm:pr-14">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <DialogTitle className="text-lg">
+                    <DialogTitle className="text-base sm:text-lg">
                       Curriculum Vitae — Yosua Reynaldi M.
                     </DialogTitle>
                     <DialogDescription className="text-xs">
                       Yosua Reynaldi Manurun-resume.pdf
                     </DialogDescription>
                   </div>
-                  <Button variant="outline" size="sm" asChild>
+                  <Button variant="outline" size="sm" className="w-fit" asChild>
                     <a
                       href="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf"
                       target="_blank"
@@ -908,7 +908,7 @@ export default function AboutHubSection() {
                   </Button>
                 </div>
               </DialogHeader>
-              <div className="h-[75vh] w-full bg-white">
+              <div className="h-[65vh] sm:h-[75vh] w-full bg-white">
                 <iframe
                   src="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf#toolbar=0&navpanes=0&scrollbar=1"
                   className="h-full w-full border-none"
@@ -918,7 +918,7 @@ export default function AboutHubSection() {
             </DialogContent>
           </Dialog>
 
-          <Button variant="outline" size="md" asChild>
+          <Button variant="outline" size="md" className="w-full sm:w-auto" asChild>
             <a
               href="/assets/documents/cv/Yosua Reynaldi Manurun-resume.pdf"
               download="Yosua Reynaldi Manurun-resume.pdf"
