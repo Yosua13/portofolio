@@ -25,12 +25,12 @@ export default function SectionHeader({
   return (
     <div
       className={cn(
-        "flex flex-col gap-5 md:flex-row md:items-end md:justify-between border-b border-[var(--border)] pb-7",
+        "flex flex-col gap-4 sm:gap-5 md:flex-row md:items-end md:justify-between border-b border-[var(--border)] pb-5 sm:pb-7",
         className
       )}
     >
-      <div className="space-y-3 text-left max-w-2xl">
-        <div className="inline-flex items-center gap-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
+      <div className="space-y-2.5 sm:space-y-3 text-left max-w-2xl">
+        <div className="inline-flex items-center gap-2.5 font-mono text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
           {index && (
             <span className="font-semibold text-[var(--accent-text)]">
               {index}
@@ -40,7 +40,7 @@ export default function SectionHeader({
           <span>{eyebrow}</span>
         </div>
 
-        <h2 className="text-3xl sm:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] text-[var(--foreground)]">
+        <h2 className="text-2xl sm:text-4xl lg:text-5xl font-semibold tracking-[-0.03em] leading-[1.08] text-[var(--foreground)]">
           {title}
           {titleItalic && (
             <>
@@ -53,13 +53,13 @@ export default function SectionHeader({
         </h2>
 
         {subtitle && (
-          <p className="max-w-xl text-sm leading-relaxed text-[var(--muted-foreground)]">
+          <p className="max-w-xl text-xs sm:text-sm leading-relaxed text-[var(--muted-foreground)]">
             {subtitle}
           </p>
         )}
       </div>
 
-      {action && <div className="shrink-0">{action}</div>}
+      {action && <div className="w-full md:w-auto shrink-0">{action}</div>}
     </div>
   );
 }

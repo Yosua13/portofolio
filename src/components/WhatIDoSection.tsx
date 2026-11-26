@@ -239,7 +239,7 @@ export default function WhatIDoSection() {
   const renderEditorialRow = (service: ServiceItem) => (
     <div
       key={service.title}
-      className="group grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start py-7 sm:py-9 px-3 sm:px-4 -mx-3 sm:-mx-4 rounded-2xl transition-colors duration-200 hover:bg-[var(--surface)]/75 text-left"
+      className="group grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 lg:gap-8 items-start py-6 sm:py-9 px-0 sm:px-4 mx-0 sm:-mx-4 rounded-2xl transition-colors duration-200 hover:bg-[var(--surface)]/75 text-left"
     >
       {/* Col 1: Large Editorial Index + Architectural Icon Tile */}
       <div className="lg:col-span-2 flex items-center lg:flex-col lg:items-start gap-4">
@@ -325,7 +325,7 @@ export default function WhatIDoSection() {
               : "Actionable software systems built for growing SMEs and scalable corporate engineering teams."
           }
           action={
-            <TabsList>
+            <TabsList className="grid grid-cols-2 sm:inline-flex w-full md:w-auto">
               <TabsTrigger value="umkm">
                 <RiStore3Fill className="h-3.5 w-3.5" />
                 {language === "id" ? "UMKM & Bisnis" : "SME & Business"}

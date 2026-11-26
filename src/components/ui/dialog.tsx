@@ -33,11 +33,11 @@ const DialogContent = React.forwardRef<
 >(({ className, children, hideClose = false, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
-    <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 sm:p-6 pointer-events-none">
+    <div className="fixed inset-0 z-[130] flex items-center justify-center p-2.5 sm:p-6 pointer-events-none">
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
-          "radix-dialog-content pointer-events-auto relative w-full max-w-5xl max-h-[90vh] overflow-hidden rounded-2xl border border-[var(--border-strong)] bg-[var(--surface-solid)] text-[var(--foreground)] shadow-2xl flex flex-col focus:outline-none",
+          "radix-dialog-content pointer-events-auto relative w-full max-w-5xl max-h-[92dvh] sm:max-h-[90vh] overflow-hidden rounded-xl sm:rounded-2xl border border-[var(--border-strong)] bg-[var(--surface-solid)] text-[var(--foreground)] shadow-2xl flex flex-col focus:outline-none",
           className
         )}
         {...props}
@@ -46,7 +46,7 @@ const DialogContent = React.forwardRef<
         {!hideClose && (
           <DialogPrimitive.Close
             aria-label="Close dialog"
-            className="absolute right-4 top-4 z-30 inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--muted-foreground)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--foreground)] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+            className="absolute right-3 top-3 sm:right-4 sm:top-4 z-30 inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--muted-foreground)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--foreground)] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
           >
             <X className="h-4 w-4" />
           </DialogPrimitive.Close>

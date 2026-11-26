@@ -429,7 +429,7 @@ export default function ContactSection() {
         </div>
 
         {/* Right Column: Clean Architectural Inquiry Frame */}
-        <div className="lg:col-span-7 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-8 shadow-[var(--card-shadow)] space-y-6">
+        <div className="lg:col-span-7 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-8 shadow-[var(--card-shadow)] space-y-5 sm:space-y-6">
           <div className="space-y-1.5 border-b border-[var(--border)] pb-5">
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--accent-text)]">
               <MessageSquareText className="h-3.5 w-3.5" />

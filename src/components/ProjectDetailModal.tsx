@@ -233,7 +233,7 @@ export default function ProjectDetailModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl">
         {/* Sticky Editorial Header */}
-        <DialogHeader className="border-b border-[var(--border)] p-5 sm:p-6 pr-14">
+        <DialogHeader className="border-b border-[var(--border)] p-4 sm:p-6 pr-12 sm:pr-14">
           <div className="flex flex-wrap items-center gap-2 mb-1.5">
             <Badge variant="accent">{project.category}</Badge>
             <Badge variant="outline">{project.role}</Badge>
@@ -269,18 +269,18 @@ export default function ProjectDetailModal({
         </DialogHeader>
 
         {/* Scrollable Body with Tabs */}
-        <div className="overflow-y-auto p-5 sm:p-6">
+        <div className="overflow-y-auto p-4 sm:p-6">
           <Tabs key={project.id} defaultValue="overview">
-            <TabsList>
-              <TabsTrigger value="overview">
+            <TabsList className="grid grid-cols-3 sm:inline-flex w-full sm:w-auto">
+              <TabsTrigger value="overview" className="px-2 sm:px-4">
                 {language === "id" ? "Ringkasan" : "Overview"}
               </TabsTrigger>
-              <TabsTrigger value="gallery">
+              <TabsTrigger value="gallery" className="px-2 sm:px-4">
                 {language === "id"
-                  ? `Galeri & Modul (${project.screens.length})`
-                  : `Gallery & Modules (${project.screens.length})`}
+                  ? `Galeri (${project.screens.length})`
+                  : `Gallery (${project.screens.length})`}
               </TabsTrigger>
-              <TabsTrigger value="stack">
+              <TabsTrigger value="stack" className="px-2 sm:px-4">
                 {language === "id" ? "Tech Stack" : "Tech Stack"}
               </TabsTrigger>
             </TabsList>

@@ -191,15 +191,15 @@ export default function MusicPlayer({
         ? "relative flex items-center gap-2 select-none" 
         : "fixed bottom-6 md:bottom-20 right-6 z-50 flex items-end gap-3 select-none"
     } font-sans`}>
-      {/* Floating Game Toggle Button (Gamepad Icon) */}
+      {/* Floating Game Toggle Button (Desktop >= 1024px only, since game requires physical WASD + Spacebar) */}
       <button
         onClick={() => setPlayMode?.(!playMode)}
-        className={`console-toggle-btn flex items-center justify-center rounded-full border hover:scale-105 active:scale-95 transition-all cursor-pointer group shrink-0 ${
+        className={`console-toggle-btn hidden lg:flex items-center justify-center rounded-full border hover:scale-105 active:scale-95 transition-all cursor-pointer group shrink-0 ${
           inline ? "w-8 h-8" : "w-12 h-12 shadow-xl"
         } ${
           playMode 
             ? "border-cyan-500 bg-cyan-950/80 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.4)]" 
-            : "border-slate-800 bg-[#090b16]/90 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/50"
+            : "border-slate-800 bg-[#090b16]/90 text-slate-400 hover:text-[var(--accent-text)] hover:border-[var(--accent)]/50"
         }`}
         title={playMode ? "Exit Flight Game" : "Start Flight Game"}
       >
@@ -207,9 +207,9 @@ export default function MusicPlayer({
       </button>
 
       {isExpanded ? (
-        /* Expanded Player Card (Dark Glass Theme, Smaller size, rounded corners) */
-        <div className={`w-64 border border-white/10 bg-[#090b16]/90 backdrop-blur-md p-4 shadow-2xl flex flex-col space-y-3 rounded-xl select-none shrink-0 text-slate-200 ${
-          inline ? "absolute bottom-12 right-0 z-[100]" : ""
+        /* Expanded Player Card (Responsive positioning on mobile so it never clips off-screen) */
+        <div className={`border border-white/10 bg-[#090b16]/95 backdrop-blur-md p-4 shadow-2xl flex flex-col space-y-3 rounded-xl select-none shrink-0 text-slate-200 ${
+          inline ? "fixed bottom-16 right-4 left-4 sm:left-auto sm:w-64 sm:absolute sm:bottom-12 sm:right-0 z-[100]" : "w-64"
         }`}>
           {/* Top Bar with Album Art and Collapse Button */}
           <div className="relative aspect-[16/10] w-full bg-slate-900/50 overflow-hidden rounded-lg border border-white/5">
